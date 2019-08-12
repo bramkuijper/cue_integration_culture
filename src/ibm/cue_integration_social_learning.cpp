@@ -12,13 +12,8 @@
 #include <vector>
 #include <cmath>
 
-// random number generation
-#include <gsl/gsl_rng.h>
-#include <gsl/gsl_randist.h>
-
-
 // various functions, such as unique filename creation
-#include "auxiliary.h"
+#include "auxiliary.hpp"
 
 #define DEBUG
 
@@ -26,9 +21,12 @@
 using namespace std;
 
 // random number generator 
-// see http://www.gnu.org/software/gsl/manual/html_node/Random-Number-Generation.html#Random-Number-Generation 
-gsl_rng_type const * T; // gnu scientific library rng type
-gsl_rng *rng_r; // gnu scientific rng 
+// set random seed etc
+int seed = get_nanoseconds();
+
+// C++ random number generation
+mt19937 rng_r{static_cast<long unsigned int>(seed)};
+uniform_real_distribution<> uniform(0.0,1.0);
 
 // parameters & variables:
 
@@ -47,13 +45,10 @@ double p = 0.0;
 // whether survival selection has a sigmoidal or a quadratic function
 bool survival_sigmoidal = true;
 
-int nloci_g = 3;
+// survival function in low vs high patches
+double survival_scalar[2] = {0.0, 0.0};
 
-// mutation rates
-double mu_theta = 0.0;
-double mu_phi = 0.0;
-double sdmu_theta = 0.0;
-double sdmu_phi = 0.0;
+int nloci_g = 3;
 
 int seed = 0;
 
@@ -66,8 +61,8 @@ struct Individual
     // affecting survival
     double u;
 
-    // loci for the genetic cue (unlinked)
-    double g[nloci_g][2];
+    // set of diploid loci for the genetic cue (unlinked)
+    vector <double> g[2];
 
     // evolving strategy locus for the genetic cue
     double agen[2];
@@ -81,8 +76,9 @@ struct Individual
 
 struct Patch
 {
+    // number of hermaphroditic breeder
     Individual breeders[NBreeder];
-    bool state_high;  // high-state patch yes/no
+    bool envt_is_high;  // high-state patch yes/no
 };
 
 Patch Pop[NPatch];
@@ -91,17 +87,17 @@ Patch Pop[NPatch];
 // survival function
 double survival(double const u, bool const state_high)
 {
+    // eqns 3,4 Leimar & McNamara (2015) Amnat
     if (sigmoidal_survival)
     {
-        double scalar = state_high ? 3.5 : -2.5;
-
-        return(1.0 / (1.0 + exp(scalar + 6.0 * u)));
+        return(1.0 / (1.0 + exp(survival_scalar[state_high] + 6.0 * u)));
     }
 
+    // eqns 1,2 Leimar & McNamara (2015) Amnat
     return(state_high ? 
-            1.0 - 0.8 * (1.0 - u) * (1.0 - u)
+            1.0 - survival_scalar[0] * (1.0 - u) * (1.0 - u)
             :
-            1.0 - 0.8 * u * u
+            1.0 - survival_scalar[0] * u * u
             );
 }
 
