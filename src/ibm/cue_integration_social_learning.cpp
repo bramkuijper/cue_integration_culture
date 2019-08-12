@@ -11,30 +11,28 @@
 #include <cassert>
 #include <vector>
 #include <cmath>
-
-// random number generation
-#include <gsl/gsl_rng.h>
-#include <gsl/gsl_randist.h>
+#include <random>
 
 
 // various functions, such as unique filename creation
-#include "auxiliary.h"
+#include "auxiliary.hpp"
+#include "individual.hpp"
 
 #define DEBUG
 
 // standard namespace
 using namespace std;
 
-// random number generator 
-// see http://www.gnu.org/software/gsl/manual/html_node/Random-Number-Generation.html#Random-Number-Generation 
-gsl_rng_type const * T; // gnu scientific library rng type
-gsl_rng *rng_r; // gnu scientific rng 
+int seed = get_nanoseconds();
+mt19937 rng_r{static_cast<long unsigned int>(seed)};
+uniform_real_distribution<> uniform(0.0,1.0);
 
 // parameters & variables:
 
 // number of individuals in population
 const int NPatches = 400;
 const int NBreeder = 100;
+const int NClutch = 10;
 
 // number of generations
 int number_generations = 50000;
@@ -42,66 +40,79 @@ int number_generations = 50000;
 // environmental switch rate
 //
 // parameters below will be changed on the command line
+
+// frequency of high state patches
 double p = 0.0;
 
-// whether survival selection has a sigmoidal or a quadratic function
-bool survival_sigmoidal = true;
+// quality (beyond 0.5 error rate) of juvenile cue
+double qjuv = 0.5;
 
+// quality (beyond 0.5 error rate) of maternal cue
+double qmat = 0.5;
+
+// whether survival selection has a sigmoidal or a quadratic function
+bool sigmoidal_survival = true;
+
+// number of loci underlying the genetic cue
 int nloci_g = 3;
 
+// initial values
+double init_g = 0.0;
+double init_amat = 0.0;
+double init_ajuv = 0.0;
+double init_agen = 0.0;
+double init_bmat_phen = 0.0;
+double init_bmat_envt = 0.0;
+
+// ranges for traits
+double gmin = 0.0;
+double gmax = 0.0;
+double amin = 0.0;
+double amax = 0.0;
+double bmin = 0.0;
+double bmax = 0.0;
+
 // mutation rates
-double mu_theta = 0.0;
-double mu_phi = 0.0;
-double sdmu_theta = 0.0;
-double sdmu_phi = 0.0;
+double mu_g = 0.0;
+double mu_amat = 0.0;
+double mu_ajuv = 0.0;
+double mu_agen = 0.0;
+double mu_bmat_phen = 0.0;
+double mu_bmat_envt = 0.0;
 
-int seed = 0;
+double sdmu_a = 0.0;
+double sdmu_b = 0.0;
+double sdmu_g = 0.0;
 
-// write out the data every nth generation
-int data_every_generation = 10;
-
-struct Individual 
-{
-    // the actual phenotype of an individual
-    // affecting survival
-    double u;
-
-    // loci for the genetic cue (unlinked)
-    double g[nloci_g][2];
-
-    // evolving strategy locus for the genetic cue
-    double agen[2];
-
-    // evolving strategy locus for the maternal cue
-    double amat[2];
-    
-    // evolving strategy locus for the binary envt'al cue
-    double ajuv[2];
-};
+//write out the data every nth generation
+int data_nth_generation = 10;
 
 struct Patch
 {
     Individual breeders[NBreeder];
-    bool state_high;  // high-state patch yes/no
+    int n_breeders; // number of breeders currently in patch
+
+    vector <Individual> juveniles;
+
+    bool envt_high;  // high-state patch yes/no
 };
 
-Patch Pop[NPatch];
-
+Patch Pop[NPatches];
 
 // survival function
-double survival(double const u, bool const state_high)
+double survival_probability(double const ad_phen, bool const state_high)
 {
     if (sigmoidal_survival)
     {
         double scalar = state_high ? 3.5 : -2.5;
 
-        return(1.0 / (1.0 + exp(scalar + 6.0 * u)));
+        return(1.0 / (1.0 + exp(scalar + 6.0 * ad_phen)));
     }
 
     return(state_high ? 
-            1.0 - 0.8 * (1.0 - u) * (1.0 - u)
+            1.0 - 0.8 * (1.0 - ad_phen) * (1.0 - ad_phen)
             :
-            1.0 - 0.8 * u * u
+            1.0 - 0.8 * ad_phen * ad_phen
             );
 }
 
@@ -110,66 +121,69 @@ double survival(double const u, bool const state_high)
 // running the executable file
 void init_arguments(int argc, char **argv)
 {
-    init_theta_a = atof(argv[1]);
-    init_theta_b = atof(argv[2]);
-    init_phi_a = atof(argv[3]);
-    init_phi_b = atof(argv[4]);
-    pmort = atof(argv[5]);
-    pgood_init = atof(argv[6]);
-    decay_good = atof(argv[7]);
-    rgood = atof(argv[8]);
-    rbad = atof(argv[9]);
-    arrival_resource_decay = atof(argv[10]);
-    resource_reproduce_threshold = atof(argv[11]);
-    mu_theta = atof(argv[12]);
-    mu_phi = atof(argv[13]);
-    sdmu_theta = atof(argv[14]);
-    sdmu_phi = atof(argv[15]);
-    max_migration_cost = atof(argv[16]);
-    min_migration_cost = atof(argv[17]);
-    migration_cost_decay = atof(argv[18]);
-    migration_cost_nonlinear_decay = atof(argv[19]);
-    migration_cost_power = atof(argv[20]);
-    tmax = atoi(argv[21]);
+    sigmoidal_survival = atoi(argv[1]);
+    p = atof(argv[2]);
+    qmat = atof(argv[2]);
+    qjuv = atof(argv[2]);
+    n_loci_g = atoi(argv[2]);
+    init_g = atof(argv[2]);
+    init_amat = atof(argv[2]);
+    init_ajuv = atof(argv[2]);
+    init_agen = atof(argv[2]);
+    init_bmat_phen = atof(argv[2]);
+    init_bmat_envt = atof(argv[2]);
+    gmin = atof(argv[2]);
+    gmax = atof(argv[2]);
+    amin = atof(argv[2]);
+    amax = atof(argv[2]);
+    bmin = atof(argv[2]);
+    bmax = atof(argv[2]);
+    sdmat = atof(argv[2]);
 
-    // set the random seed
-	seed = get_nanoseconds();
+    mu_g = atof(argv[2]);
+    sdmu_g = atof(argv[2]);
+    mu_amat = atof(argv[2]);
+    mu_ajuv = atof(argv[2]);
+    mu_agen = atof(argv[2]);
+    mu_bmat_phen = atof(argv[2]);
+    mu_bmat_envt = atof(argv[2]);
+    sdmu_a = atof(argv[2]);
+    sdmu_b = atof(argv[2]);
 
-    // set up the random number generators
-    // (from the gnu gsl library)
-    gsl_rng_env_setup();
-    T = gsl_rng_default;
-    rng_r = gsl_rng_alloc(T);
-    gsl_rng_set(rng_r, seed);
 }
 
 // write down all parameters in the file
 void write_parameters(ofstream &DataFile)
 {
     DataFile << endl << endl
-            << "init_theta_a;" << init_theta_a << endl
-            << "init_theta_b;" << init_theta_b << endl
-            << "init_phi_a;" << init_phi_a << endl
-            << "init_phi_b;" << init_phi_b << endl
-            << "pmort;" << pmort << endl
-            << "pgood_init;" << pgood_init << endl
-            << "decay_good;" << decay_good << endl
-            << "rgood;" << rgood << endl
-            << "rbad;" << rbad << endl
-            << "arrival_resource_decay;" << arrival_resource_decay << endl
-            << "resource_reproduce_threshold;" << resource_reproduce_threshold << endl
-            << "mu_theta;" << mu_theta << endl
-            << "mu_phi;" << mu_phi << endl
-            << "sdmu_theta;" << sdmu_theta << endl
-            << "sdmu_phi;" << sdmu_phi << endl
-            << "tmax;" << tmax << endl
-            << "N;" << N << endl
-            << "max_migration_cost;" << max_migration_cost << endl
-            << "min_migration_cost;" << min_migration_cost << endl
-            << "migration_cost_decay;" << migration_cost_decay << endl
-            << "migration_cost_nonlinear_decay;" << migration_cost_nonlinear_decay << endl
-            << "migration_cost_power;" << migration_cost_power << endl
-            << "seed;" << seed << endl;
+        << "sigmoidal_survival;" << sigmoidal_survival << ";"
+        << "p;" << p << ";"
+        << "qmat;" << qmat << ";"
+        << "qjuv;" << qjuv << ";"
+        << "n_loci_g;" << n_loci_g << ";"
+        << "init_g;" << init_g << ";"
+        << "init_amat;" << init_amat << ";"
+        << "init_ajuv;" << init_ajuv << ";"
+        << "init_agen;" << init_agen << ";"
+        << "init_bmat_phen;" << init_bmat_phen << ";"
+        << "init_bmat_envt;" << init_bmat_envt << ";"
+        << "gmin;" << gmin << ";"
+        << "gmax;" << gmax << ";"
+        << "amin;" << amin << ";"
+        << "amax;" << amax << ";"
+        << "bmin;" << bmin << ";"
+        << "bmax;" << bmax << ";"
+        << "sdmat;" << sdmat << ";"
+        << "mu_g;" << mu_g << ";"
+        << "sdmu_g;" << sdmu_g << ";"
+        << "mu_amat;" << mu_amat << ";"
+        << "mu_ajuv;" << mu_ajuv << ";"
+        << "mu_agen;" << mu_agen << ";"
+        << "mu_bmat_phen;" << mu_bmat_phen << ";"
+        << "mu_bmat_envt;" << mu_bmat_envt << ";"
+        << "sdmu_a;" << sdmu_a << ";"
+        << "sdmu_b;" << sdmu_b << ";"
+        << "seed;" << seed << ";" << endl;
 }
 
 // list of the data headers at the start of the file
@@ -186,240 +200,62 @@ void write_stats(ofstream &DataFile, int generation, int timestep)
 // initialize the population at the start of the simulation
 void init_population()
 {
-    // loop through all individuals in the wintering ground
-    // and give them values
-    for (int patch_i = 0; patch_i < NPatch; ++patch_i)
-    {
-        Pop[patch_i].high_state = gsl_rng_uniform(rng_r) < p;
+    // auxiliary variable whether mothers perceived a cue
+    // that the environment is in a high state
+    bool cue_juv_envt_high;
 
+    // loop through all individuals 
+    // and assign them values for the cue loci
+    for (int patch_i = 0; patch_i < NPatches; ++patch_i)
+    {
+        // patch in a high state or not
+        Pop[patch_i].envt_high = uniform(rng_r) < p;
+       
+        // cue given to adults
+        cue_juv_envt_high = uniform(rng_r) < qmat ?
+            Pop[patch_i].envt_high 
+            :
+            !Pop[patch_i].envt_high;
+        
         for (int breeder_i = 0; breeder_i < NBreeder; ++breeder_i)
         {
-            for (int g_loc_i = 0; g_loc_i < nloci_g; ++g_loc_i)
+            for (int allele_i = 0; allele_i < 2; ++allele_i)
             {
-                for (int allele_i = 0; allele_i < 2; ++allele_i)
+                for (int g_loc_i = 0; g_loc_i < nloci_g; ++g_loc_i)
                 {
+                    // genetic cue values
                     Pop[patch_i].breeders[breeder_i].g[g_loc_i][allele_i] = init_g;
                 }
-            }
-        }
-    }
 
-    NWinter = N;
-}
+                // maternal cue weighting
+                Pop[patch_i].breeders[breeder_i].amat[allele_i] = init_amat;
 
-// individuals in both summer and winter populations
-// die at a certain rate. If this function is called in winter
-// the summer pool will be empty so no individuals die there
-// If this function is called in summer, however, both the summer
-// ground individuals die, as well as the individuals who have
-// stayed at the wintering ground
-void mortality()
-{
-    for (int i = 0; i < NWinter;++i)
-    {
-        // individual dies; replace with end of the stack individual
-        if (gsl_rng_uniform(rng_r) < pmort)
-        {
-            WinterPop[i] = WinterPop[NWinter - 1];
-            --NWinter;
-            --i;
-        }
-    }
+                // juvenile cue weighting
+                Pop[patch_i].breeders[breeder_i].ajuv[allele_i] = init_ajuv;
 
-    for (int i = 0; i < NSummer;++i)
-    {
-        // individual dies; replace with end of the stack individual
-        if (gsl_rng_uniform(rng_r) < pmort)
-        {
-            SummerPop[i] = SummerPop[NSummer - 1];
-            --NSummer;
-            --i;
-        }
-    }
-}
-
-// remove individuals from the staging pool and put them
-// back in the original population
-void clear_staging_pool()
-{
-    // put individuals from staging pool (which haven't migrated) 
-    // back in the original population
-    for (int i = 0; i < NStaging; ++i)
-    {
-        WinterPop[NWinter++] = StagingPool[i];
-
-    }
-
-    // just double check that NWinter does not exceed max population size
-    assert(NWinter <= N);
-
-    NStaging = 0;
-}
-
-// the dynamics of the population at the wintering ground
-void winter_dynamics(int t)
-{
-    // individuals forage
-    // individuals accumulate resources
-    // individuals make dispersal decisions
-
-    // probability of encountering a good resource
-    double pgood = pgood_init - decay_good * t;
-
-    // set lower boundary to the probability
-    if (pgood <= 0)
-    {
-        pgood = 0;
-    }
-
-    // foraging of individuals who are just at the wintering site
-    // and who have yet to decide to go to the staging site
-    for (int i = 0; i < NWinter; ++i)
-    {
-        if (gsl_rng_uniform(rng_r) < pgood) // good resource chosen
-        {
-            WinterPop[i].resources += rgood;
-        }
-        else
-        {
-            WinterPop[i].resources += rbad;
-        }
-    
-    } // ok resource dynamic done
-
-
-    // foraging of individuals who are already at the staging site
-    for (int i = 0; i < NStaging; ++i)
-    { 
-        // indivuals who are already at the staging site
-        // continue to forage at the staging site
-        if (gsl_rng_uniform(rng_r) < pgood) // good resource chosen
-        {
-            StagingPool[i].resources += rgood;
-        }
-        else
-        {
-            StagingPool[i].resources += rbad;
-        }
-    }
-
-    assert(NWinter <= N);
-    assert(NWinter >= 0);
-
-    double psignal = 0.0;
-
-    // individuals decide whether to go to staging site
-    // i.e., prepare for dispersal
-    // signal to disperse
-    for (int i = 0; i < NWinter; ++i) 
-    {
-        // reaction norm dependent on resources
-        // resulting in signaling a willingness to disperse
-        // => go to the staging level
-        psignal = 0.5 * (WinterPop[i].theta_a[0] + WinterPop[i].theta_a[1])
-            + 0.5 * (WinterPop[i].theta_b[0] + WinterPop[i].theta_b[1]) * WinterPop[i].resources;
-
-        // does individual want to signal to others to be ready for departure?
-        if (gsl_rng_uniform(rng_r) < psignal)
-        {
-            // add individual to the staging pool
-            StagingPool[NStaging] = WinterPop[i];
-            ++NStaging; // increment the number of individuals in the staging pool
-
-            assert(NStaging <= N);
-            assert(NStaging >= 0);
-
-            // delete this individual from the winter population
-            WinterPop[i] = WinterPop[NWinter - 1];
-
-            // decrement the number of individuals in the winter population
-            --NWinter;
-            --i;
-        }
-    }
-
-    // store current number of individuals at the breeding ground
-    // so that we know which individuals have just arrived there
-    // (we need to update their resources dependent on their migration
-    // group size)
-    int NSummer_old = NSummer;
-
-    int NFlock = 0;
-
-    double pdisperse = 0.0;
-
-    int NStaging_start = NStaging;
-
-    // actual dispersal
-    for (int i = 0; i < NStaging; ++i)
-    {
-        // later we will consider collective dispersal decisions
-        // for now, individuals leave dependent on the current amount of individuals
-        // within the staging pool
-
-        pdisperse = 0.5 * (StagingPool[i].phi_a[0] + StagingPool[i].phi_a[1])
-            + 0.5 * (StagingPool[i].phi_b[0] + StagingPool[i].phi_b[1]) * NStaging_start;
-
-        // yes individual goes
-        if (gsl_rng_uniform(rng_r) < pdisperse)
-        {
-            SummerPop[NSummer] = StagingPool[i];
-            ++NSummer;
+                // genetic cue weighting
+                Pop[patch_i].breeders[breeder_i].agen[allele_i] = init_agen;
+                
+                // maternal phenotypic cue weighting
+                Pop[patch_i].breeders[breeder_i].bmat_phen[allele_i] = init_bmat_phen;
+                
+                // maternal phenotypic cue weighting
+                Pop[patch_i].breeders[breeder_i].bmat_envt[allele_i] = init_bmat_envt;
+            } //end for allele_i
             
-            assert(NSummer <= N);
-
-
-            // delete this individual from the staging population
-            StagingPool[i] = StagingPool[NStaging - 1];
-
-            // decrement the number of individuals in the staging population
-            --NStaging;
-            --i;
-
-            assert(NStaging <= N);
-            assert(NStaging >= 0);
-
-            // increase flock size
-            ++NFlock;
+            Pop[patch_i].n_breeders = NBreeder;
             
-            assert(NFlock <= N);
-        }
-    }
+            Pop[patch_i].breeders[breeder_i].cue_ad_envt_high = 
+                cue_juv_envt_high;
 
-    double total_migration_cost;
+            Pop[patch_i].breeders[breeder_i].cue_juv_envt_high = 
+                cue_juv_envt_high;
 
-    // update resource levels for all new individuals that have just
-    // been added to the summer pool dependent on their flock size
-    for (int i = NSummer_old; i < NSummer; ++i)
-    {
-        total_migration_cost = max_migration_cost - migration_cost_decay * NFlock - migration_cost_nonlinear_decay * pow(NFlock,migration_cost_power);
-
-        if (total_migration_cost < min_migration_cost)
-        {
-            total_migration_cost = min_migration_cost;
-        }
-
-        assert(total_migration_cost >= 0.0);
-        assert(total_migration_cost <= 1.0);
-
-        // resources are reduced due to migration,
-        // yet this depends on group size in a curvilinear fashion
-        SummerPop[i].resources = SummerPop[i].resources * total_migration_cost;
-
-        // and reduce it by time of arrival
-        // TODO think more about this function
-        SummerPop[i].resources -= arrival_resource_decay * t;
-
-        if (SummerPop[i].resources < 0)
-        {
-            SummerPop[i].resources = 0;
-        }
-    }
-
-    // add current dispersal flock size to stats
-    mean_flock_size_winter += NFlock;
-    mean_staging_size_winter += NStaging_start;
-} // end winter_dynamics
+            Pop[patch_i].breeders[breeder_i].u = 1.0 /
+                (1.0 + exp(-init_agen * init_g - ajuv * cue_juv_envt_high));
+        } // end for breeder_i
+    } // end for patch_i
+} // end void init_population()
 
 // mutation of a certain allele with value val
 // given mutation rate mu and mutational distribution stdev sdmu
@@ -433,368 +269,300 @@ double mutation(double val, double mu, double sdmu)
     return(val);
 }
 
+// auxiliary function to bound values between [min,max]
+void clamp(double &val, double min, double max)
+{
+    val = val > max ? max : val < min ? min : val;
+}
+
 // create a new offspring
-void create_offspring(Individual &mother, Individual &father, Individual &offspring)
+void create_offspring(Individual &mother
+        ,Individual &father
+        ,Individual &offspring
+        ,bool offspring_envt)
 {
-    offspring.resources = 0.0;
+    // set up a bernoulli distribution that returns 0s or 1s
+    // at equal probability to sample alleles from the first or
+    // second set of chromosomes of diploid individuals
+    bernoulli_distribution allele_sample(0.5);
 
-    // inherit theta loci
+    double sum_genes = 0.0;
 
-    // each parental allele has probability 0.5 to make it into offspring
-    offspring.theta_a[0] = mutation(mother.theta_a[gsl_rng_uniform_int(rng_r,2)], mu_theta, sdmu_theta);
-
-    offspring.theta_a[1] = mutation(father.theta_a[gsl_rng_uniform_int(rng_r,2)], mu_theta, sdmu_theta);
-
-    
-
-    
-    offspring.theta_b[0] = mutation(mother.theta_b[gsl_rng_uniform_int(rng_r,2)], mu_theta, sdmu_theta);
-    offspring.theta_b[1] = mutation(father.theta_b[gsl_rng_uniform_int(rng_r,2)], mu_theta, sdmu_theta);
-
-    // inherit phi loci
-    offspring.phi_a[0] = mutation(mother.phi_a[gsl_rng_uniform_int(rng_r,2)], mu_phi, sdmu_phi);
-    offspring.phi_a[1] = mutation(father.phi_a[gsl_rng_uniform_int(rng_r,2)], mu_phi, sdmu_phi);
-    
-    offspring.phi_b[0] = mutation(mother.phi_b[gsl_rng_uniform_int(rng_r,2)], mu_phi, sdmu_phi);
-    offspring.phi_b[1] = mutation(father.phi_b[gsl_rng_uniform_int(rng_r,2)], mu_phi, sdmu_phi);
-
-    for (int allele_i = 0; allele_i < 2; ++allele_i)
+    for (int g_loc_i = 0; g_loc_i < nloci_g; ++g_loc_i)
     {
-        // put boundaries on the elevation between 0 and 1
-        // to help with the interpretation of the evolved values of the slope
-        if (offspring.theta_a[allele_i] < 0.0)
-        {
-            offspring.theta_a[allele_i] = 0.0;
-        }
-        else if (offspring.theta_a[allele_i] > 1.0)
-        {
-            offspring.theta_a[allele_i] = 1.0;
-        }
+        // genetic cue values
+        Kid.g[g_loc_i][0] = mutation(
+                Mother.g[g_loc_i][allele_sample(rng_r)],
+                mu_g,
+                sdmu_g);
+
+        clamp(Kid.g[g_loc_i][0], gmin, gmax);
         
-        if (offspring.phi_a[allele_i] < 0.0)
-        {
-            offspring.phi_a[allele_i] = 0.0;
-        }
-        else if (offspring.phi_a[allele_i] > 1.0)
-        {
-            offspring.phi_a[allele_i] = 1.0;
-        }
-    }   
-}
+        Kid.g[g_loc_i][1] = mutation(
+                Father.g[g_loc_i][allele_sample(rng_r)],
+                mu_g,
+                sdmu_g);
 
+        clamp(Kid.g[g_loc_i][1], gmin, gmax);
 
-
-// in summery they reproduce dependent on 
-// resources and arrival time
-void summer_reproduction(ofstream &DataFile)
-{
-    // auxiliary variables storing current mom and dad
-    Individual mother, father;
-
-    // auxiliary variable specifing the rounded amount of a mother's
-    // resources
-    int resource_integer;
-
-    /// auxilary variable specifying the id of the randomly sampled
-    // fater
-    int father_id;
-
-    // see if population is extinct
-    if (NSummer == 1)
-    {
-        // quit if extinct 
-        write_parameters(DataFile);
-        exit(1);
+        sum_genes += 0.5 * (Kid.g[g_loc_i][0] + Kid.g[g_loc_i][1]);
     }
 
-    // use a flexible array for the kids
-    vector<Individual> Kids;
+    // inheritance of maternal cue values 
+    Kid.amat[0] = mutation(
+            Mother.amat[allele_sample(rng_r)],
+            mu_amat,
+            sdmu_a);
 
-    // mating dynamic. Presumes that there an even 
-    // number of individuals
-    // so we just discard the last individual
-    for (int i = 0; i < NSummer; ++i)
+    clamp(Kid.amat[0], amin, amax);
+
+    Kid.amat[1] = mutation(
+            Father.amat[allele_sample(rng_r)],
+            mu_amat,
+            sdmu_a);
+
+    clamp(Kid.amat[1], amin, amax);
+
+    double amat_phen = 0.5 * (Kid.amat[0] + Kid.amat[1]);
+   
+
+    // inheritance of juvenile cue values 
+    Kid.ajuv[0] = mutation(
+            Mother.ajuv[allele_sample(rng_r)],
+            mu_ajuv,
+            sdmu_a);
+
+    clamp(Kid.ajuv[0], amin, amax);
+
+    Kid.ajuv[1] = mutation(
+            Father.ajuv[allele_sample(rng_r)],
+            mu_ajuv,
+            sdmu_a);
+
+    clamp(Kid.ajuv[1], amin, amax);
+
+    double ajuv_phen = 0.5 * (Kid.ajuv[0] + Kid.ajuv[1]);
+   
+
+
+    // inheritance of genetic cue values 
+    Kid.agen[0] = mutation(
+            Mother.agen[allele_sample(rng_r)],
+            mu_agen,
+            sdmu_a);
+
+    clamp(Kid.agen[0], amin, amax);
+
+    Kid.agen[1] = mutation(
+            Father.agen[allele_sample(rng_r)],
+            mu_agen,
+            sdmu_a);
+
+    clamp(Kid.agen[1], amin, amax);
+
+    double agen_phen = 0.5 * (Kid.agen[0] + Kid.agen[1]);
+
+
+    // inheritance of maternal phenotypic cue values 
+    Kid.bmat_phen[0] = mutation(
+            Mother.bmat_phen[allele_sample(rng_r)],
+            mu_bmat_phen,
+            sdmu_b);
+
+    clamp(Kid.bmat_phen[0], bmin, bmax);
+
+    Kid.bmat_phen[1] = mutation(
+            Father.bmat_phen[allele_sample(rng_r)],
+            mu_bmat_phen,
+            sdmu_b);
+
+    clamp(Kid.bmat_phen[1], bmin, bmax);
+
+    double bmat_phen_phen = 0.5 * (Kid.bmat_phen[0] + Kid.bmat_phen[1]);
+    
+    // inheritance of maternal environmental cue values 
+    Kid.bmat_envt[0] = mutation(
+            Mother.bmat_envt[allele_sample(rng_r)],
+            mu_bmat_envt,
+            sdmu_b);
+
+    clamp(Kid.bmat_envt[0], bmin, bmax);
+
+    Kid.bmat_envt[1] = mutation(
+            Father.bmat_envt[allele_sample(rng_r)],
+            mu_bmat_envt,
+            sdmu_b);
+
+    clamp(Kid.bmat_envt[1], bmin, bmax);
+
+    double bmat_envt_phen = 0.5 * (Kid.bmat_envt[0] + Kid.bmat_envt[1]);
+
+
+    // kid receives juvenile cue
+    Kid.cue_juv_envt_high = uniform(rng_r) < qjuv ? 
+        offspring_envt : !offspring_envt;
+
+    // kid receives adult cue
+    Kid.cue_ad_envt_high = uniform(rng_r) < qmat ? 
+        offspring_envt : !offspring_envt;
+
+    double dmat_weighting = Kid.cue_ad_envt_high ? 1.0 : -1.0;
+
+    // generate maternal cue
+    Kid.xoff = 1.0 /
+        (1.0 + exp(
+                   -Kid.bmat_phen_phen * (Mother.ad_phen - 0.5) + 
+                   dmat_weighting * Kid.bmat_envt_phen));
+
+    // noise in the maternal cue
+    normal_distribution<> maternal_noise(0,sdmat);
+
+    xmat = Mother.xoff + maternal_noise(rng_r);
+
+    Kid.ad_phen = 1.0 / 
+        (1.0 + exp(
+                   -amat_phen * Mother.xmat +
+                   -agen_phen * sum_genes +
+                   -ajuv_phen * Kid.cue_juv_envt_high));
+
+} // end create_offspring()
+
+void survive_reproduce()
+{
+    // set up a random number generator to 
+    // sample from the remaining breeders
+    uniform_int_distribution<> random_patch(
+            0,
+            NPatches - 1);
+
+
+    // how many offspring need to be produced in each patch
+    int n_offspring_per_patch = Clutch * NBreeders;
+    for (int patch_i = 0; patch_i < NPatches; ++patch_i)
     {
-        // get the mother
-        mother = SummerPop[i];
+        assert(Pop[patch_i].n_breeders > 0);
+        assert(Pop[patch_i].n_breeders <= NBreeder);
 
-        // if mom does not meet minimum standards
-        // no reproduction through female function
-        if (mother.resources < resource_reproduce_threshold)
+        for (int breeder_i = 0; breeder_i < Pop[patch_i].n_breeders; ++breeder_i)
         {
-            continue;
-        }
-
-        // now randomly select a father
-        do {
-            // sample integer uniformly between 0 and NSummer
-            // (not including NSummer itself)
-            father_id = gsl_rng_uniform_int(rng_r, NSummer);
-        }
-        while (father_id == i);
-
-        father = SummerPop[father_id];
-
-        // translate maternal resources to numbers of offspring
-        //
-        // first round to lowest integer
-        resource_integer = floor(mother.resources);
-
-        // TODO (slightly digressing): can we come up with an analytical 
-        // description of this rounding process of w into integer values?
-        if (gsl_rng_uniform(rng_r) < mother.resources - resource_integer)
-        {
-            // make an additional offspring
-            ++resource_integer;
-        }
+            // individual dies if random uniform number is larger 
+            // than the survival probability
+            if (uniform(rng_r) > 
+                    survival_probability(
+                        Pop[patch_i].breeders[breeder_i].u
+                        , Pop[patch_i].envt_high)
+            )
+            {
+                // delete individual
+                Pop[patch_i].breeders[breeder_i] = Pop[patch_i].breeders[Nbreeder - 1];
+                --breeder_i;
+                --Pop[patch_i].n_breeders;
+            }
+        } // end for (int breeder_i
         
-        // for each parent create the offspring
-        for (int kid_i = 0; kid_i < resource_integer; ++kid_i)
+        if (Pop[patch_i].n_breeders > 0)
         {
-            Individual kid;
+            // set up a random number generator to 
+            // sample from the remaining breeders
+            uniform_int_distribution<> random_breeder(
+                    0,
+                    Pop[patch_i].n_breeders - 1);
 
-            create_offspring(mother, father, kid);
+            // let breeders produce offspring
+            for (int offspring_i = 0;
+                    offspring_i < n_offspring_per_patch;
+                    ++offspring_i)
+            {
+                Individual Kid;
 
-            // add kid to the stack
-            Kids.push_back(kid);
-        }
-    }
+                create_offspring(
+                        Pop[patch_i].breeders[random_breeder(rng_r)]
+                        ,Pop[patch_i].breeders[random_breeder(rng_r)]
+                        ,Kid
+                        ,Pop[patch_i].envt_high
+                );
 
-    NKids = Kids.size();
+                // dispersal or not
+                if (uniform(rng_r) > m)
+                {
+                    Pop[patch_i].juveniles.push_back(Kid);
+                }
+                else
+                {
+                    Pop[random_patch(rng_r)].juveniles.push_back(Kid);
+                }
+            } // for (int offspring_i = 0;
+        } // end if (Pop[patch_i].n_breeders > 0)
 
-    // number of dead individuals is the max population
-    // minus the current individuals in the summer population
-    // minus the current individuals who stayed at the wintering ground
-    int Ndead = N - NSummer - NWinter;
-
-    int random_kid = 0;
-
-    // recruit new individuals to the summer pool
-    for (int i = 0; i < Ndead; ++i)
-    {
-        // no kids left to recruit
-        if (Kids.size() == 0)
+        // change the envt
+        if (p < uniform(rng_r))
         {
-            break;
+            Pop[patch_i].envt_high = !Pop[patch_i].envt_high;
         }
+    } // end for int patch_i
+} // end survive_reproduce()
 
-        random_kid = gsl_rng_uniform_int(rng_r, Kids.size());
-
-        // add random kid to population
-        SummerPop[NSummer++] = Kids[random_kid];
-
-        //  delete random kid as it has been sampled
-        Kids[random_kid] = Kids[Kids.size()];
-
-        Kids.pop_back();
-    }
-}
-
-// gaining resources at breeding ground
-// & fly back
-void summer_dynamics(int t)
+void replace()
 {
+    int rand_juv;
 
-    // probability of encountering a good resource
-    double pgood = pgood_init - decay_good * t;
-
-    // foraging of individuals who are just at the wintering site
-    // and who have yet to decide to go to the staging site
-    for (int i = 0; i < NSummer; ++i)
+    for (int patch_i = 0; patch_i < NPatches; ++patch_i)
     {
-        if (gsl_rng_uniform(rng_r) < pgood) // good resource chosen
+
+        for (int breeder_i = 0; breeder_i < NBreeder; ++breeder_i)
         {
-            SummerPop[i].resources += rgood;
-        }
-        else
-        {
-            SummerPop[i].resources += rbad;
-        }
-    
-    } // ok resource dynamic done
 
+            assert(Pop[patch_i].juveniles.size() >= NBreeder);
 
-    // foraging of individuals who are already at the staging site
-    for (int i = 0; i < NStaging; ++i)
-    { 
-        // indivuals who are already at the staging site
-        // continue to forage at the staging site
-        if (gsl_rng_uniform(rng_r) < pgood) // good resource chosen
-        {
-            StagingPool[i].resources += rgood;
-        }
-        else
-        {
-            StagingPool[i].resources += rbad;
-        }
-    }
+            // set up a random number generator to 
+            // sample from the remaining breeders
+            uniform_int_distribution<> random_juveniles(
+                    0,
+                    Pop[patch_i].juveniles.size() - 1);
 
-    assert(NSummer<= N);
-    assert(NSummer>= 0);
+            rand_juv = random_juveniles(rng_r);
 
-    double psignal = 0.0;
-    // individuals decide whether to go to staging site
-    // i.e., prepare for dispersal
-    // signal to disperse
-    for (int i = 0; i < NSummer; ++i) 
-    {
-        // reaction norm dependent on resources
-        // resulting in signaling a willingness to disperse
-        // => go to the staging level
-        psignal = 0.5 * (SummerPop[i].theta_a[0] + SummerPop[i].theta_a[1])
-            + 0.5 * (SummerPop[i].theta_b[0] + SummerPop[i].theta_b[1]) * SummerPop[i].resources;
+            Pop[patch_i].breeders[breeder_i] = 
+                Pop[patch_i].juveniles[rand_juv];
 
-        // does individual want to signal to others to be ready for departure?
-        if (gsl_rng_uniform(rng_r) < psignal)
-        {
-            // add individual to the staging pool
-            StagingPool[NStaging] = SummerPop[i];
-            ++NStaging; // increment the number of individuals in the staging pool
+            Pop[patch_i].juveniles.erase(
+                    Pop[patch_i].juveniles.begin() 
+                    + rand_juv);
 
-            assert(NStaging <= N);
-            assert(NStaging >= 0);
+        } // for (int breeder_i = 0; breeder_i < NBreeder; ++breeder_i)
 
-            // delete this individual from the winter population
-            SummerPop[i] = SummerPop[NSummer - 1];
+        Pop[patch_i].n_breeders = NBreeder;
+        
+        // clear out all the juveniles
+        Pop[patch_i].juveniles.clear();
 
-            // decrement the number of individuals in the winter population
-            --NSummer;
-            --i;
-        }
-    }
-
-    // store current number of individuals at the breeding ground
-    // so that we know which individuals have just arrived there
-    // (we need to update their resources dependent on their migration
-    // group size)
-    int NWinter_old = NWinter;
-
-    int NFlock = 0;
-
-    double pdisperse = 0.0;
-
-    int NStaging_start = NStaging;
-
-    // actual dispersal
-    for (int i = 0; i < NStaging; ++i)
-    {
-        // later we will consider collective dispersal decisions
-        // for now, individuals leave dependent on the current amount of individuals
-        // within the staging pool
-
-        pdisperse = 0.5 * (StagingPool[i].phi_a[0] + StagingPool[i].phi_a[1])
-            + 0.5 * (StagingPool[i].phi_b[0] + StagingPool[i].phi_b[1]) * NStaging_start;
-
-        // yes individual goes
-        if (gsl_rng_uniform(rng_r) < pdisperse)
-        {
-            WinterPop[NWinter] = StagingPool[i];
-            ++NWinter;
-            
-            assert(NWinter <= N);
-
-
-            // delete this individual from the staging population
-            StagingPool[i] = StagingPool[NStaging - 1];
-
-            // decrement the number of individuals in the staging population
-            --NStaging;
-            --i;
-
-            assert(NStaging <= N);
-            assert(NStaging >= 0);
-
-            // increase flock size
-            ++NFlock;
-            
-            assert(NFlock <= N);
-        }
-    }
-
-    // update resource levels for all new individuals that have just
-    // been added to the pool dependent on their flock size
-    for (int i = NWinter_old; i < NWinter; ++i)
-    {
-        // TODO: think about relationship between flock size and
-        // resource reduction
-        WinterPop[i].resources -= 1.0 / NFlock;
-
-        // and reduce it by time of arrival
-        // TODO think more about this function
-        WinterPop[i].resources -= arrival_resource_decay * t;
-    }
-    
-    // add current dispersal flock size to stats
-    mean_flock_size_summer += NFlock;
-    mean_staging_size_summer += NStaging_start;
+    } // end for (int patch_i = 0
 }
-
 
 // the key part of the code
 // accepting command line arguments
 int main(int argc, char **argv)
 {
-    string filename = "sim_migration";
+    string filename = "sim_cue_integration";
     create_filename(filename);
     ofstream DataFile(filename.c_str());  // output file 
 
+    // get command line arguments
     init_arguments(argc, argv);
 
+    // write headers to the datafile
     write_data_headers(DataFile);
 
+    // initialize the population
     init_population();
 
     for (int generation = 0; generation < number_generations; ++generation)
     {
-        mean_flock_size_winter = 0.0;
-        mean_staging_size_winter = 0.0;
+        survive_reproduce();
 
-        // time during winter (i.e., days)
-        // during which individuals forage
-        for (int t = 0; t < tmax; ++t)
-        {
-            winter_dynamics(t);
-        }
+        replace();
 
-        // now take averages over all timesteps that individuals can join groups
-        mean_flock_size_winter /= tmax;
-        mean_staging_size_winter /= tmax;
-        
-        // all individuals that wanted to migrate have migrated now
-        // all remainers are going to stay at wintering ground
-        clear_staging_pool();
-
-        // let individuals die with a certain probability 
-        mortality();
-
-
-        // have individuals reproduce after they migrated to the summer spot
-        summer_reproduction(DataFile);
-        
-        // set flock size stats to 0 before summer dynamics starts
-        mean_flock_size_summer = 0.0;
-        mean_staging_size_summer = 0.0;
-
-        // time during summer (i.e., days)
-        // during which individuals forage
-        for (int t = 0; t < tmax; ++t)
-        {
-            summer_dynamics(t);
-        }
-        
-        // now take averages over all timesteps that individuals can join groups
-        mean_flock_size_summer /= tmax;
-        mean_staging_size_summer /= tmax;
-
-
-        // all individuals who remain at the summer ground die
-        NSummer = 0;
-        NStaging = 0;
-
-        // let individuals die with a certain probability 
-        mortality();
-
-        if (generation % skip == 0)
+        if (generation % data_nth_generation == 0)
         {
             write_stats(DataFile, generation, 2);
         }
