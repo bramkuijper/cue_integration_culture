@@ -10,15 +10,16 @@ class Individual
         // the actual phenotype of an individual
         // affecting survival
         double ad_phen;
-       
-        // maternal cue
-        double xmat;
         
-        // offspring cue
-        double xoff;
-
+        // the maternal phenotype (stats purposes)
+        double ad_mat;
+       
         // diploid loci for the genetic cue (unlinked)
         std::vector < double > g[2];
+
+        // maternal cue provided to the offspring (stats purposes)
+        // including noise
+        double xmat;
 
         // evolving strategy locus for the genetic cue
         double agen[2];
@@ -29,16 +30,16 @@ class Individual
         // evolving strategy locus for the binary envt'al cue
         double ajuv[2];
 
-        // evolving strategy to weigh maternal phenotypic cues
-        double bmat_phen[2];
-
         // evolving strategy to weigh maternal enviromental cues
         double bmat_envt[2];
 
-        // juvenile cue
-        bool cue_ad_envt_high;
+        // evolving strategy to weigh maternal phenotypic cues
+        double bmat_phen[2];
 
         // adult cue
+        bool cue_ad_envt_high;
+
+        // juvenile cue
         bool cue_juv_envt_high;
 
         Individual();

@@ -2,6 +2,7 @@
 
 Individual::Individual():
     ad_phen{0.0},
+    ad_mat{0.0},
     xmat{0.0},
     agen{0.0,0.0},
     amat{0.0,0.0},
@@ -15,15 +16,16 @@ Individual::Individual():
 
 Individual::Individual(Individual const &other):
     ad_phen{other.ad_phen},
+    ad_mat{other.ad_mat},
+    g{other.g[0],other.g[1]},
     xmat{other.xmat},
     agen{other.agen[0],other.agen[1]},
     amat{other.amat[0],other.amat[1]},
     ajuv{other.ajuv[0],other.ajuv[1]},
-    bmat_phen{other.bmat_phen[0],other.bmat_phen[1]},
     bmat_envt{other.bmat_envt[0],other.bmat_envt[1]},
+    bmat_phen{other.bmat_phen[0],other.bmat_phen[1]},
     cue_ad_envt_high{other.cue_ad_envt_high},
-    cue_juv_envt_high{other.cue_juv_envt_high},
-    g{other.g[0],other.g[1]}
+    cue_juv_envt_high{other.cue_juv_envt_high}
 {
 }
 
@@ -31,9 +33,9 @@ Individual::Individual(Individual const &other):
 void Individual::operator=(Individual const &other) 
 {
     ad_phen = other.ad_phen;
-
+    ad_mat = other.ad_mat;
     xmat = other.xmat;
-    
+
     agen[0] = other.agen[0];
     agen[1] = other.agen[1];
 
@@ -54,4 +56,5 @@ void Individual::operator=(Individual const &other)
 
     g[0] = other.g[0];
     g[1] = other.g[1];
+
 } // end void Individual::operator=()

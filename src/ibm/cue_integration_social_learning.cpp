@@ -33,7 +33,6 @@ uniform_real_distribution<> uniform(0.0,1.0);
 // number of individuals in population
 const int NPatches = 400;
 const int NBreeder = 100;
-const int NClutch = 10;
 
 // number of generations
 int number_generations = 50000;
@@ -48,8 +47,6 @@ double p = 0.0;
 // survival function in low vs high patches
 double survival_scalar[2] = {0.0, 0.0};
 
-int nloci_g = 3;
-
 // quality (beyond 0.5 error rate) of juvenile cue
 double qjuv = 0.5;
 
@@ -61,6 +58,8 @@ double sdmat = 0.0;
 
 // whether survival selection has a sigmoidal or a quadratic function
 bool sigmoidal_survival = true;
+
+bool laplace = true;
 
 // number of loci underlying the genetic cue
 int nloci_g = 3;
@@ -104,10 +103,11 @@ struct Patch
 {
     // number of hermaphroditic breeder
     Individual breeders[NBreeder];
+
+    // next generation breeders
+    Individual breeders_t1[NBreeder];
+    
     int n_breeders; // number of breeders currently in patch
-
-    vector <Individual> juveniles;
-
     bool envt_high;  // high-state patch yes/no
 };
 
@@ -136,35 +136,37 @@ double survival_probability(double const ad_phen, bool const state_high)
 void init_arguments(int argc, char **argv)
 {
     sigmoidal_survival = atoi(argv[1]);
-    p = atof(argv[2]);
-    qmat = atof(argv[2]);
-    qjuv = atof(argv[2]);
-    n_loci_g = atoi(argv[2]);
-    init_g = atof(argv[2]);
-    init_amat = atof(argv[2]);
-    init_ajuv = atof(argv[2]);
-    init_agen = atof(argv[2]);
-    init_bmat_phen = atof(argv[2]);
-    init_bmat_envt = atof(argv[2]);
-    gmin = atof(argv[2]);
-    gmax = atof(argv[2]);
-    amin = atof(argv[2]);
-    amax = atof(argv[2]);
-    bmin = atof(argv[2]);
-    bmax = atof(argv[2]);
-    sdmat = atof(argv[2]);
+    laplace = atoi(argv[2]);
+    p = atof(argv[3]);
+    survival_scalar[0] = atof(argv[4]);
+    survival_scalar[1] = atof(argv[5]);
+    qmat = atof(argv[6]);
+    qjuv = atof(argv[7]);
+    nloci_g = atoi(argv[8]);
+    init_g = atof(argv[9]);
+    init_amat = atof(argv[10]);
+    init_ajuv = atof(argv[11]);
+    init_agen = atof(argv[12]);
+    init_bmat_phen = atof(argv[13]);
+    init_bmat_envt = atof(argv[14]);
+    gmin = atof(argv[15]);
+    gmax = atof(argv[16]);
+    amin = atof(argv[17]);
+    amax = atof(argv[18]);
+    bmin = atof(argv[19]);
+    bmax = atof(argv[20]);
+    sdmat = atof(argv[21]);
 
-    mu_g = atof(argv[2]);
-    sdmu_g = atof(argv[2]);
-    mu_amat = atof(argv[2]);
-    mu_ajuv = atof(argv[2]);
-    mu_agen = atof(argv[2]);
-    mu_bmat_phen = atof(argv[2]);
-    mu_bmat_envt = atof(argv[2]);
-    sdmu_a = atof(argv[2]);
-    sdmu_b = atof(argv[2]);
-    
-    m = atof(argv[2]);
+    mu_g = atof(argv[22]);
+    mu_amat = atof(argv[23]);
+    mu_ajuv = atof(argv[24]);
+    mu_agen = atof(argv[25]);
+    mu_bmat_phen = atof(argv[26]);
+    mu_bmat_envt = atof(argv[27]);
+    sdmu_a = atof(argv[28]);
+    sdmu_b = atof(argv[29]);
+    sdmu_g = atof(argv[30]);
+    m = atof(argv[31]);
 
 }
 
@@ -173,10 +175,11 @@ void write_parameters(ofstream &DataFile)
 {
     DataFile << endl << endl
         << "sigmoidal_survival;" << sigmoidal_survival << ";"
+        << "laplace;" << laplace << ";"
         << "p;" << p << ";"
         << "qmat;" << qmat << ";"
         << "qjuv;" << qjuv << ";"
-        << "n_loci_g;" << n_loci_g << ";"
+        << "nloci_g;" << nloci_g << ";"
         << "init_g;" << init_g << ";"
         << "init_amat;" << init_amat << ";"
         << "init_ajuv;" << init_ajuv << ";"
@@ -200,6 +203,8 @@ void write_parameters(ofstream &DataFile)
         << "sdmu_a;" << sdmu_a << ";"
         << "sdmu_b;" << sdmu_b << ";"
         << "m;" << m << ";"
+        << "survival_scalar0;" << survival_scalar[0] << ";"
+        << "survival_scalar1;" << survival_scalar[1] << ";"
         << "seed;" << seed << ";" << endl;
 }
 
@@ -221,12 +226,15 @@ void write_data_headers(ofstream &DataFile)
         << "var_amat;" 
         << "var_bmat_phen;" 
         << "var_bmat_envt;" 
-        << "var_g;" << endl; 
+        << "var_g;" 
+        << "freq_high;" 
+        << endl; 
 }
 
 // write data both for winter and summer populations
 void write_stats(ofstream &DataFile, int generation, int timestep)
 {
+    // variables to store means and variances
     double mean_ad_phen = 0.0;
     double ss_ad_phen = 0.0;
    
@@ -248,13 +256,19 @@ void write_stats(ofstream &DataFile, int generation, int timestep)
     double mean_g = 0.0;
     double ss_g = 0.0;
 
-    double g, ad_phen, agen, amat, ajuv, 
+    double freq_high = 0.0;
 
+    // auxiliary variables to calculate an individual's phenotype
+    double g, ad_phen, agen, amat, ajuv, bmat_phen, bmat_envt;
+
+    // summing means and sums of squares over all patches and breeders
     for (int patch_i = 0; patch_i < NPatches; ++patch_i)
     {
+        freq_high += Pop[patch_i].envt_high;
+
         for (int breeder_i = 0; breeder_i < NBreeder; ++breeder_i)
         {
-            for (int g_i = 0; g_i < n_loci_g; ++g_i)
+            for (int g_i = 0; g_i < nloci_g; ++g_i)
             {
                 g =  0.5 * (
                         Pop[patch_i].breeders[breeder_i].g[0][g_i]
@@ -264,7 +278,7 @@ void write_stats(ofstream &DataFile, int generation, int timestep)
 
                 mean_g += g;
                 ss_g += g * g;
-            } // end for (int g_i = 0; g_i < n_loci_g; ++g_i)
+            } // end for (int g_i = 0; g_i < nloci_g; ++g_i)
 
             // adult phenotype
             ad_phen = Pop[patch_i].breeders[breeder_i].ad_phen;
@@ -344,6 +358,8 @@ void write_stats(ofstream &DataFile, int generation, int timestep)
     mean_g /= NPatches * NBreeder;
     double var_g = ss_g / NPatches * NBreeder - mean_g * mean_g;
 
+    freq_high /= NPatches;
+
     DataFile << generation << ";"
         << mean_ad_phen << ";"
         << mean_agen << ";"
@@ -358,7 +374,9 @@ void write_stats(ofstream &DataFile, int generation, int timestep)
         << var_amat << ";"
         << var_bmat_phen << ";"
         << var_bmat_envt << ";"
-        << var_g << ";" << endl;
+        << var_g << ";" 
+        << freq_high << ";" 
+        << endl;
 }
 
 // initialize the population at the start of the simulation
@@ -388,7 +406,7 @@ void init_population()
                 for (int g_loc_i = 0; g_loc_i < nloci_g; ++g_loc_i)
                 {
                     // genetic cue values
-                    Pop[patch_i].breeders[breeder_i].g[g_loc_i][allele_i] = init_g;
+                    Pop[patch_i].breeders[breeder_i].g[allele_i].push_back(init_g);
                 }
 
                 // maternal cue weighting
@@ -415,8 +433,9 @@ void init_population()
             Pop[patch_i].breeders[breeder_i].cue_juv_envt_high = 
                 cue_juv_envt_high;
 
+            // as this is generation t=0, forget about maternal cues for now
             Pop[patch_i].breeders[breeder_i].ad_phen = 1.0 /
-                (1.0 + exp(-init_agen * init_g - ajuv * cue_juv_envt_high));
+                (1.0 + exp(-init_agen * init_g - init_ajuv * cue_juv_envt_high));
         } // end for breeder_i
     } // end for patch_i
 } // end void init_population()
@@ -425,9 +444,27 @@ void init_population()
 // given mutation rate mu and mutational distribution stdev sdmu
 double mutation(double val, double mu, double sdmu)
 {
-    if (gsl_rng_uniform(rng_r) < mu)
+    if (uniform(rng_r) < mu)
     {
-        val += gsl_ran_gaussian(rng_r, sdmu);
+        if (laplace)
+        {
+            // using a uniform dist to draw numbers from a Laplace dist
+            // see https://en.wikipedia.org/wiki/Laplace_distribution 
+            uniform_real_distribution<> mutational_effect(-0.5 + 0.0000001, 0.5);
+            double U = mutational_effect(rng_r);
+
+            double sgnU = U < 0.0 ? -1 : U > 0.0 ? 1.0 : 0.0;
+
+            // effect size of Laplace
+            double x = -sdmu * sgnU * log(1.0 - 2 * fabs(U));
+
+            val += x;
+        }
+        else
+        {
+            normal_distribution<> mutational_effect(0.0, sdmu);
+            val += mutational_effect(rng_r);
+        }
     }
 
     return(val);
@@ -452,146 +489,156 @@ void create_offspring(Individual &mother
 
     double sum_genes = 0.0;
 
+    double allelic_val;
+
+    assert((int)mother.g[0].size() == nloci_g);
+    
+    if (offspring.g[0].size() > 0)
+    {
+        offspring.g[0].clear();
+        offspring.g[1].clear();
+    }
+
     for (int g_loc_i = 0; g_loc_i < nloci_g; ++g_loc_i)
     {
         // genetic cue values
-        Kid.g[g_loc_i][0] = mutation(
-                Mother.g[g_loc_i][allele_sample(rng_r)],
+        allelic_val = mutation(
+                mother.g[allele_sample(rng_r)][g_loc_i],
                 mu_g,
                 sdmu_g);
 
-        clamp(Kid.g[g_loc_i][0], gmin, gmax);
+        clamp(allelic_val, gmin, gmax);
+
+        offspring.g[0].push_back(allelic_val);
         
-        Kid.g[g_loc_i][1] = mutation(
-                Father.g[g_loc_i][allele_sample(rng_r)],
+        allelic_val = mutation(
+                father.g[allele_sample(rng_r)][g_loc_i],
                 mu_g,
                 sdmu_g);
 
-        clamp(Kid.g[g_loc_i][1], gmin, gmax);
+        clamp(allelic_val, gmin, gmax);
 
-        sum_genes += 0.5 * (Kid.g[g_loc_i][0] + Kid.g[g_loc_i][1]);
+        offspring.g[1].push_back(allelic_val);
+
+        sum_genes += 0.5 * (offspring.g[0][g_loc_i] + offspring.g[1][g_loc_i]);
     }
+    
+    assert((int)offspring.g[0].size() == nloci_g);
 
     // inheritance of maternal cue values 
-    Kid.amat[0] = mutation(
-            Mother.amat[allele_sample(rng_r)],
+    offspring.amat[0] = mutation(
+            mother.amat[allele_sample(rng_r)],
             mu_amat,
             sdmu_a);
 
-    clamp(Kid.amat[0], amin, amax);
+    clamp(offspring.amat[0], amin, amax);
 
-    Kid.amat[1] = mutation(
-            Father.amat[allele_sample(rng_r)],
+    offspring.amat[1] = mutation(
+            father.amat[allele_sample(rng_r)],
             mu_amat,
             sdmu_a);
 
-    clamp(Kid.amat[1], amin, amax);
+    clamp(offspring.amat[1], amin, amax);
 
-    double amat_phen = 0.5 * (Kid.amat[0] + Kid.amat[1]);
+    double amat_phen = 0.5 * (offspring.amat[0] + offspring.amat[1]);
    
 
     // inheritance of juvenile cue values 
-    Kid.ajuv[0] = mutation(
-            Mother.ajuv[allele_sample(rng_r)],
+    offspring.ajuv[0] = mutation(
+            mother.ajuv[allele_sample(rng_r)],
             mu_ajuv,
             sdmu_a);
 
-    clamp(Kid.ajuv[0], amin, amax);
+    clamp(offspring.ajuv[0], amin, amax);
 
-    Kid.ajuv[1] = mutation(
-            Father.ajuv[allele_sample(rng_r)],
+    offspring.ajuv[1] = mutation(
+            father.ajuv[allele_sample(rng_r)],
             mu_ajuv,
             sdmu_a);
 
-    clamp(Kid.ajuv[1], amin, amax);
+    clamp(offspring.ajuv[1], amin, amax);
 
-    double ajuv_phen = 0.5 * (Kid.ajuv[0] + Kid.ajuv[1]);
+    double ajuv_phen = 0.5 * (offspring.ajuv[0] + offspring.ajuv[1]);
    
 
 
     // inheritance of genetic cue values 
-    Kid.agen[0] = mutation(
-            Mother.agen[allele_sample(rng_r)],
+    offspring.agen[0] = mutation(
+            mother.agen[allele_sample(rng_r)],
             mu_agen,
             sdmu_a);
 
-    clamp(Kid.agen[0], amin, amax);
+    clamp(offspring.agen[0], amin, amax);
 
-    Kid.agen[1] = mutation(
-            Father.agen[allele_sample(rng_r)],
+    offspring.agen[1] = mutation(
+            father.agen[allele_sample(rng_r)],
             mu_agen,
             sdmu_a);
 
-    clamp(Kid.agen[1], amin, amax);
+    clamp(offspring.agen[1], amin, amax);
 
-    double agen_phen = 0.5 * (Kid.agen[0] + Kid.agen[1]);
+    double agen_phen = 0.5 * (offspring.agen[0] + offspring.agen[1]);
 
 
     // inheritance of maternal phenotypic cue values 
-    Kid.bmat_phen[0] = mutation(
-            Mother.bmat_phen[allele_sample(rng_r)],
+    offspring.bmat_phen[0] = mutation(
+            mother.bmat_phen[allele_sample(rng_r)],
             mu_bmat_phen,
             sdmu_b);
 
-    clamp(Kid.bmat_phen[0], bmin, bmax);
+    clamp(offspring.bmat_phen[0], bmin, bmax);
 
-    Kid.bmat_phen[1] = mutation(
-            Father.bmat_phen[allele_sample(rng_r)],
+    offspring.bmat_phen[1] = mutation(
+            father.bmat_phen[allele_sample(rng_r)],
             mu_bmat_phen,
             sdmu_b);
 
-    clamp(Kid.bmat_phen[1], bmin, bmax);
+    clamp(offspring.bmat_phen[1], bmin, bmax);
 
-    double bmat_phen_phen = 0.5 * (Kid.bmat_phen[0] + Kid.bmat_phen[1]);
-    
     // inheritance of maternal environmental cue values 
-    Kid.bmat_envt[0] = mutation(
-            Mother.bmat_envt[allele_sample(rng_r)],
+    offspring.bmat_envt[0] = mutation(
+            mother.bmat_envt[allele_sample(rng_r)],
             mu_bmat_envt,
             sdmu_b);
 
-    clamp(Kid.bmat_envt[0], bmin, bmax);
+    clamp(offspring.bmat_envt[0], bmin, bmax);
 
-    Kid.bmat_envt[1] = mutation(
-            Father.bmat_envt[allele_sample(rng_r)],
+    offspring.bmat_envt[1] = mutation(
+            father.bmat_envt[allele_sample(rng_r)],
             mu_bmat_envt,
             sdmu_b);
 
-    clamp(Kid.bmat_envt[1], bmin, bmax);
-
-    double bmat_envt_phen = 0.5 * (Kid.bmat_envt[0] + Kid.bmat_envt[1]);
-
+    clamp(offspring.bmat_envt[1], bmin, bmax);
 
     // kid receives juvenile cue
-    Kid.cue_juv_envt_high = uniform(rng_r) < qjuv ? 
+    offspring.cue_juv_envt_high = uniform(rng_r) < qjuv ? 
         offspring_envt : !offspring_envt;
 
-    // kid receives adult cue
-    Kid.cue_ad_envt_high = uniform(rng_r) < qmat ? 
-        offspring_envt : !offspring_envt;
-
-    double dmat_weighting = Kid.cue_ad_envt_high ? 1.0 : -1.0;
+    // adult cue will be received after potential envt'al change
+    //
+    // has the mother observed a high cue or a low one?
+    double dmat_weighting = mother.cue_ad_envt_high ? 1.0 : -1.0;
 
     // generate maternal cue
-    Kid.xoff = 1.0 /
+    double xoff = 1.0 /
         (1.0 + exp(
-                   -bmat_phen_phen * (Mother.ad_phen - 0.5) + 
-                   dmat_weighting * bmat_envt_phen));
+                   -0.5 * (mother.bmat_phen[0] + mother.bmat_phen[1]) * (mother.ad_phen - 0.5) + 
+                   dmat_weighting * 0.5 * (mother.bmat_envt[0] + mother.bmat_envt[1])));
 
     // noise in the maternal cue
     normal_distribution<> maternal_noise(0,sdmat);
 
-    Kid.xmat = Mother.xoff + maternal_noise(rng_r);
+    double xmat = xoff + maternal_noise(rng_r);
 
-    Kid.ad_phen = 1.0 / 
+    offspring.ad_phen = 1.0 / 
         (1.0 + exp(
-                   -amat_phen * Mother.xmat +
+                   -amat_phen * xmat +
                    -agen_phen * sum_genes +
-                   -ajuv_phen * Kid.cue_juv_envt_high));
+                   -ajuv_phen * offspring.cue_juv_envt_high));
 
 } // end create_offspring()
 
-void survive_reproduce()
+void survive()
 {
     // set up a random number generator to 
     // sample from the remaining breeders
@@ -599,14 +646,21 @@ void survive_reproduce()
             0,
             NPatches - 1);
 
+    bool cue_ad_envt_high;
 
-    // how many offspring need to be produced in each patch
-    int n_offspring_per_patch = NClutch * NBreeder;
     for (int patch_i = 0; patch_i < NPatches; ++patch_i)
     {
         assert(Pop[patch_i].n_breeders > 0);
         assert(Pop[patch_i].n_breeders <= NBreeder);
 
+        // calculate adult cue value supplied to mothers
+        // the cue value is the same for all mothers
+        cue_ad_envt_high = uniform(rng_r) < qmat ? 
+            Pop[patch_i].envt_high 
+            : 
+            !Pop[patch_i].envt_high;
+
+        // breeders endure survival selection
         for (int breeder_i = 0; breeder_i < Pop[patch_i].n_breeders; ++breeder_i)
         {
             // individual dies if random uniform number is larger 
@@ -614,51 +668,27 @@ void survive_reproduce()
             if (uniform(rng_r) > 
                     survival_probability(
                         Pop[patch_i].breeders[breeder_i].ad_phen
-                        , Pop[patch_i].envt_high)
+                        ,Pop[patch_i].envt_high)
             )
             {
                 // delete individual
-                Pop[patch_i].breeders[breeder_i] = Pop[patch_i].breeders[NBreeder - 1];
+                Pop[patch_i].breeders[breeder_i] = 
+                    Pop[patch_i].breeders[NBreeder - 1];
+
                 --breeder_i;
                 --Pop[patch_i].n_breeders;
             }
-        } // end for (int breeder_i
-        
-        if (Pop[patch_i].n_breeders > 0)
-        {
-            // set up a random number generator to 
-            // sample from the remaining breeders
-            uniform_int_distribution<> random_breeder(
-                    0,
-                    Pop[patch_i].n_breeders - 1);
-
-            // let breeders produce offspring
-            for (int offspring_i = 0;
-                    offspring_i < n_offspring_per_patch;
-                    ++offspring_i)
+            else
             {
-                Individual Kid;
+                // breeder survives
+                // give it an environmental cue as adult
+                Pop[patch_i].breeders[breeder_i].cue_ad_envt_high = 
+                    cue_ad_envt_high;
+            }
+        } // end for (int breeder_i
 
-                create_offspring(
-                        Pop[patch_i].breeders[random_breeder(rng_r)]
-                        ,Pop[patch_i].breeders[random_breeder(rng_r)]
-                        ,Kid
-                        ,Pop[patch_i].envt_high
-                );
 
-                // dispersal or not
-                if (uniform(rng_r) > m)
-                {
-                    Pop[patch_i].juveniles.push_back(Kid);
-                }
-                else
-                {
-                    Pop[random_patch(rng_r)].juveniles.push_back(Kid);
-                }
-            } // for (int offspring_i = 0;
-        } // end if (Pop[patch_i].n_breeders > 0)
-
-        // change the envt
+        // environmental change
         if (p < uniform(rng_r))
         {
             Pop[patch_i].envt_high = !Pop[patch_i].envt_high;
@@ -668,38 +698,78 @@ void survive_reproduce()
 
 void replace()
 {
-    int rand_juv;
+    // randomly chosen remote patch to obtain
+    // individuals from
+    int random_remote_patch;
+        
+    // set up a random number generator to 
+    // sample remote patches
+    uniform_int_distribution<> patch_sampler(
+            0,
+            NPatches - 1);
 
     for (int patch_i = 0; patch_i < NPatches; ++patch_i)
     {
 
         for (int breeder_i = 0; breeder_i < NBreeder; ++breeder_i)
         {
+            if (uniform(rng_r) > m 
+                    &&
+                    Pop[patch_i].n_breeders > 0)
+            {
+                // set up a random number generator to 
+                // sample from the remaining breeders
+                uniform_int_distribution<> random_local_breeder(
+                        0,
+                        Pop[patch_i].n_breeders - 1);
 
-            assert(Pop[patch_i].juveniles.size() >= NBreeder);
+                create_offspring(
+                        Pop[patch_i].breeders[random_local_breeder(rng_r)]
+                        ,Pop[patch_i].breeders[random_local_breeder(rng_r)]
+                        ,Pop[patch_i].breeders_t1[breeder_i]
+                        ,Pop[patch_i].envt_high
+                );
+                
+                assert((int)Pop[patch_i].breeders_t1[breeder_i].g[0].size() == nloci_g);
+            }
+            else
+            {
+                do {
 
-            // set up a random number generator to 
-            // sample from the remaining breeders
-            uniform_int_distribution<> random_juveniles(
-                    0,
-                    Pop[patch_i].juveniles.size() - 1);
+                    random_remote_patch = patch_sampler(rng_r);
 
-            rand_juv = random_juveniles(rng_r);
-
-            Pop[patch_i].breeders[breeder_i] = 
-                Pop[patch_i].juveniles[rand_juv];
-
-            Pop[patch_i].juveniles.erase(
-                    Pop[patch_i].juveniles.begin() 
-                    + rand_juv);
-
-        } // for (int breeder_i = 0; breeder_i < NBreeder; ++breeder_i)
-
-        Pop[patch_i].n_breeders = NBreeder;
+                }
+                while(Pop[random_remote_patch].n_breeders < 1);
         
-        // clear out all the juveniles
-        Pop[patch_i].juveniles.clear();
+                uniform_int_distribution<> random_remote_breeder(
+                0,
+                Pop[random_remote_patch].n_breeders - 1);
 
+                create_offspring(
+                        Pop[random_remote_patch].breeders[random_remote_breeder(rng_r)]
+                        ,Pop[random_remote_patch].breeders[random_remote_breeder(rng_r)]
+                        ,Pop[patch_i].breeders_t1[breeder_i]
+                        ,Pop[random_remote_patch].envt_high
+                );
+            
+                assert((int)Pop[patch_i].breeders_t1[breeder_i].g[0].size() == nloci_g);
+            }
+        } // for (int breeder_i = 0; breeder_i < NBreeder; ++breeder_i)
+    } // end for (int patch_i = 0
+
+    // all new breeders established, copy them over
+    for (int patch_i = 0; patch_i < NPatches; ++patch_i)
+    {
+        for (int breeder_i = 0; breeder_i < NBreeder; ++breeder_i)
+        {
+            Pop[patch_i].breeders[breeder_i] = 
+                Pop[patch_i].breeders_t1[breeder_i];
+    
+            assert((int)Pop[patch_i].breeders_t1[breeder_i].g[0].size() == nloci_g);
+            
+            Pop[patch_i].n_breeders = NBreeder;
+        
+        }
     } // end for (int patch_i = 0
 }
 
@@ -722,7 +792,8 @@ int main(int argc, char **argv)
 
     for (int generation = 0; generation < number_generations; ++generation)
     {
-        survive_reproduce();
+        cout << generation << endl;
+        survive();
 
         replace();
 
