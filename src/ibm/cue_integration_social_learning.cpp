@@ -99,6 +99,12 @@ double m = 0.0;
 //write out the data every nth generation
 int data_nth_generation = 10;
 
+// survival statistics which I obtain in the survive()
+// function and then use in the write_data() function
+double mean_survival[2] = {0.0,0.0};
+double var_survival[2] = {0.0,0.0};
+
+
 struct Patch
 {
     // number of hermaphroditic breeder
@@ -206,6 +212,74 @@ void write_parameters(ofstream &DataFile)
         << "survival_scalar0;" << survival_scalar[0] << ";"
         << "survival_scalar1;" << survival_scalar[1] << ";"
         << "seed;" << seed << ";" << endl;
+} // void write_parameters(ofstream &DataFile)
+
+void write_dist(ofstream &DataFile)
+{
+    double g;
+    for (int patch_i = 0; patch_i < NPatches; ++patch_i)
+    {
+        for (int breeder_i = 0; breeder_i < NBreeder; ++breeder_i)
+        {
+            DataFile << patch_i << ";" 
+                << breeder_i << ";"
+                << Pop[patch_i].breeders[breeder_i].ad_phen << ";"
+                << Pop[patch_i].breeders[breeder_i].ad_mat << ";"
+                << Pop[patch_i].breeders[breeder_i].xmat << ";"
+                << 0.5 * (Pop[patch_i].breeders[breeder_i].agen[0]
+                    +
+                    Pop[patch_i].breeders[breeder_i].agen[1]) << ";"
+                << 0.5 * (Pop[patch_i].breeders[breeder_i].ajuv[0]
+                    +
+                    Pop[patch_i].breeders[breeder_i].ajuv[1]) << ";"
+                << 0.5 * (Pop[patch_i].breeders[breeder_i].amat[0]
+                    +
+                    Pop[patch_i].breeders[breeder_i].amat[1]) << ";"
+                << 0.5 * (Pop[patch_i].breeders[breeder_i].bmat_phen[0]
+                    +
+                    Pop[patch_i].breeders[breeder_i].bmat_envt[1]) << ";";
+
+            g = 0.0;
+
+            for (int g_i = 0; g_i < nloci_g; ++g_i)
+            {
+                g += 0.5 * (
+                    Pop[patch_i].breeders[breeder_i].g[0][g_i]
+                    +
+                    Pop[patch_i].breeders[breeder_i].g[1][g_i]);
+            }
+
+            DataFile << g << ";"
+                << Pop[patch_i].envt_high << ";"
+                << Pop[patch_i].breeders[breeder_i].cue_ad_envt_high << ";"
+                << Pop[patch_i].breeders[breeder_i].cue_juv_envt_high << ";"
+                << endl;
+        } // end for (int breeder_i = 0; breeder_i < NPatches; ++breeder_i)
+    } // end for (int patch_i = 0; patch_i < NPatches; ++patch_i)
+} // end  void write_dist(ofstream &DataFile)
+
+
+// list of the data headers at the start of the file
+// in which the distribution of evolved trait values
+// and states is written at the end of the file
+void write_data_headers_dist(ofstream &DataFile)
+{
+    DataFile 
+        << "patch_id;" 
+        << "id;" 
+        << "ad_phen;" 
+        << "ad_mat;" 
+        << "xmat;" 
+        << "agen;" 
+        << "ajuv;" 
+        << "amat;" 
+        << "bmat_phen;" 
+        << "bmat_envt;" 
+        << "g;" 
+        << "envt;" 
+        << "cue_ad_envt_high;" 
+        << "cue_juv_envt_high;" 
+        << endl; 
 }
 
 // list of the data headers at the start of the file
@@ -228,6 +302,10 @@ void write_data_headers(ofstream &DataFile)
         << "var_bmat_envt;" 
         << "var_g;" 
         << "freq_high;" 
+        << "mean_surv0;" 
+        << "mean_surv1;" 
+        << "var_surv0;" 
+        << "var_surv1;" 
         << endl; 
 }
 
@@ -376,6 +454,10 @@ void write_stats(ofstream &DataFile, int generation, int timestep)
         << var_bmat_envt << ";"
         << var_g << ";" 
         << freq_high << ";" 
+        << mean_survival[0] << ";" 
+        << mean_survival[1] << ";" 
+        << var_survival[0] << ";" 
+        << var_survival[1] << ";" 
         << endl;
 }
 
@@ -650,6 +732,18 @@ void survive()
 
     bool cue_ad_envt_high;
 
+    // reset survival statistics
+    mean_survival[0] = 0.0;
+    var_survival[0] = 0.0;
+    mean_survival[1] = 0.0;
+    var_survival[1] = 0.0;
+
+    // keep track of the number of breeders
+    // in high patches to calculate survival stats
+    int n_high_patches = 0.0;
+
+    double surv = 0.0;
+
     for (int patch_i = 0; patch_i < NPatches; ++patch_i)
     {
         assert(Pop[patch_i].n_breeders > 0);
@@ -661,17 +755,32 @@ void survive()
             Pop[patch_i].envt_high 
             : 
             !Pop[patch_i].envt_high;
+        
+        // keep track of the number of breeders in a
+        // high envt
+        if (Pop[patch_i].envt_high)
+        {
+            n_high_patches += NBreeder;
+        }
 
         // breeders endure survival selection
         for (int breeder_i = 0; breeder_i < Pop[patch_i].n_breeders; ++breeder_i)
         {
+            // calculate survival probability
+            surv = survival_probability(
+                        Pop[patch_i].breeders[breeder_i].ad_phen
+                        ,Pop[patch_i].envt_high);
+
+            // store the survival value in this envt
+            // for sake of statistics
+            mean_survival[Pop[patch_i].envt_high] += surv;
+
+            // store sum of squares now, calc variance later
+            var_survival[Pop[patch_i].envt_high] += surv * surv;
+
             // individual dies if random uniform number is larger 
             // than the survival probability
-            if (uniform(rng_r) > 
-                    survival_probability(
-                        Pop[patch_i].breeders[breeder_i].ad_phen
-                        ,Pop[patch_i].envt_high)
-            )
+            if (uniform(rng_r) > surv)
             {
                 // delete individual
                 Pop[patch_i].breeders[breeder_i] = 
@@ -696,6 +805,19 @@ void survive()
             Pop[patch_i].envt_high = !Pop[patch_i].envt_high;
         }
     } // end for int patch_i
+
+    // finalize survival statistics
+    mean_survival[0] /= NPatches * NBreeder - n_high_patches;
+    mean_survival[1] /= n_high_patches;
+
+    // var = E[xx] - E[x]E[x]
+    var_survival[0] = var_survival[0] / (NPatches * NBreeder - n_high_patches)
+        - mean_survival[0] * mean_survival[0];
+    
+    var_survival[1] = var_survival[1] / n_high_patches
+        - mean_survival[1] * mean_survival[1];
+
+    // finalize statistics
 } // end survive_reproduce()
 
 void replace()
@@ -786,7 +908,7 @@ int main(int argc, char **argv)
     // output file to write out the complete 
     // trait and state distribution of individuals
     // in the last generation
-    string filename_final_dist = filename + "_dist"
+    string filename_final_dist = filename + "_dist";
     ofstream DataFileDist(filename_final_dist.c_str());  
 
     // get command line arguments
@@ -795,7 +917,7 @@ int main(int argc, char **argv)
     // write headers to the datafile
     write_data_headers(DataFile);
     
-    write_data_headers_dist(DataFile);
+    write_data_headers_dist(DataFileDist);
 
     // initialize the population
     init_population();
@@ -812,5 +934,7 @@ int main(int argc, char **argv)
         }
     }
 
+    write_dist(DataFileDist);
+    
     write_parameters(DataFile);
 }

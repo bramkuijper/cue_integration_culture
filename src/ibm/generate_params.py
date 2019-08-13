@@ -1,11 +1,17 @@
 #!/usr/bin/env python3
 
-# generate a batch file with command line parameter combinations
-# so that we can run the cue integration simulations
+# ptyhon script that 
+# generates a batch file with all the different 
+# simulations that need to run for all parameter
+# combinations
 
 import numpy as np
 
+# whether the survival curvive is 
+# sigmoidal or not
 sigmoidal_survival = [ 0, 1]
+
+# frequency of the high environment
 #p = list(np.linspace(0,1,11))
 p = [ 0.9 ]
 survival_scalar_sig = [-2.5,3.5]
@@ -16,6 +22,8 @@ qjuv = [ 0.5 ]
 nloci_g = [ 3 ]
 
 exe = "./xcue_integration"
+
+laplace = 1
 
 nrep = 3
 
@@ -65,6 +73,7 @@ for rep_i in range(0,nrep):
 
                                     print(exe + " "
                                             + str(sigmoidal_survival_i) + " "
+                                            + str(laplace) + " "
                                             + str(p_i) + " "
                                             + survival_scalar_i_str + " "
                                             + str(qmat_i) + " "
