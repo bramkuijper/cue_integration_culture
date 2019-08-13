@@ -619,6 +619,8 @@ void create_offspring(Individual &mother
     // has the mother observed a high cue or a low one?
     double dmat_weighting = mother.cue_ad_envt_high ? 1.0 : -1.0;
 
+    offspring.ad_mat = mother.ad_phen;
+
     // generate maternal cue
     double xoff = 1.0 /
         (1.0 + exp(
@@ -628,11 +630,11 @@ void create_offspring(Individual &mother
     // noise in the maternal cue
     normal_distribution<> maternal_noise(0,sdmat);
 
-    double xmat = xoff + maternal_noise(rng_r);
+    offspring.xmat = xoff + maternal_noise(rng_r);
 
     offspring.ad_phen = 1.0 / 
         (1.0 + exp(
-                   -amat_phen * xmat +
+                   -amat_phen * offspring.xmat +
                    -agen_phen * sum_genes +
                    -ajuv_phen * offspring.cue_juv_envt_high));
 
@@ -673,7 +675,7 @@ void survive()
             {
                 // delete individual
                 Pop[patch_i].breeders[breeder_i] = 
-                    Pop[patch_i].breeders[NBreeder - 1];
+                    Pop[patch_i].breeders[Pop[patch_i].n_breeders - 1];
 
                 --breeder_i;
                 --Pop[patch_i].n_breeders;
@@ -781,18 +783,25 @@ int main(int argc, char **argv)
     create_filename(filename);
     ofstream DataFile(filename.c_str());  // output file 
 
+    // output file to write out the complete 
+    // trait and state distribution of individuals
+    // in the last generation
+    string filename_final_dist = filename + "_dist"
+    ofstream DataFileDist(filename_final_dist.c_str());  
+
     // get command line arguments
     init_arguments(argc, argv);
 
     // write headers to the datafile
     write_data_headers(DataFile);
+    
+    write_data_headers_dist(DataFile);
 
     // initialize the population
     init_population();
 
     for (int generation = 0; generation < number_generations; ++generation)
     {
-        cout << generation << endl;
         survive();
 
         replace();
