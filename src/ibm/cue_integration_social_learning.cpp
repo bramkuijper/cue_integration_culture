@@ -180,38 +180,39 @@ void init_arguments(int argc, char **argv)
 void write_parameters(ofstream &DataFile)
 {
     DataFile << endl << endl
-        << "sigmoidal_survival;" << sigmoidal_survival << ";"
-        << "laplace;" << laplace << ";"
-        << "p;" << p << ";"
-        << "qmat;" << qmat << ";"
-        << "qjuv;" << qjuv << ";"
-        << "nloci_g;" << nloci_g << ";"
-        << "init_g;" << init_g << ";"
-        << "init_amat;" << init_amat << ";"
-        << "init_ajuv;" << init_ajuv << ";"
-        << "init_agen;" << init_agen << ";"
-        << "init_bmat_phen;" << init_bmat_phen << ";"
-        << "init_bmat_envt;" << init_bmat_envt << ";"
-        << "gmin;" << gmin << ";"
-        << "gmax;" << gmax << ";"
-        << "amin;" << amin << ";"
-        << "amax;" << amax << ";"
-        << "bmin;" << bmin << ";"
-        << "bmax;" << bmax << ";"
-        << "sdmat;" << sdmat << ";"
-        << "mu_g;" << mu_g << ";"
-        << "sdmu_g;" << sdmu_g << ";"
-        << "mu_amat;" << mu_amat << ";"
-        << "mu_ajuv;" << mu_ajuv << ";"
-        << "mu_agen;" << mu_agen << ";"
-        << "mu_bmat_phen;" << mu_bmat_phen << ";"
-        << "mu_bmat_envt;" << mu_bmat_envt << ";"
-        << "sdmu_a;" << sdmu_a << ";"
-        << "sdmu_b;" << sdmu_b << ";"
-        << "m;" << m << ";"
-        << "survival_scalar0;" << survival_scalar[0] << ";"
-        << "survival_scalar1;" << survival_scalar[1] << ";"
+        << "sigmoidal_survival;" << sigmoidal_survival << ";"<< endl
+        << "laplace;" << laplace << ";"<< endl
+        << "p;" << p << ";"<< endl
+        << "qmat;" << qmat << ";"<< endl
+        << "qjuv;" << qjuv << ";"<< endl
+        << "nloci_g;" << nloci_g << ";"<< endl
+        << "init_g;" << init_g << ";"<< endl
+        << "init_amat;" << init_amat << ";"<< endl
+        << "init_ajuv;" << init_ajuv << ";"<< endl
+        << "init_agen;" << init_agen << ";"<< endl
+        << "init_bmat_phen;" << init_bmat_phen << ";"<< endl
+        << "init_bmat_envt;" << init_bmat_envt << ";"<< endl
+        << "gmin;" << gmin << ";"<< endl
+        << "gmax;" << gmax << ";"<< endl
+        << "amin;" << amin << ";"<< endl
+        << "amax;" << amax << ";"<< endl
+        << "bmin;" << bmin << ";"<< endl
+        << "bmax;" << bmax << ";"<< endl
+        << "sdmat;" << sdmat << ";"<< endl
+        << "mu_g;" << mu_g << ";"<< endl
+        << "sdmu_g;" << sdmu_g << ";"<< endl
+        << "mu_amat;" << mu_amat << ";"<< endl
+        << "mu_ajuv;" << mu_ajuv << ";"<< endl
+        << "mu_agen;" << mu_agen << ";"<< endl
+        << "mu_bmat_phen;" << mu_bmat_phen << ";"<< endl
+        << "mu_bmat_envt;" << mu_bmat_envt << ";"<< endl
+        << "sdmu_a;" << sdmu_a << ";"<< endl
+        << "sdmu_b;" << sdmu_b << ";"<< endl
+        << "m;" << m << ";"<< endl
+        << "survival_scalar0;" << survival_scalar[0] << ";"<< endl
+        << "survival_scalar1;" << survival_scalar[1] << ";"<< endl
         << "seed;" << seed << ";" << endl;
+
 } // void write_parameters(ofstream &DataFile)
 
 void write_dist(ofstream &DataFile)
@@ -236,6 +237,9 @@ void write_dist(ofstream &DataFile)
                     +
                     Pop[patch_i].breeders[breeder_i].amat[1]) << ";"
                 << 0.5 * (Pop[patch_i].breeders[breeder_i].bmat_phen[0]
+                    +
+                    Pop[patch_i].breeders[breeder_i].bmat_phen[1]) << ";"
+                << 0.5 * (Pop[patch_i].breeders[breeder_i].bmat_envt[0]
                     +
                     Pop[patch_i].breeders[breeder_i].bmat_envt[1]) << ";";
 
