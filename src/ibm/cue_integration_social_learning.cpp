@@ -581,15 +581,17 @@ void create_offspring(Individual &mother
 
     assert((int)mother.g[0].size() == nloci_g);
     
+    // reset arrays for the genetic cue values
     if (offspring.g[0].size() > 0)
     {
         offspring.g[0].clear();
         offspring.g[1].clear();
     }
 
+    // inherit genetic cue values
     for (int g_loc_i = 0; g_loc_i < nloci_g; ++g_loc_i)
     {
-        // genetic cue values
+        // maternal values 
         allelic_val = mutation(
                 mother.g[allele_sample(rng_r)][g_loc_i],
                 mu_g,
@@ -599,6 +601,7 @@ void create_offspring(Individual &mother
 
         offspring.g[0].push_back(allelic_val);
         
+        // paternal values 
         allelic_val = mutation(
                 father.g[allele_sample(rng_r)][g_loc_i],
                 mu_g,
@@ -705,7 +708,7 @@ void create_offspring(Individual &mother
     // adult cue will be received after potential envt'al change
     //
     // has the mother observed a high cue or a low one?
-    double dmat_weighting = mother.cue_ad_envt_high ? 1.0 : -1.0;
+    double dmat_weighting = mother.cue_ad_envt_high ? -1.0 : 1.0;
 
     offspring.ad_mat = mother.ad_phen;
 
@@ -716,9 +719,11 @@ void create_offspring(Individual &mother
                    dmat_weighting * 0.5 * (mother.bmat_envt[0] + mother.bmat_envt[1])));
 
     // noise in the maternal cue
-    normal_distribution<> maternal_noise(0,sdmat);
+    normal_distribution<> maternal_noise(0.0, sdmat);
 
     offspring.xmat = xoff + maternal_noise(rng_r);
+
+    clamp(offspring.xmat, 0.0, 1.0);
 
     offspring.ad_phen = 1.0 / 
         (1.0 + exp(
