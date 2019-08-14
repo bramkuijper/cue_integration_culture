@@ -63,15 +63,29 @@ dat = pd.read_csv(sys.argv[1],
         index_col=False)
 
 #########################################
+# read in the final-generation 
+# trait distribution data
+#########################################
+
+dist_dat = pd.read_csv(
+        sys.argv[1].strip() + "_dist",
+        sep=";")
+
+distribution_available = dist_dat.shape[0] > 0
+
+#########################################
 
 #           make figure
 
 #########################################
 
 # initialize the figure
-fig = plt.figure(figsize=(10,20))
+fig = plt.figure(figsize=(10,40),dpi=200)
 
-nrows = 5
+nrows = 7
+
+if distribution_available:
+    nrows += 4
 
 nloci_g = 3
 
@@ -91,10 +105,20 @@ gs = gridspec.GridSpec(
         width_ratios=widths,
         height_ratios=heights)
 
-
 # plot the resulting joining probability 
 ax = plt.subplot(gs[rowctr,0])
 
+ax.plot(
+        dat["generation"]
+        ,dat["mean_ad_phen"]
+        ,label=r"$u$")
+
+ax.set_ylabel(r"Ad phenotype, $a$")
+
+rowctr +=1
+
+# plot the resulting joining probability 
+ax = plt.subplot(gs[rowctr,0])
 
 ax.plot(
         dat["generation"]
@@ -116,7 +140,6 @@ ax.legend()
 
 rowctr +=1
 
-# plot the resulting migration probz
 ax = plt.subplot(gs[rowctr,0])
 
 ax.plot(
@@ -134,7 +157,6 @@ ax.legend()
 
 rowctr +=1
 
-# plot the resulting migration probz
 ax = plt.subplot(gs[rowctr,0])
 
 ax.plot(
@@ -163,7 +185,6 @@ ax.legend()
 
 rowctr +=1
 
-# plot the resulting migration probz
 ax = plt.subplot(gs[rowctr,0])
 
 ax.plot(
@@ -186,9 +207,121 @@ ax.plot(
         ,color="#ffadda")
 
 ax.set_ylabel(r"Genetic cue, $g$")
+
+
+
+rowctr +=1
+
+ax = plt.subplot(gs[rowctr,0])
+
+ax.plot(
+        dat["generation"]
+        ,dat["mean_surv0"]
+        ,label=r"Surv $e_{\mathrm{low}}$")
+
+ax.plot(
+        dat["generation"]
+        ,dat["mean_surv1"]
+        ,label=r"Surv $e_{\mathrm{high}}$")
+
+ax.set_ylabel(r"Survival")
+ax.set_xlabel(r"Generation, $t$")
 ax.legend()
 
-format = "pdf"
+rowctr +=1
+
+ax = plt.subplot(gs[rowctr,0])
+
+ax.plot(
+        dat["generation"]
+        ,dat["freq_high"])
+
+ax.set_ylabel(r"Freq high envt")
+ax.set_xlabel(r"Generation, $t$")
+
+if distribution_available:
+    rowctr +=1
+
+    ax = plt.subplot(gs[rowctr,0])
+
+    ax.plot(
+            dist_dat["ad_mat"]
+            ,dist_dat["xmat"]
+            ,color="#ff008d"
+            ,linestyle=""
+            ,markersize=0.5
+            ,marker=".")
+
+    ax.set_xlim(0,1)
+    ax.set_ylim(0,1)
+
+    ax.set_xlabel(r"Maternal phenotype, $u_{\mathrm{mat}}$")
+    ax.set_ylabel(r"Cue to offspring, $x_{\mathrm{mat}}$")
+    
+    rowctr +=1
+
+    ax = plt.subplot(gs[rowctr,0])
+
+    ax.plot(
+            dist_dat["xmat"]
+            ,dist_dat["ad_phen"]
+            ,color="blue"
+            ,linestyle=""
+            ,markersize=0.5
+            ,marker=".")
+
+    ax.set_xlim(0,1)
+    ax.set_ylim(0,1)
+
+    ax.set_xlabel(r"Maternal cue, $x_{\mathrm{mat}}$")
+    ax.set_ylabel(r"Phenotype, $u$")
+    
+    
+    rowctr +=1
+
+    ax = plt.subplot(gs[rowctr,0])
+
+    ax.plot(
+            dist_dat["envt"]
+            ,dist_dat["g"]
+            ,color="red"
+            ,linestyle=""
+            ,markersize=0.5
+            ,marker=".")
+
+    ax.set_xlim(-0.1,1.1)
+    ax.set_ylim(-3.5,3.5)
+
+    ax.set_xlabel(r"Environment, $e$")
+    ax.set_ylabel(r"Genotype, $g$")
+
+    rowctr +=1
+    
+    ax = plt.subplot(gs[rowctr,0])
+
+    ax.plot(
+            dist_dat["envt"]
+            ,dist_dat["cue_ad_envt_high"]-0.01
+            ,color="red"
+            ,linestyle=""
+            ,label="Adult cue"
+            ,marker=".")
+    
+    ax.plot(
+            dist_dat["envt"]
+            ,dist_dat["cue_juv_envt_high"]
+            ,color="blue"
+            ,linestyle=""
+            ,label="Juvenile cue"
+            ,marker=".")
+
+    ax.set_xlim(-0.1,1.1)
+    ax.set_ylim(-0.1,1.1)
+    ax.legend()
+
+    ax.set_xlabel(r"Environment, $e$")
+    ax.set_ylabel(r"Genotype, $g$")
+format = "jpg"
 
 filename = os.path.join(
         os.path.dirname(sys.argv[1]),
@@ -196,6 +329,7 @@ filename = os.path.join(
         )
 
 plt.savefig(
-        fname=filename,
-        format=format, 
-        bbox_inches="tight")
+        fname=filename
+        ,format=format
+        ,dpi="figure"
+        ,bbox_inches="tight")
