@@ -9,14 +9,14 @@ import numpy as np
 
 # whether the survival curvive is 
 # sigmoidal or not
-sigmoidal_survival = [ 0, 1]
+sigmoidal_survival = [ 1]
 
 # frequency of the high environment
 #p = list(np.linspace(0,1,11))
-p = [ 0.9 ]
+p = [ 0.5 ]
 survival_scalar_sig = [-2.5,3.5]
 survival_scalar_quad = [0.8,0.0]
-qmat = [ 0.9 ]
+qmat = [ 0.5 ]
 qjuv = [ 0.5 ]
 
 nloci_g = [ 3 ]
@@ -25,11 +25,11 @@ exe = "./xcue_integration"
 
 laplace = 1
 
-nrep = 3
+nrep = 1
 
 initvals = "0 0 0 0 0 0"
 
-aminmax = "0.0 0.8"
+aminmax = "0.0 8.0"
 gminmax = "-1.0 1.0"
 bminmax = "-10.0 10.0"
 

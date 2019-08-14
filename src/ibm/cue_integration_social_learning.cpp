@@ -125,7 +125,8 @@ double survival_probability(double const ad_phen, bool const state_high)
     // eqns 3,4 Leimar & McNamara (2015) Amnat
     if (sigmoidal_survival)
     {
-        return(1.0 / (1.0 + exp(survival_scalar[state_high] + 6.0 * ad_phen)));
+        double phen = state_high ? -ad_phen : ad_phen;
+        return(1.0 / (1.0 + exp(survival_scalar[state_high] + 6.0 * phen)));
     }
 
     // eqns 1,2 Leimar & McNamara (2015) Amnat
@@ -470,7 +471,7 @@ void init_population()
 {
     // auxiliary variable whether mothers perceived a cue
     // that the environment is in a high state
-    bool cue_juv_envt_high;
+    bool cue_ad_envt_high;
 
     // loop through all individuals 
     // and assign them values for the cue loci
@@ -480,7 +481,7 @@ void init_population()
         Pop[patch_i].envt_high = uniform(rng_r) < p;
        
         // cue given to adults
-        cue_juv_envt_high = uniform(rng_r) < qmat ?
+        cue_ad_envt_high = uniform(rng_r) < qmat ?
             Pop[patch_i].envt_high 
             :
             !Pop[patch_i].envt_high;
@@ -513,15 +514,16 @@ void init_population()
             
             Pop[patch_i].n_breeders = NBreeder;
             
+            // initialize environmental cue values
             Pop[patch_i].breeders[breeder_i].cue_ad_envt_high = 
-                cue_juv_envt_high;
+                cue_ad_envt_high;
 
             Pop[patch_i].breeders[breeder_i].cue_juv_envt_high = 
-                cue_juv_envt_high;
+                cue_ad_envt_high;
 
             // as this is generation t=0, forget about maternal cues for now
             Pop[patch_i].breeders[breeder_i].ad_phen = 1.0 /
-                (1.0 + exp(-init_agen * init_g - init_ajuv * cue_juv_envt_high));
+                (1.0 + exp(-init_agen * init_g - init_ajuv * cue_ad_envt_high));
         } // end for breeder_i
     } // end for patch_i
 } // end void init_population()
@@ -734,7 +736,6 @@ void survive()
             0,
             NPatches - 1);
 
-    bool cue_ad_envt_high;
 
     // reset survival statistics
     mean_survival[0] = 0.0;
@@ -752,13 +753,6 @@ void survive()
     {
         assert(Pop[patch_i].n_breeders > 0);
         assert(Pop[patch_i].n_breeders <= NBreeder);
-
-        // calculate adult cue value supplied to mothers
-        // the cue value is the same for all mothers
-        cue_ad_envt_high = uniform(rng_r) < qmat ? 
-            Pop[patch_i].envt_high 
-            : 
-            !Pop[patch_i].envt_high;
         
         // keep track of the number of breeders in a
         // high envt
@@ -792,13 +786,6 @@ void survive()
 
                 --breeder_i;
                 --Pop[patch_i].n_breeders;
-            }
-            else
-            {
-                // breeder survives
-                // give it an environmental cue as adult
-                Pop[patch_i].breeders[breeder_i].cue_ad_envt_high = 
-                    cue_ad_envt_high;
             }
         } // end for (int breeder_i
 
@@ -838,7 +825,6 @@ void replace()
 
     for (int patch_i = 0; patch_i < NPatches; ++patch_i)
     {
-
         for (int breeder_i = 0; breeder_i < NBreeder; ++breeder_i)
         {
             if (uniform(rng_r) > m 
@@ -885,9 +871,18 @@ void replace()
         } // for (int breeder_i = 0; breeder_i < NBreeder; ++breeder_i)
     } // end for (int patch_i = 0
 
+    bool cue_ad_envt_high;
+
     // all new breeders established, copy them over
     for (int patch_i = 0; patch_i < NPatches; ++patch_i)
     {
+        // calculate adult cue value supplied to mothers
+        // the cue value is the same for all mothers
+        cue_ad_envt_high = uniform(rng_r) < qmat ? 
+            Pop[patch_i].envt_high 
+            : 
+            !Pop[patch_i].envt_high;
+        
         for (int breeder_i = 0; breeder_i < NBreeder; ++breeder_i)
         {
             Pop[patch_i].breeders[breeder_i] = 
@@ -897,6 +892,9 @@ void replace()
             
             Pop[patch_i].n_breeders = NBreeder;
         
+            // give breeder an environmental cue as adult
+            Pop[patch_i].breeders[breeder_i].cue_ad_envt_high = 
+                cue_ad_envt_high;
         }
     } // end for (int patch_i = 0
 }
