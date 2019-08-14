@@ -832,6 +832,8 @@ void replace()
     {
         for (int breeder_i = 0; breeder_i < NBreeder; ++breeder_i)
         {
+            Individual Kid;
+
             if (uniform(rng_r) > m 
                     &&
                     Pop[patch_i].n_breeders > 0)
@@ -842,10 +844,11 @@ void replace()
                         0,
                         Pop[patch_i].n_breeders - 1);
 
+
                 create_offspring(
                         Pop[patch_i].breeders[random_local_breeder(rng_r)]
                         ,Pop[patch_i].breeders[random_local_breeder(rng_r)]
-                        ,Pop[patch_i].breeders_t1[breeder_i]
+                        ,Kid
                         ,Pop[patch_i].envt_high
                 );
                 
@@ -867,12 +870,15 @@ void replace()
                 create_offspring(
                         Pop[random_remote_patch].breeders[random_remote_breeder(rng_r)]
                         ,Pop[random_remote_patch].breeders[random_remote_breeder(rng_r)]
-                        ,Pop[patch_i].breeders_t1[breeder_i]
+                        ,Kid
                         ,Pop[random_remote_patch].envt_high
                 );
             
                 assert((int)Pop[patch_i].breeders_t1[breeder_i].g[0].size() == nloci_g);
             }
+
+            Pop[patch_i].breeders_t1[breeder_i] = Kid;
+
         } // for (int breeder_i = 0; breeder_i < NBreeder; ++breeder_i)
     } // end for (int patch_i = 0
 
@@ -893,7 +899,7 @@ void replace()
             Pop[patch_i].breeders[breeder_i] = 
                 Pop[patch_i].breeders_t1[breeder_i];
     
-            assert((int)Pop[patch_i].breeders_t1[breeder_i].g[0].size() == nloci_g);
+            assert((int)Pop[patch_i].breeders[breeder_i].g[0].size() == nloci_g);
             
             Pop[patch_i].n_breeders = NBreeder;
         
