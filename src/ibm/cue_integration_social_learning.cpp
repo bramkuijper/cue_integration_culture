@@ -851,8 +851,6 @@ void replace()
                         ,Kid
                         ,Pop[patch_i].envt_high
                 );
-                
-                assert((int)Pop[patch_i].breeders_t1[breeder_i].g[0].size() == nloci_g);
             }
             else
             {
@@ -874,10 +872,11 @@ void replace()
                         ,Pop[random_remote_patch].envt_high
                 );
             
-                assert((int)Pop[patch_i].breeders_t1[breeder_i].g[0].size() == nloci_g);
             }
 
             Pop[patch_i].breeders_t1[breeder_i] = Kid;
+                
+            assert((int)Pop[patch_i].breeders_t1[breeder_i].g[0].size() == nloci_g);
 
         } // for (int breeder_i = 0; breeder_i < NBreeder; ++breeder_i)
     } // end for (int patch_i = 0
