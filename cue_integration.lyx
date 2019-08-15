@@ -34,7 +34,7 @@
 \patchBothAmsMathEnvironmentsForLineno{multline}%
 }
 
-\linenumbers
+%\linenumbers
 \end_preamble
 \use_default_options true
 \maintain_unincluded_children false
@@ -169,15 +169,43 @@ literal "false"
 \end_inset
 
 .
+ The simulations are written in 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+texttt{C++}
 \end_layout
 
-\begin_layout Paragraph
+\end_inset
+
+ and the code is available here: 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+url{https://github.com/bramkuijper/cue_integration_culture/}
+\end_layout
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsection
 Life cycle
 \end_layout
 
 \begin_layout Standard
-Barring the assumption of a hermaphroditic mating system in the current
- model, the life cycle is identical to the one depicted in 
+The model assumes a hermaphroditic mating system and social learning, but
+ otherwise the life cycle in the model is identical to the one depicted
+ in Figure 1D of 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "Leimar2015"
@@ -207,7 +235,7 @@ literal "false"
 \begin_inset Formula 
 \begin{align*}
 S_{\text{low}}(u) & =1-0.8u^{2}\\
-S_{\mathrm{high}} & =1-0.8(1-u)^{2}.
+S_{\mathrm{high}}(u) & =1-0.8(1-u)^{2}.
 \end{align*}
 
 \end_inset
@@ -230,27 +258,88 @@ literal "false"
  father from among the surviving hermaphroditic adult breeders, potentially
  allowing for selfing in case the number of survivors is very small.
  Upon birth, an individual offspring then determines its phenotype according
- to environmental, genetic, maternal and social cues, after which a proportion
- of 
+ to environmental, genetic, maternal and social cues (see eq.
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:liability"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ below), after which a proportion of 
 \begin_inset Formula $m$
 \end_inset
 
  newborn offspring migrates to randomly chosen remote patches.
- All surviving adult breeders then die and are replaced by the 
+ All surviving adult breeders then die and are replaced by 
 \begin_inset Formula $K$
 \end_inset
 
- newborn offspring in the local patch.
+ newborn offspring who reside the local patch.
+ The newly established adults learn about their environment and receive
+ a cue 
+\begin_inset Formula $e_{\mathrm{mat}}$
+\end_inset
+
+, after which the environment potentially changes with probability 
+\begin_inset Formula $1-p$
+\end_inset
+
+.
+ Finally, these newly established adults experience survival selection and
+ subsequently produce offspring.
+\end_layout
+
+\begin_layout Subsection
+Phenotype determination and cues
+\end_layout
+
+\begin_layout Standard
+Upon birth, an individual's phenotype 
+\begin_inset Formula $0\leq u\leq1$
+\end_inset
+
+ is determined according to a logistic function, reflecting a weighted sum
+ of the various cues an individual receives at the start of its life.
+ We have
+\begin_inset Formula 
+\begin{align}
+u & =\frac{1}{1+\exp\left(-a_{\mathrm{juv}}x_{\mathrm{juv}}-a_{\mathrm{gen}}x_{\mathrm{gen}}-a_{\mathrm{mat}}x_{\mathrm{mat}}-a_{\mathrm{soc}}x_{\mathrm{soc}}\right)},\label{eq:liability}
+\end{align}
+
+\end_inset
+
+where 
+\begin_inset Formula $a_{\mathrm{juv}}$
+\end_inset
+
+, 
+\begin_inset Formula $a_{\mathrm{gen}}$
+\end_inset
+
+, 
+\begin_inset Formula $a_{\mathrm{mat}}$
+\end_inset
+
+ and 
+\begin_inset Formula $a_{\mathrm{soc}}$
+\end_inset
+
+ are diploid, unlinked loci (bounded on the interval [0,8]) that reflect
+ evolving levels of sensitivity to each of the following cues
 \end_layout
 
 \begin_layout Paragraph
-Cues
+Juveniles cues (phenotypic plasticity)
 \end_layout
 
 \begin_layout Standard
 Upon birth and before dispersal, each individual offspring receives a binary
  cue 
-\begin_inset Formula $x_{\mathrm{juv}}$
+\begin_inset Formula $x_{\mathrm{juv}}\in[-1,1]$
 \end_inset
 
  about its local environment, where 
@@ -261,17 +350,19 @@ Upon birth and before dispersal, each individual offspring receives a binary
 \begin_inset Formula $0.5\leq q_{\mathrm{juv}}\leq1.0$
 \end_inset
 
-.
- Alternatively, 
+, and 
 \begin_inset Formula $x_{\mathrm{juv}}$
 \end_inset
 
- is opposite to the local environment with probability 
-\begin_inset Formula $1-q_{\mathrm{juv}}$
-\end_inset
+ is identical to the opposite environment otherwise.
+\end_layout
 
-.
- Individuals also receive a genetic cue 
+\begin_layout Paragraph
+Genetic cues
+\end_layout
+
+\begin_layout Standard
+Upon birth, individuals receive a genetic cue 
 \begin_inset Formula $x_{\mathrm{gen}}$
 \end_inset
 
@@ -283,37 +374,155 @@ Upon birth and before dispersal, each individual offspring receives a binary
 \begin_inset Formula $g_{i}$
 \end_inset
 
-, 
-\end_layout
-
-\begin_layout Standard
-The simulations are written in 
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-texttt{C++}
-\end_layout
-
-\end_inset
-
- and the code is available here: 
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-url{https://github.com/bramkuijper/cue_integration_culture/}
-\end_layout
-
+, with 
+\begin_inset Formula $-1\leq g_{i}\leq1$
 \end_inset
 
 .
+ 
+\end_layout
+
+\begin_layout Paragraph
+Maternal cues
+\end_layout
+
+\begin_layout Standard
+Upon birth, individuals receive a maternal cue 
+\begin_inset Formula $x_{\mathrm{mat}}$
+\end_inset
+
+, which is given by a sigmoid function that reflects (i) the relative influence
+ of the maternal phenotype 
+\begin_inset Formula $u$
+\end_inset
+
+, weighed by the evolving maternal trait 
+\begin_inset Formula $-10\leq b_{\mathrm{umat}}\leq10$
+\end_inset
+
+ and (ii) a mother's perceived environment 
+\begin_inset Formula $e_{\mathrm{mat}}\in[-1,1]$
+\end_inset
+
+ (reflecting cues of low and high environments respectively), weighed by
+ the evolving maternal trait 
+\begin_inset Formula $-10\leq b_{\mathrm{emat}}\leq10$
+\end_inset
+
+ (see also 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Leimar2015"
+literal "false"
+
+\end_inset
+
+ eqns 6, 7):
+\begin_inset Formula 
+\begin{align}
+x_{\mathrm{mat}}\left(u,e_{\mathrm{mat}}\right) & =\frac{1}{1+\exp\left[-b_{\mathrm{umat}}\left(u-0.5\right)-e_{\mathrm{mat}}b_{\mathrm{emat}}\right]}+\xi_{\mathrm{mat}},\label{eq:maternal_cue}
+\end{align}
+
+\end_inset
+
+where 
+\begin_inset Formula $x_{\mathrm{mat}}\left(u,e_{\mathrm{mat}}\right)$
+\end_inset
+
+ is truncated to the interval 
+\begin_inset Formula $[0,1]$
+\end_inset
+
+.
+ In the expression above, 
+\begin_inset Formula $\xi_{\mathrm{mat}}$
+\end_inset
+
+ reflects the amount of noise in the maternal signal, which is a normally
+ distributed variable with mean 
+\begin_inset Formula $0$
+\end_inset
+
+ and standard deviation 
+\begin_inset Formula $\sigma_{\mathrm{mat}}=0.05$
+\end_inset
+
+.
+ I assume that 
+\begin_inset Formula $\xi_{\mathrm{mat}}$
+\end_inset
+
+ differs among individual offspring born from the same mother (
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Leimar2015"
+literal "false"
+
+\end_inset
+
+ do not say whether their analogous variable 
+\begin_inset Formula $z$
+\end_inset
+
+ in their eq.
+ [8] differs between offspring from the same mother).
+ Finally, the mother's perceived environment 
+\begin_inset Formula $e_{\mathrm{mat}}$
+\end_inset
+
+ is identical to the actual environment she experienced during early adulthood
+ (before environmental change and before survival selection, see life cycle
+ above) with probability 
+\begin_inset Formula $0.5\leq q_{\mathrm{ad}}\leq1.0$
+\end_inset
+
+, while 
+\begin_inset Formula $e_{\mathrm{mat}}$
+\end_inset
+
+ is equal to the opposite environment otherwise.
+ All mothers in the local patch perceive the same value of 
+\begin_inset Formula $e_{\mathrm{mat}}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Paragraph
+Social cues
+\end_layout
+
+\begin_layout Standard
+Upon birth, individuals receive a social cue 
+\begin_inset Formula $x_{\mathrm{soc}}$
+\end_inset
+
+ which reflects phenotypic (direct environmental information from other
+ individuals will be considered later), obtained either through prestige
+ biases or through conformity biases.
+ We have
+\begin_inset Formula 
+\begin{align}
+x_{\mathrm{soc}} & =\frac{1}{1+\exp\left[-d_{\mathrm{p}}\left(x_{\mathrm{p}}-0.5\right)-d_{\mathrm{c}}\left(x_{\mathrm{c}}-0.5\right)\right]}+\xi_{\mathrm{soc}},\label{eq:social_cue}
+\end{align}
+
+\end_inset
+
+where 
+\begin_inset Formula $d_{\mathrm{p}}$
+\end_inset
+
+ reflects the sensitivity to cues relating to prestige-based social learning,
+ 
+\begin_inset Formula $x_{\mathrm{p}}$
+\end_inset
+
+.
+ Next, 
+\begin_inset Formula $d_{\mathrm{c}}$
+\end_inset
+
+ reflects 
 \end_layout
 
 \begin_layout Standard
