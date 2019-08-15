@@ -581,15 +581,17 @@ void create_offspring(Individual &mother
 
     assert((int)mother.g[0].size() == nloci_g);
     
+    // reset arrays for the genetic cue values
     if (offspring.g[0].size() > 0)
     {
         offspring.g[0].clear();
         offspring.g[1].clear();
     }
 
+    // inherit genetic cue values
     for (int g_loc_i = 0; g_loc_i < nloci_g; ++g_loc_i)
     {
-        // genetic cue values
+        // maternal values 
         allelic_val = mutation(
                 mother.g[allele_sample(rng_r)][g_loc_i],
                 mu_g,
@@ -599,6 +601,7 @@ void create_offspring(Individual &mother
 
         offspring.g[0].push_back(allelic_val);
         
+        // paternal values 
         allelic_val = mutation(
                 father.g[allele_sample(rng_r)][g_loc_i],
                 mu_g,
@@ -705,8 +708,9 @@ void create_offspring(Individual &mother
     // adult cue will be received after potential envt'al change
     //
     // has the mother observed a high cue or a low one?
-    double dmat_weighting = mother.cue_ad_envt_high ? 1.0 : -1.0;
+    double dmat_weighting = mother.cue_ad_envt_high ? -1.0 : 1.0;
 
+    // store the maternal phenotype for stats purposes
     offspring.ad_mat = mother.ad_phen;
 
     // generate maternal cue
@@ -716,9 +720,11 @@ void create_offspring(Individual &mother
                    dmat_weighting * 0.5 * (mother.bmat_envt[0] + mother.bmat_envt[1])));
 
     // noise in the maternal cue
-    normal_distribution<> maternal_noise(0,sdmat);
+    normal_distribution<> maternal_noise(0.0, sdmat);
 
     offspring.xmat = xoff + maternal_noise(rng_r);
+
+    clamp(offspring.xmat, 0.0, 1.0);
 
     offspring.ad_phen = 1.0 / 
         (1.0 + exp(
@@ -789,12 +795,6 @@ void survive()
             }
         } // end for (int breeder_i
 
-
-        // environmental change
-        if (p < uniform(rng_r))
-        {
-            Pop[patch_i].envt_high = !Pop[patch_i].envt_high;
-        }
     } // end for int patch_i
 
     // finalize survival statistics
@@ -827,6 +827,8 @@ void replace()
     {
         for (int breeder_i = 0; breeder_i < NBreeder; ++breeder_i)
         {
+            Individual Kid;
+
             if (uniform(rng_r) > m 
                     &&
                     Pop[patch_i].n_breeders > 0)
@@ -837,14 +839,13 @@ void replace()
                         0,
                         Pop[patch_i].n_breeders - 1);
 
+
                 create_offspring(
                         Pop[patch_i].breeders[random_local_breeder(rng_r)]
                         ,Pop[patch_i].breeders[random_local_breeder(rng_r)]
-                        ,Pop[patch_i].breeders_t1[breeder_i]
+                        ,Kid
                         ,Pop[patch_i].envt_high
                 );
-                
-                assert((int)Pop[patch_i].breeders_t1[breeder_i].g[0].size() == nloci_g);
             }
             else
             {
@@ -862,12 +863,16 @@ void replace()
                 create_offspring(
                         Pop[random_remote_patch].breeders[random_remote_breeder(rng_r)]
                         ,Pop[random_remote_patch].breeders[random_remote_breeder(rng_r)]
-                        ,Pop[patch_i].breeders_t1[breeder_i]
+                        ,Kid
                         ,Pop[random_remote_patch].envt_high
                 );
             
-                assert((int)Pop[patch_i].breeders_t1[breeder_i].g[0].size() == nloci_g);
             }
+
+            Pop[patch_i].breeders_t1[breeder_i] = Kid;
+                
+            assert((int)Pop[patch_i].breeders_t1[breeder_i].g[0].size() == nloci_g);
+
         } // for (int breeder_i = 0; breeder_i < NBreeder; ++breeder_i)
     } // end for (int patch_i = 0
 
@@ -888,13 +893,19 @@ void replace()
             Pop[patch_i].breeders[breeder_i] = 
                 Pop[patch_i].breeders_t1[breeder_i];
     
-            assert((int)Pop[patch_i].breeders_t1[breeder_i].g[0].size() == nloci_g);
+            assert((int)Pop[patch_i].breeders[breeder_i].g[0].size() == nloci_g);
             
             Pop[patch_i].n_breeders = NBreeder;
         
             // give breeder an environmental cue as adult
             Pop[patch_i].breeders[breeder_i].cue_ad_envt_high = 
                 cue_ad_envt_high;
+        }
+
+        // envtal change
+        if (uniform(rng_r) < 1.0 - p)
+        {
+            Pop[patch_i].envt_high = !Pop[patch_i].envt_high;
         }
     } // end for (int patch_i = 0
 }

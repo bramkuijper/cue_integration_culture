@@ -85,7 +85,7 @@ fig = plt.figure(figsize=(10,40),dpi=200)
 nrows = 7
 
 if distribution_available:
-    nrows += 4
+    nrows += 6
 
 nloci_g = 3
 
@@ -244,31 +244,71 @@ if distribution_available:
 
     ax = plt.subplot(gs[rowctr,0])
 
+    dist_dat_sub0 = dist_dat[(dist_dat["envt"] == 0)]
+    dist_dat_sub1 = dist_dat[(dist_dat["envt"] == 1)]
+
     ax.plot(
-            dist_dat["ad_mat"]
-            ,dist_dat["xmat"]
-            ,color="#ff008d"
+            dist_dat_sub0["ad_mat"]
+            ,dist_dat_sub0["xmat"]
             ,linestyle=""
             ,markersize=0.5
-            ,marker=".")
+            ,marker="."
+            ,label="low envt")
+    
 
     ax.set_xlim(0,1)
     ax.set_ylim(0,1)
+    
+    ax.set_xlabel(r"Maternal phenotype, $u_{\mathrm{mat}}$")
+    ax.set_ylabel(r"Cue to offspring, $x_{\mathrm{mat}}$")
+
+    rowctr +=1
+
+    ax = plt.subplot(gs[rowctr,0])
+
+    ax.plot(
+            dist_dat_sub1["ad_mat"]
+            ,dist_dat_sub1["xmat"]
+            ,linestyle=""
+            ,markersize=0.5
+            ,marker="."
+            ,label="high envt")
 
     ax.set_xlabel(r"Maternal phenotype, $u_{\mathrm{mat}}$")
     ax.set_ylabel(r"Cue to offspring, $x_{\mathrm{mat}}$")
+    
+    ax.set_xlim(0,1)
+    ax.set_ylim(0,1)
+
+    rowctr +=1
+
+    ax = plt.subplot(gs[rowctr,0])
+    
+    ax.plot(
+            dist_dat_sub0["xmat"]
+            ,dist_dat_sub0["ad_phen"]
+            ,linestyle=""
+            ,markersize=0.5
+            ,marker="."
+            ,label="low envt")
+    
+    ax.set_xlabel(r"Maternal cue, $x_{\mathrm{mat}}$")
+    ax.set_ylabel(r"Phenotype, $u$")
+
+    ax.set_xlim(0,1)
+    ax.set_ylim(0,1)
     
     rowctr +=1
 
     ax = plt.subplot(gs[rowctr,0])
 
     ax.plot(
-            dist_dat["xmat"]
-            ,dist_dat["ad_phen"]
-            ,color="blue"
+            dist_dat_sub1["xmat"]
+            ,dist_dat_sub1["ad_phen"]
             ,linestyle=""
             ,markersize=0.5
-            ,marker=".")
+            ,marker="."
+            ,label="high envt")
 
     ax.set_xlim(0,1)
     ax.set_ylim(0,1)
