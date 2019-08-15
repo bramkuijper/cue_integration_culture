@@ -15,7 +15,7 @@ sigmoidal_survival = [ 0 ]
 # frequency of the high environment
 #p = list(np.linspace(0,1,11))
 p = [ 0.9 ]
-survival_scalar_sig = [-3.5,3.5]
+survival_scalar_sig = [-2.5,3.5]
 survival_scalar_quad = [0.8,0.0]
 qmat = [ 0.9 ]
 qjuv = [ 0.5 ]

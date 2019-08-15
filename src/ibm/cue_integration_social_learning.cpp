@@ -710,6 +710,7 @@ void create_offspring(Individual &mother
     // has the mother observed a high cue or a low one?
     double dmat_weighting = mother.cue_ad_envt_high ? -1.0 : 1.0;
 
+    // store the maternal phenotype for stats purposes
     offspring.ad_mat = mother.ad_phen;
 
     // generate maternal cue
@@ -794,12 +795,6 @@ void survive()
             }
         } // end for (int breeder_i
 
-
-        // environmental change
-        if (p < uniform(rng_r))
-        {
-            Pop[patch_i].envt_high = !Pop[patch_i].envt_high;
-        }
     } // end for int patch_i
 
     // finalize survival statistics
@@ -905,6 +900,22 @@ void replace()
             // give breeder an environmental cue as adult
             Pop[patch_i].breeders[breeder_i].cue_ad_envt_high = 
                 cue_ad_envt_high;
+        }
+
+        if (Pop[patch_i].envt_high)
+        {
+            // after cue has been received, environmental change
+            if (uniform(rng_r) < 1.0 - p)
+            {
+                Pop[patch_i].envt_high = false;
+            }
+        }
+        else 
+        {
+            if (uniform(rng_r) < p)
+            {
+                Pop[patch_i].envt_high = true;
+            }
         }
     } // end for (int patch_i = 0
 }
