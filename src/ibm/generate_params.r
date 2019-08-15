@@ -71,7 +71,7 @@ for (rep_i in 1:nrep)
         {
             survival_scalar_i = paste(survival_scalar_sig, collapse=" ")
         } else {
-            survival_scalar_i = paste(survival_scalar_sig, collapse=" ")
+            survival_scalar_i = paste(survival_scalar_quad, collapse=" ")
         }
 
         for (p_i in p)

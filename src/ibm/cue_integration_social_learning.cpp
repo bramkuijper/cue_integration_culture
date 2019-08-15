@@ -902,20 +902,10 @@ void replace()
                 cue_ad_envt_high;
         }
 
-        if (Pop[patch_i].envt_high)
+        // envtal change
+        if (uniform(rng_r) < 1.0 - p)
         {
-            // after cue has been received, environmental change
-            if (uniform(rng_r) < 1.0 - p)
-            {
-                Pop[patch_i].envt_high = false;
-            }
-        }
-        else 
-        {
-            if (uniform(rng_r) < p)
-            {
-                Pop[patch_i].envt_high = true;
-            }
+            Pop[patch_i].envt_high = !Pop[patch_i].envt_high;
         }
     } // end for (int patch_i = 0
 }
