@@ -1,22 +1,25 @@
 #include "individual.hpp"
 
 Individual::Individual():
-    ad_phen{0.0},
-    ad_mat{0.0},
+    phen_ad{0.0},
+    phen_mat{0.0},
+    phen_mat{0.0},
     xmat{0.0},
     agen{0.0,0.0},
     amat{0.0,0.0},
     ajuv{0.0,0.0},
     bmat_envt{0.0,0.0},
     bmat_phen{0.0,0.0},
+    dp{0.0,0.0},
+    dc{0.0,0.0},
     cue_ad_envt_high{false},
     cue_juv_envt_high{false}
 {
 }
 
 Individual::Individual(Individual const &other):
-    ad_phen{other.ad_phen},
-    ad_mat{other.ad_mat},
+    phen_ad{other.phen_ad},
+    phen_mat{other.phen_mat},
     g{other.g[0],other.g[1]},
     xmat{other.xmat},
     agen{other.agen[0],other.agen[1]},
@@ -32,8 +35,8 @@ Individual::Individual(Individual const &other):
 // overload the assignment operator 
 void Individual::operator=(Individual const &other) 
 {
-    ad_phen = other.ad_phen;
-    ad_mat = other.ad_mat;
+    phen_ad = other.phen_ad;
+    phen_mat = other.phen_mat;
     xmat = other.xmat;
 
     agen[0] = other.agen[0];

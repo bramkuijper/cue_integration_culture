@@ -120,20 +120,20 @@ struct Patch
 Patch Pop[NPatches];
 
 // survival function
-double survival_probability(double const ad_phen, bool const state_high)
+double survival_probability(double const phen_ad, bool const state_high)
 {
     // eqns 3,4 Leimar & McNamara (2015) Amnat
     if (sigmoidal_survival)
     {
-        double phen = state_high ? -ad_phen : ad_phen;
+        double phen = state_high ? -phen_ad : phen_ad;
         return(1.0 / (1.0 + exp(survival_scalar[state_high] + 6.0 * phen)));
     }
 
     // eqns 1,2 Leimar & McNamara (2015) Amnat
     return(state_high ? 
-            1.0 - survival_scalar[0] * (1.0 - ad_phen) * (1.0 - ad_phen)
+            1.0 - survival_scalar[0] * (1.0 - phen_ad) * (1.0 - phen_ad)
             :
-            1.0 - survival_scalar[0] * ad_phen * ad_phen
+            1.0 - survival_scalar[0] * phen_ad * phen_ad
             );
 }
 
@@ -225,8 +225,8 @@ void write_dist(ofstream &DataFile)
         {
             DataFile << patch_i << ";" 
                 << breeder_i << ";"
-                << Pop[patch_i].breeders[breeder_i].ad_phen << ";"
-                << Pop[patch_i].breeders[breeder_i].ad_mat << ";"
+                << Pop[patch_i].breeders[breeder_i].phen_ad << ";"
+                << Pop[patch_i].breeders[breeder_i].phen_mat << ";"
                 << Pop[patch_i].breeders[breeder_i].xmat << ";"
                 << 0.5 * (Pop[patch_i].breeders[breeder_i].agen[0]
                     +
@@ -272,8 +272,8 @@ void write_data_headers_dist(ofstream &DataFile)
     DataFile 
         << "patch_id;" 
         << "id;" 
-        << "ad_phen;" 
-        << "ad_mat;" 
+        << "phen_ad;" 
+        << "phen_mat;" 
         << "xmat;" 
         << "agen;" 
         << "ajuv;" 
@@ -292,14 +292,14 @@ void write_data_headers(ofstream &DataFile)
 {
     DataFile 
         << "generation;" 
-        << "mean_ad_phen;" 
+        << "mean_phen_ad;" 
         << "mean_agen;" 
         << "mean_ajuv;" 
         << "mean_amat;" 
         << "mean_bmat_phen;" 
         << "mean_bmat_envt;" 
         << "mean_g;" 
-        << "var_ad_phen;" 
+        << "var_phen_ad;" 
         << "var_agen;" 
         << "var_ajuv;" 
         << "var_amat;" 
@@ -318,8 +318,8 @@ void write_data_headers(ofstream &DataFile)
 void write_stats(ofstream &DataFile, int generation, int timestep)
 {
     // variables to store means and variances
-    double mean_ad_phen = 0.0;
-    double ss_ad_phen = 0.0;
+    double mean_phen_ad = 0.0;
+    double ss_phen_ad = 0.0;
    
     double mean_agen = 0.0;
     double ss_agen = 0.0;
@@ -342,7 +342,7 @@ void write_stats(ofstream &DataFile, int generation, int timestep)
     double freq_high = 0.0;
 
     // auxiliary variables to calculate an individual's phenotype
-    double g, ad_phen, agen, amat, ajuv, bmat_phen, bmat_envt;
+    double g, phen_ad, agen, amat, ajuv, bmat_phen, bmat_envt;
 
     // summing means and sums of squares over all patches and breeders
     for (int patch_i = 0; patch_i < NPatches; ++patch_i)
@@ -364,9 +364,9 @@ void write_stats(ofstream &DataFile, int generation, int timestep)
             } // end for (int g_i = 0; g_i < nloci_g; ++g_i)
 
             // adult phenotype
-            ad_phen = Pop[patch_i].breeders[breeder_i].ad_phen;
-            mean_ad_phen += ad_phen;
-            ss_ad_phen += ad_phen * ad_phen;
+            phen_ad = Pop[patch_i].breeders[breeder_i].phen_ad;
+            mean_phen_ad += phen_ad;
+            ss_phen_ad += phen_ad * phen_ad;
 
             // sensitivity to genetic cues
             agen = 0.5 * (
@@ -420,8 +420,8 @@ void write_stats(ofstream &DataFile, int generation, int timestep)
         } // end for (int breeder_i = 0; breeder_i < NBreeder; ++breeder_i)
     } // end for (int patch_i = 0; patch_i < NPatches; ++patch_i)
 
-    mean_ad_phen /= NPatches * NBreeder;
-    double var_ad_phen = ss_ad_phen / NPatches * NBreeder - mean_ad_phen * mean_ad_phen;
+    mean_phen_ad /= NPatches * NBreeder;
+    double var_phen_ad = ss_phen_ad / NPatches * NBreeder - mean_phen_ad * mean_phen_ad;
    
     mean_agen /= NPatches * NBreeder;
     double var_agen = ss_agen / NPatches * NBreeder - mean_agen * mean_agen;
@@ -444,14 +444,14 @@ void write_stats(ofstream &DataFile, int generation, int timestep)
     freq_high /= NPatches;
 
     DataFile << generation << ";"
-        << mean_ad_phen << ";"
+        << mean_phen_ad << ";"
         << mean_agen << ";"
         << mean_ajuv << ";"
         << mean_amat << ";"
         << mean_bmat_phen << ";"
         << mean_bmat_envt << ";"
         << mean_g << ";"
-        << var_ad_phen << ";"
+        << var_phen_ad << ";"
         << var_agen << ";"
         << var_ajuv << ";"
         << var_amat << ";"
@@ -522,7 +522,7 @@ void init_population()
                 cue_ad_envt_high;
 
             // as this is generation t=0, forget about maternal cues for now
-            Pop[patch_i].breeders[breeder_i].ad_phen = 1.0 /
+            Pop[patch_i].breeders[breeder_i].phen_ad = 1.0 /
                 (1.0 + exp(-init_agen * init_g - init_ajuv * cue_ad_envt_high));
         } // end for breeder_i
     } // end for patch_i
@@ -711,12 +711,12 @@ void create_offspring(Individual &mother
     double dmat_weighting = mother.cue_ad_envt_high ? -1.0 : 1.0;
 
     // store the maternal phenotype for stats purposes
-    offspring.ad_mat = mother.ad_phen;
+    offspring.phen_mat = mother.phen_ad;
 
     // generate maternal cue
     double xoff = 1.0 /
         (1.0 + exp(
-                   -0.5 * (mother.bmat_phen[0] + mother.bmat_phen[1]) * (mother.ad_phen - 0.5) + 
+                   -0.5 * (mother.bmat_phen[0] + mother.bmat_phen[1]) * (mother.phen_ad - 0.5) + 
                    dmat_weighting * 0.5 * (mother.bmat_envt[0] + mother.bmat_envt[1])));
 
     // noise in the maternal cue
@@ -726,7 +726,7 @@ void create_offspring(Individual &mother
 
     clamp(offspring.xmat, 0.0, 1.0);
 
-    offspring.ad_phen = 1.0 / 
+    offspring.phen_ad = 1.0 / 
         (1.0 + exp(
                    -amat_phen * offspring.xmat +
                    -agen_phen * sum_genes +
@@ -772,7 +772,7 @@ void survive()
         {
             // calculate survival probability
             surv = survival_probability(
-                        Pop[patch_i].breeders[breeder_i].ad_phen
+                        Pop[patch_i].breeders[breeder_i].phen_ad
                         ,Pop[patch_i].envt_high);
 
             // store the survival value in this envt

@@ -9,11 +9,14 @@ class Individual
         
         // the actual phenotype of an individual
         // affecting survival
-        double ad_phen;
+        double phen_ad;
         
         // the maternal phenotype (stats purposes)
-        double ad_mat;
-       
+        double phen_mat;
+
+        // phenotypic cue from prestige bias
+        double phen_prestige;
+
         // diploid loci for the genetic cue (unlinked)
         std::vector < double > g[2];
 
@@ -29,6 +32,10 @@ class Individual
         
         // evolving strategy locus for the binary envt'al cue
         double ajuv[2];
+
+        // evolving strategy locus for the social learning strategy
+        double asoc[2];
+
 
         // evolving strategy to weigh maternal enviromental cues
         double bmat_envt[2];
