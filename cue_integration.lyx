@@ -127,6 +127,33 @@ Phenotypic integration of social learning, epigenetic, genetic and environmental
  cues
 \end_layout
 
+\begin_layout Author
+Bram Kuijper, Peter R.
+ Hammerstein, Olof Leimar, 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+
+\backslash
+
+\end_layout
+
+\end_inset
+
+John M.
+ McNamara & Sasha R.
+ X.
+ Dall
+\end_layout
+
+\begin_layout Section
+Introduction
+\end_layout
+
 \begin_layout Section
 The model
 \end_layout
@@ -497,32 +524,249 @@ Upon birth, individuals receive a social cue
 \begin_inset Formula $x_{\mathrm{soc}}$
 \end_inset
 
- which reflects phenotypic (direct environmental information from other
- individuals will be considered later), obtained either through prestige
- biases or through conformity biases.
+ which reflects phenotypic (cues which more directly inform offspring about
+ the local environment [similar to 
+\begin_inset Formula $e_{\mathrm{mat}}$
+\end_inset
+
+ in eq.
+ (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:social_cue"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+)] will be considered later), obtained either through prestige biases or
+ through conformity biases.
  We have
 \begin_inset Formula 
 \begin{align}
-x_{\mathrm{soc}} & =\frac{1}{1+\exp\left[-d_{\mathrm{p}}\left(x_{\mathrm{p}}-0.5\right)-d_{\mathrm{c}}\left(x_{\mathrm{c}}-0.5\right)\right]}+\xi_{\mathrm{soc}},\label{eq:social_cue}
+x_{\mathrm{soc}}\left(u_{\mathrm{p}},x_{\mathrm{c}}\right) & =\frac{1}{1+\exp\left[-d_{\mathrm{p}}\left(u_{\mathrm{p}}-0.5\right)-d_{\mathrm{c}}\left(x_{\mathrm{c}}-0.5\right)\right]}+\xi_{\mathrm{soc}},\label{eq:social_cue}
 \end{align}
 
 \end_inset
 
 where 
-\begin_inset Formula $d_{\mathrm{p}}$
+\begin_inset Formula $x_{\mathrm{soc}}\left(u_{\mathrm{p}},x_{\mathrm{c}}\right)$
 \end_inset
 
- reflects the sensitivity to cues relating to prestige-based social learning,
- 
-\begin_inset Formula $x_{\mathrm{p}}$
+ is truncated to the interval [0,1].
+ In the expression above, 
+\begin_inset Formula $\xi_{\mathrm{soc}}$
+\end_inset
+
+ reflects the amount of noise in the social cue, which is a normally distributed
+ variable with mean 
+\begin_inset Formula $0$
+\end_inset
+
+ and standard deviation 
+\begin_inset Formula $\sigma_{\mathrm{soc}}=0.05$
 \end_inset
 
 .
- Next, 
+ In the first part of the expression, 
+\begin_inset Formula $d_{\mathrm{p}}$
+\end_inset
+
+ and 
 \begin_inset Formula $d_{\mathrm{c}}$
 \end_inset
 
- reflects 
+ reflect two unlinked, diploid evolving loci that reflect sensitivity to
+ phenotypic cues acquired through prestige-based (
+\begin_inset Formula $u_{\mathrm{p}}$
+\end_inset
+
+) and conformity-based (
+\begin_inset Formula $x_{\mathrm{c}}$
+\end_inset
+
+) social learning.
+ Here, prestige-based social learning is defined as the learning of cues
+ possessed by individuals perceived as more successful or knowledgeable
+ 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "Henrich2001"
+literal "false"
+
+\end_inset
+
+, while conformity-based social learning is not directly determined by features
+ of the cue itself, but by its commonality 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "Henrich2003"
+literal "false"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Following previous models of prestige-based learning 
+\begin_inset CommandInset citation
+LatexCommand citep
+before "e.g.,"
+key "Henrich2004,Kobayashi2012a"
+literal "false"
+
+\end_inset
+
+, a socially learnt cue is obtained by ranking the potential survival payoff
+ 
+\begin_inset Formula $S(u)$
+\end_inset
+
+ of a randomly chosen sample of 
+\begin_inset Formula $n_{\mathrm{p}}$
+\end_inset
+
+ individuals (
+\begin_inset Formula $0<n_{\mathrm{p}}\leq K$
+\end_inset
+
+) from the parental generation in the local patch, where 
+\begin_inset Formula $u_{\mathrm{p}}$
+\end_inset
+
+ is the phenotype of the individual with the highest ranked survivorship
+ value 
+\begin_inset Formula $S(u)$
+\end_inset
+
+ in the current environment.
+ Note that offspring ranking of parental survivorship occurs after the parental
+ generation has experienced survival selection (thus reducing the amount
+ of variation in parental survivorship apparent to offspring), but also
+ after the local environment has experienced change with probability 
+\begin_inset Formula $1-p$
+\end_inset
+
+ (thus increasing the amount of variation in parental survivorship apparent
+ to offspring).
+ Errors in ranking individuals or errors in copying socially learned cues
+ will have to be considered later.
+\end_layout
+
+\begin_layout Standard
+Following models of conformity-based social learning 
+\begin_inset CommandInset citation
+LatexCommand citep
+before "e.g.,"
+key "Eriksson2007"
+literal "false"
+
+\end_inset
+
+, individuals evaluate phenotypes 
+\begin_inset Formula $u_{i}$
+\end_inset
+
+ of each individual belonging to randomly chosen subset of 
+\begin_inset Formula $n_{\mathrm{c}}$
+\end_inset
+
+ individuals (
+\begin_inset Formula $0<n_{\mathrm{c}}<K$
+\end_inset
+
+) from the parental generation in the local patch.
+ Individuals take account of the number of individuals 
+\begin_inset Formula $n_{\mathrm{c,lo}}\leq n_{\mathrm{c}}$
+\end_inset
+
+ with a phenotypes 
+\begin_inset Formula $u_{i}$
+\end_inset
+
+ corresponding to the low environment (i.e., 
+\begin_inset Formula $u_{i}<0.5$
+\end_inset
+
+), whereas 
+\begin_inset Formula $n_{\mathrm{c,hi}}=n_{\mathrm{c}}-n_{\mathrm{c,lo}}$
+\end_inset
+
+ reflects the number of individuals with phenotypes 
+\begin_inset Formula $u_{i}>0.5$
+\end_inset
+
+.
+ We then have
+\begin_inset Formula 
+\begin{align*}
+x_{c} & =\begin{cases}
+0 & n_{\mathrm{c,lo}}>n_{\mathrm{c,hi}}\\
+0.5 & n_{\mathrm{c,lo}}=n_{\mathrm{c,hi}}\\
+1 & n_{\mathrm{c,lo}}<n_{\mathrm{c,hi}}
+\end{cases}.
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Finally, note that when 
+\begin_inset Formula $n_{c}=0,n_{\mathrm{p}}=1$
+\end_inset
+
+, individuals obtain cues from a single, randomly chosen individual instead.
+ Note that 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "Eriksson2007"
+literal "false"
+
+\end_inset
+
+ found that such a random learning strategy often outperformed the conformist
+ strategy, so we might want to consider this (see also 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "Kobayashi2012"
+literal "false"
+
+\end_inset
+
+ for island models with random learning).
+\end_layout
+
+\begin_layout Subsection
+Potential other features
+\end_layout
+
+\begin_layout Itemize
+Errors in ranking individuals or errors in copying socially learned cues
+ will have to be considered later.
+\end_layout
+
+\begin_layout Itemize
+Rather than socially learning another individual's phenotype, learn their
+ adult environmental cues instead
+\end_layout
+
+\begin_layout Itemize
+Learning from remote versus local patches
+\end_layout
+
+\begin_layout Itemize
+Individual learning over time rather than phenotypic plasticity in response
+ to direct environmental cues 
+\begin_inset Formula $x_{\mathrm{juv}}$
+\end_inset
+
+.
+ However, this requires multiple timesteps in juvenile life, complicating
+ the model further.
 \end_layout
 
 \begin_layout Standard
