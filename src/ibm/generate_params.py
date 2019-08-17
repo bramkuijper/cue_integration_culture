@@ -28,7 +28,7 @@ laplace = 1
 
 nrep = 5
 
-initvals = "0 0 0 0 0 0"
+initvals = "0 0 0 0 0 0 0 0 0"
 
 aminmax = "0.0 8.0"
 gminmax = "-1.0 1.0"

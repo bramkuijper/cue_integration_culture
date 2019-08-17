@@ -23,6 +23,12 @@ class Individual
         // maternal cue provided to the offspring (stats purposes)
         // including noise
         double xmat;
+        
+        // socially learnt cue
+        double xsoc;
+        
+        // socially learnt conformism-based cue 
+        double xconformist;
 
         // evolving strategy locus for the genetic cue
         double agen[2];
@@ -36,12 +42,17 @@ class Individual
         // evolving strategy locus for the social learning strategy
         double asoc[2];
 
-
         // evolving strategy to weigh maternal enviromental cues
         double bmat_envt[2];
 
         // evolving strategy to weigh maternal phenotypic cues
         double bmat_phen[2];
+
+        // evolving strategy to weigh cues from prestige-based social learning
+        double dp[2];
+        
+        // evolving strategy to weigh cues from conformism-based social learning
+        double dc[2];
 
         // adult cue
         bool cue_ad_envt_high;

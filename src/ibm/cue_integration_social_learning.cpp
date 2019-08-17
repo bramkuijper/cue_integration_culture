@@ -56,6 +56,10 @@ double qmat = 0.5;
 // noise in maternal cue 
 double sdmat = 0.0;
 
+// noise in social cue
+double sdsoc = 0.0;
+
+
 // whether survival selection has a sigmoidal or a quadratic function
 bool sigmoidal_survival = true;
 
@@ -69,8 +73,11 @@ double init_g = 0.0;
 double init_amat = 0.0;
 double init_ajuv = 0.0;
 double init_agen = 0.0;
+double init_asoc = 0.0;
 double init_bmat_phen = 0.0;
 double init_bmat_envt = 0.0;
+double init_dc = 0.0;
+double init_dp = 0.0;
 
 // ranges for traits
 double gmin = 0.0;
@@ -85,13 +92,18 @@ double mu_g = 0.0;
 double mu_amat = 0.0;
 double mu_ajuv = 0.0;
 double mu_agen = 0.0;
+double mu_asoc = 0.0;
 double mu_bmat_phen = 0.0;
 double mu_bmat_envt = 0.0;
+double mu_dp = 0.0;
+double mu_dc = 0.0;
 
 double sdmu_a = 0.0;
 double sdmu_b = 0.0;
 double sdmu_g = 0.0;
 
+int np = 0;
+int nc = 0;
 
 // migration rates
 double m = 0.0;
@@ -154,27 +166,36 @@ void init_arguments(int argc, char **argv)
     init_amat = atof(argv[10]);
     init_ajuv = atof(argv[11]);
     init_agen = atof(argv[12]);
-    init_bmat_phen = atof(argv[13]);
-    init_bmat_envt = atof(argv[14]);
-    gmin = atof(argv[15]);
-    gmax = atof(argv[16]);
-    amin = atof(argv[17]);
-    amax = atof(argv[18]);
-    bmin = atof(argv[19]);
-    bmax = atof(argv[20]);
-    sdmat = atof(argv[21]);
+    init_asoc = atof(argv[13]);
+    init_bmat_phen = atof(argv[14]);
+    init_bmat_envt = atof(argv[15]);
+    init_dp = atof(argv[16]);
+    init_dc = atof(argv[17]);
 
-    mu_g = atof(argv[22]);
-    mu_amat = atof(argv[23]);
-    mu_ajuv = atof(argv[24]);
-    mu_agen = atof(argv[25]);
-    mu_bmat_phen = atof(argv[26]);
-    mu_bmat_envt = atof(argv[27]);
-    sdmu_a = atof(argv[28]);
-    sdmu_b = atof(argv[29]);
-    sdmu_g = atof(argv[30]);
-    m = atof(argv[31]);
+    gmin = atof(argv[18]);
+    gmax = atof(argv[19]);
+    amin = atof(argv[20]);
+    amax = atof(argv[21]);
+    bmin = atof(argv[22]);
+    bmax = atof(argv[23]);
+    sdmat = atof(argv[24]);
+    sdsoc = atof(argv[25]);
 
+    mu_g = atof(argv[26]);
+    mu_amat = atof(argv[27]);
+    mu_ajuv = atof(argv[28]);
+    mu_agen = atof(argv[29]);
+    mu_asoc = atof(argv[30]);
+    mu_bmat_phen = atof(argv[31]);
+    mu_bmat_envt = atof(argv[32]);
+    mu_dp = atof(argv[33]);
+    mu_dc = atof(argv[34]);
+    sdmu_a = atof(argv[35]);
+    sdmu_b = atof(argv[36]);
+    sdmu_g = atof(argv[37]);
+    m = atof(argv[38]);
+    np = atof(argv[39]);
+    nc = atof(argv[40]);
 }
 
 // write down all parameters in the file
@@ -191,8 +212,11 @@ void write_parameters(ofstream &DataFile)
         << "init_amat;" << init_amat << ";"<< endl
         << "init_ajuv;" << init_ajuv << ";"<< endl
         << "init_agen;" << init_agen << ";"<< endl
+        << "init_asoc;" << init_asoc << ";"<< endl
         << "init_bmat_phen;" << init_bmat_phen << ";"<< endl
         << "init_bmat_envt;" << init_bmat_envt << ";"<< endl
+        << "init_dp;" << init_dp << ";"<< endl
+        << "init_dc;" << init_dc << ";"<< endl
         << "gmin;" << gmin << ";"<< endl
         << "gmax;" << gmax << ";"<< endl
         << "amin;" << amin << ";"<< endl
@@ -200,16 +224,22 @@ void write_parameters(ofstream &DataFile)
         << "bmin;" << bmin << ";"<< endl
         << "bmax;" << bmax << ";"<< endl
         << "sdmat;" << sdmat << ";"<< endl
+        << "sdsoc;" << sdsoc<< ";"<< endl
         << "mu_g;" << mu_g << ";"<< endl
         << "sdmu_g;" << sdmu_g << ";"<< endl
         << "mu_amat;" << mu_amat << ";"<< endl
         << "mu_ajuv;" << mu_ajuv << ";"<< endl
         << "mu_agen;" << mu_agen << ";"<< endl
+        << "mu_asoc;" << mu_asoc << ";"<< endl
         << "mu_bmat_phen;" << mu_bmat_phen << ";"<< endl
         << "mu_bmat_envt;" << mu_bmat_envt << ";"<< endl
+        << "mu_dc;" << mu_dc << ";"<< endl
+        << "mu_dp;" << mu_dp << ";"<< endl
         << "sdmu_a;" << sdmu_a << ";"<< endl
         << "sdmu_b;" << sdmu_b << ";"<< endl
         << "m;" << m << ";"<< endl
+        << "np;" << np << ";"<< endl
+        << "nc;" << nc << ";"<< endl
         << "survival_scalar0;" << survival_scalar[0] << ";"<< endl
         << "survival_scalar1;" << survival_scalar[1] << ";"<< endl
         << "seed;" << seed << ";" << endl;
@@ -227,22 +257,50 @@ void write_dist(ofstream &DataFile)
                 << breeder_i << ";"
                 << Pop[patch_i].breeders[breeder_i].phen_ad << ";"
                 << Pop[patch_i].breeders[breeder_i].phen_mat << ";"
+                << Pop[patch_i].breeders[breeder_i].phen_prestige << ";"
                 << Pop[patch_i].breeders[breeder_i].xmat << ";"
+                << Pop[patch_i].breeders[breeder_i].xsoc << ";"
+                << Pop[patch_i].breeders[breeder_i].xconformist<< ";"
+
+                // agen
                 << 0.5 * (Pop[patch_i].breeders[breeder_i].agen[0]
                     +
                     Pop[patch_i].breeders[breeder_i].agen[1]) << ";"
+
+                // ajuv
                 << 0.5 * (Pop[patch_i].breeders[breeder_i].ajuv[0]
                     +
                     Pop[patch_i].breeders[breeder_i].ajuv[1]) << ";"
+
+                // amat
                 << 0.5 * (Pop[patch_i].breeders[breeder_i].amat[0]
                     +
                     Pop[patch_i].breeders[breeder_i].amat[1]) << ";"
+
+                // asoc
+                << 0.5 * (Pop[patch_i].breeders[breeder_i].asoc[0]
+                    +
+                    Pop[patch_i].breeders[breeder_i].asoc[1]) << ";"
+
+                // bmat_phen
                 << 0.5 * (Pop[patch_i].breeders[breeder_i].bmat_phen[0]
                     +
                     Pop[patch_i].breeders[breeder_i].bmat_phen[1]) << ";"
+
+                // bmat_envt
                 << 0.5 * (Pop[patch_i].breeders[breeder_i].bmat_envt[0]
                     +
-                    Pop[patch_i].breeders[breeder_i].bmat_envt[1]) << ";";
+                    Pop[patch_i].breeders[breeder_i].bmat_envt[1]) << ";"
+
+                // dc
+                << 0.5 * (Pop[patch_i].breeders[breeder_i].dc[0]
+                    +
+                    Pop[patch_i].breeders[breeder_i].dc[1]) << ";"
+
+                // dp
+                << 0.5 * (Pop[patch_i].breeders[breeder_i].dp[0]
+                    +
+                    Pop[patch_i].breeders[breeder_i].dp[1]) << ";";
 
             g = 0.0;
 
@@ -274,12 +332,18 @@ void write_data_headers_dist(ofstream &DataFile)
         << "id;" 
         << "phen_ad;" 
         << "phen_mat;" 
+        << "phen_prestige;" 
         << "xmat;" 
+        << "xsoc;" 
+        << "xconformist;" 
         << "agen;" 
         << "ajuv;" 
         << "amat;" 
+        << "asoc;" 
         << "bmat_phen;" 
         << "bmat_envt;" 
+        << "dc;" 
+        << "dp;" 
         << "g;" 
         << "envt;" 
         << "cue_ad_envt_high;" 
@@ -293,18 +357,26 @@ void write_data_headers(ofstream &DataFile)
     DataFile 
         << "generation;" 
         << "mean_phen_ad;" 
+        << "mean_phen_prestige;" 
         << "mean_agen;" 
         << "mean_ajuv;" 
         << "mean_amat;" 
+        << "mean_asoc;" 
         << "mean_bmat_phen;" 
         << "mean_bmat_envt;" 
+        << "mean_dc;" 
+        << "mean_dp;" 
         << "mean_g;" 
         << "var_phen_ad;" 
+        << "var_phen_prestige;" 
         << "var_agen;" 
         << "var_ajuv;" 
         << "var_amat;" 
+        << "var_asoc;" 
         << "var_bmat_phen;" 
         << "var_bmat_envt;" 
+        << "var_dc;" 
+        << "var_dp;" 
         << "var_g;" 
         << "freq_high;" 
         << "mean_surv0;" 
@@ -320,6 +392,9 @@ void write_stats(ofstream &DataFile, int generation, int timestep)
     // variables to store means and variances
     double mean_phen_ad = 0.0;
     double ss_phen_ad = 0.0;
+    
+    double mean_phen_prestige = 0.0;
+    double ss_phen_prestige = 0.0;
    
     double mean_agen = 0.0;
     double ss_agen = 0.0;
@@ -330,11 +405,20 @@ void write_stats(ofstream &DataFile, int generation, int timestep)
     double mean_ajuv = 0.0;
     double ss_ajuv = 0.0;
     
+    double mean_asoc = 0.0;
+    double ss_asoc = 0.0;
+    
     double mean_bmat_phen = 0.0;
     double ss_bmat_phen = 0.0;
     
     double mean_bmat_envt = 0.0;
     double ss_bmat_envt = 0.0;
+    
+    double mean_dc = 0.0;
+    double ss_dc = 0.0;
+
+    double mean_dp = 0.0;
+    double ss_dp = 0.0;
 
     double mean_g = 0.0;
     double ss_g = 0.0;
@@ -342,7 +426,7 @@ void write_stats(ofstream &DataFile, int generation, int timestep)
     double freq_high = 0.0;
 
     // auxiliary variables to calculate an individual's phenotype
-    double g, phen_ad, agen, amat, ajuv, bmat_phen, bmat_envt;
+    double g, phen_ad, phen_prestige, agen, amat, asoc, ajuv, bmat_phen, bmat_envt, dp, dc;
 
     // summing means and sums of squares over all patches and breeders
     for (int patch_i = 0; patch_i < NPatches; ++patch_i)
@@ -367,6 +451,11 @@ void write_stats(ofstream &DataFile, int generation, int timestep)
             phen_ad = Pop[patch_i].breeders[breeder_i].phen_ad;
             mean_phen_ad += phen_ad;
             ss_phen_ad += phen_ad * phen_ad;
+            
+            // prestige phenotype
+            phen_prestige = Pop[patch_i].breeders[breeder_i].phen_prestige;
+            mean_phen_prestige += phen_prestige;
+            ss_phen_prestige += phen_prestige * phen_prestige;
 
             // sensitivity to genetic cues
             agen = 0.5 * (
@@ -394,9 +483,19 @@ void write_stats(ofstream &DataFile, int generation, int timestep)
                     +
                     Pop[patch_i].breeders[breeder_i].ajuv[1] 
                     );
-
+            
             mean_ajuv += ajuv;
             ss_ajuv += ajuv * ajuv;
+
+            // sensitivity to juvenile cues
+            asoc = 0.5 * (
+                    Pop[patch_i].breeders[breeder_i].asoc[0] 
+                    +
+                    Pop[patch_i].breeders[breeder_i].asoc[1] 
+                    );
+
+            mean_asoc += asoc;
+            ss_asoc += asoc * asoc;
             
             // maternal sensitivity to phenotypic cues
             bmat_phen = 0.5 * (
@@ -417,11 +516,35 @@ void write_stats(ofstream &DataFile, int generation, int timestep)
 
             mean_bmat_envt += bmat_envt;
             ss_bmat_envt += bmat_envt * bmat_envt;
+            
+            // sensitivity to juvenile cues
+            dp = 0.5 * (
+                    Pop[patch_i].breeders[breeder_i].dp[0] 
+                    +
+                    Pop[patch_i].breeders[breeder_i].dp[1] 
+                    );
+
+            mean_dp += dp;
+            ss_dp += dp * dp;
+            
+            // sensitivity to juvenile cues
+            dc = 0.5 * (
+                    Pop[patch_i].breeders[breeder_i].dc[0] 
+                    +
+                    Pop[patch_i].breeders[breeder_i].dc[1] 
+                    );
+
+            mean_dc += dc;
+            ss_dc += dc * dc;
         } // end for (int breeder_i = 0; breeder_i < NBreeder; ++breeder_i)
     } // end for (int patch_i = 0; patch_i < NPatches; ++patch_i)
 
     mean_phen_ad /= NPatches * NBreeder;
     double var_phen_ad = ss_phen_ad / NPatches * NBreeder - mean_phen_ad * mean_phen_ad;
+    
+    mean_phen_prestige /= NPatches * NBreeder;
+    double var_phen_prestige = ss_phen_prestige / NPatches * NBreeder 
+        - mean_phen_prestige * mean_phen_prestige;
    
     mean_agen /= NPatches * NBreeder;
     double var_agen = ss_agen / NPatches * NBreeder - mean_agen * mean_agen;
@@ -432,11 +555,20 @@ void write_stats(ofstream &DataFile, int generation, int timestep)
     mean_ajuv /= NPatches * NBreeder;
     double var_ajuv = ss_ajuv / NPatches * NBreeder - mean_ajuv * mean_ajuv;
     
+    mean_asoc /= NPatches * NBreeder;
+    double var_asoc = ss_asoc / NPatches * NBreeder - mean_asoc * mean_asoc;
+    
     mean_bmat_phen /= NPatches * NBreeder;
     double var_bmat_phen = ss_bmat_phen / NPatches * NBreeder - mean_bmat_phen * mean_bmat_phen;
     
     mean_bmat_envt /= NPatches * NBreeder;
     double var_bmat_envt = ss_bmat_envt / NPatches * NBreeder - mean_bmat_envt * mean_bmat_envt;
+    
+    mean_dp /= NPatches * NBreeder;
+    double var_dp = ss_dp / NPatches * NBreeder - mean_dp * mean_dp;
+    
+    mean_dc /= NPatches * NBreeder;
+    double var_dc = ss_dc / NPatches * NBreeder - mean_dc * mean_dc;
 
     mean_g /= NPatches * NBreeder;
     double var_g = ss_g / NPatches * NBreeder - mean_g * mean_g;
@@ -445,18 +577,26 @@ void write_stats(ofstream &DataFile, int generation, int timestep)
 
     DataFile << generation << ";"
         << mean_phen_ad << ";"
+        << mean_phen_prestige << ";"
         << mean_agen << ";"
         << mean_ajuv << ";"
         << mean_amat << ";"
+        << mean_asoc << ";"
         << mean_bmat_phen << ";"
         << mean_bmat_envt << ";"
+        << mean_dc << ";"
+        << mean_dp << ";"
         << mean_g << ";"
         << var_phen_ad << ";"
+        << var_phen_prestige << ";"
         << var_agen << ";"
         << var_ajuv << ";"
         << var_amat << ";"
+        << var_asoc << ";"
         << var_bmat_phen << ";"
         << var_bmat_envt << ";"
+        << var_dc << ";"
+        << var_dp << ";"
         << var_g << ";" 
         << freq_high << ";" 
         << mean_survival[0] << ";" 
@@ -505,11 +645,20 @@ void init_population()
                 // genetic cue weighting
                 Pop[patch_i].breeders[breeder_i].agen[allele_i] = init_agen;
                 
+                // social cue weighting
+                Pop[patch_i].breeders[breeder_i].asoc[allele_i] = init_asoc;
+                
                 // maternal phenotypic cue weighting
                 Pop[patch_i].breeders[breeder_i].bmat_phen[allele_i] = init_bmat_phen;
                 
                 // maternal phenotypic cue weighting
                 Pop[patch_i].breeders[breeder_i].bmat_envt[allele_i] = init_bmat_envt;
+                
+                // weighting of prestige cue
+                Pop[patch_i].breeders[breeder_i].dp[allele_i] = init_dp;
+                
+                // weighting of conformist cue
+                Pop[patch_i].breeders[breeder_i].dc[allele_i] = init_dc;
             } //end for allele_i
             
             Pop[patch_i].n_breeders = NBreeder;
@@ -568,7 +717,9 @@ void clamp(double &val, double min, double max)
 void create_offspring(Individual &mother
         ,Individual &father
         ,Individual &offspring
-        ,bool offspring_envt)
+        ,bool const offspring_envt
+        ,double const phen_prestige
+        ,double const xconformist)
 {
     // set up a bernoulli distribution that returns 0s or 1s
     // at equal probability to sample alleles from the first or
@@ -653,7 +804,7 @@ void create_offspring(Individual &mother
    
 
 
-    // inheritance of genetic cue values 
+    // inheritance of genetic cue sensitivity values 
     offspring.agen[0] = mutation(
             mother.agen[allele_sample(rng_r)],
             mu_agen,
@@ -669,6 +820,24 @@ void create_offspring(Individual &mother
     clamp(offspring.agen[1], amin, amax);
 
     double agen_phen = 0.5 * (offspring.agen[0] + offspring.agen[1]);
+    
+    
+    // inheritance of social cue sensitivity values 
+    offspring.asoc[0] = mutation(
+            mother.asoc[allele_sample(rng_r)],
+            mu_asoc,
+            sdmu_a);
+
+    clamp(offspring.asoc[0], amin, amax);
+
+    offspring.asoc[1] = mutation(
+            father.asoc[allele_sample(rng_r)],
+            mu_asoc,
+            sdmu_a);
+
+    clamp(offspring.asoc[1], amin, amax);
+
+    double asoc_phen = 0.5 * (offspring.asoc[0] + offspring.asoc[1]);
 
 
     // inheritance of maternal phenotypic cue values 
@@ -700,6 +869,40 @@ void create_offspring(Individual &mother
             sdmu_b);
 
     clamp(offspring.bmat_envt[1], bmin, bmax);
+    
+    // inheritance of rel. sensitivity to prestige biases
+    offspring.dp[0] = mutation(
+            mother.dp[allele_sample(rng_r)],
+            mu_dp,
+            sdmu_b);
+
+    clamp(offspring.dp[0], bmin, bmax);
+
+    offspring.dp[1] = mutation(
+            father.dp[allele_sample(rng_r)],
+            mu_dp,
+            sdmu_b);
+
+    clamp(offspring.dp[1], bmin, bmax);
+
+    double dp_phen = 0.5 * (offspring.dp[0] + offspring.dp[1]);
+    
+    // inheritance of rel. sensitivity to prestige biases
+    offspring.dc[0] = mutation(
+            mother.dc[allele_sample(rng_r)],
+            mu_dc,
+            sdmu_b);
+
+    clamp(offspring.dc[0], bmin, bmax);
+
+    offspring.dc[1] = mutation(
+            father.dc[allele_sample(rng_r)],
+            mu_dc,
+            sdmu_b);
+
+    clamp(offspring.dc[1], bmin, bmax);
+
+    double dc_phen = 0.5 * (offspring.dc[0] + offspring.dc[1]);
 
     // kid receives juvenile cue
     offspring.cue_juv_envt_high = uniform(rng_r) < qjuv ? 
@@ -723,14 +926,30 @@ void create_offspring(Individual &mother
     normal_distribution<> maternal_noise(0.0, sdmat);
 
     offspring.xmat = xoff + maternal_noise(rng_r);
-
     clamp(offspring.xmat, 0.0, 1.0);
+
+    offspring.xconformist = xconformist;
+    offspring.phen_prestige = phen_prestige;
+
+    normal_distribution<> social_noise(0.0, sdsoc);
+
+
+    // generate socially learnt cue
+    double xsoc = 1.0 / (1.0 + exp(
+                - 0.5 * dp_phen * (offspring.phen_prestige - 0.5)
+                - 0.5 * dc_phen * offspring.xconformist));
+
+    offspring.xsoc = xsoc + social_noise(rng_r);
+
+    clamp(offspring.xsoc, 0.0, 1.0);
 
     offspring.phen_ad = 1.0 / 
         (1.0 + exp(
                    -amat_phen * offspring.xmat +
                    -agen_phen * sum_genes +
-                   -ajuv_phen * offspring.cue_juv_envt_high));
+                   -ajuv_phen * offspring.cue_juv_envt_high
+                   -asoc_phen * offspring.xsoc
+                   ));
 
 } // end create_offspring()
 
@@ -811,12 +1030,80 @@ void survive()
     // finalize statistics
 } // end survive_reproduce()
 
+void social_learning(
+        int const patch_i
+        ,double &prestige_phen
+        ,double &xconformist)
+{
+    double surv, phen;
+
+    int np_local, nc_local;
+
+    // set up a random number generator to 
+    // sample and socially learn from 
+    // the surviving breeders
+    uniform_int_distribution<> random_local_breeder(
+            0,
+            Pop[patch_i].n_breeders - 1);
+
+    // check whether sampling np is feasible
+    np_local = np > Pop[patch_i].n_breeders ? Pop[patch_i].n_breeders : np;
+
+    // keep track on the current phenotype and survival value
+    // of the individual with the highest 'prestige'
+    prestige_phen = 0.0;
+    double prestige_surv = 0.0;
+
+    // compare survivorship values from np breeders and pick the highest
+    for (int prest_i = 0; prest_i < np_local; ++prest_i)
+    {
+        phen = Pop[patch_i].breeders[random_local_breeder(rng_r)].phen_ad;
+        surv = survival_probability(phen,Pop[patch_i].envt_high);
+
+        if (surv > prestige_surv)
+        {
+            prestige_phen = phen;
+
+            prestige_surv = surv;
+        }
+    }
+
+    int nlo = 0;
+    int nhi = 0;
+
+    // check whether sampling nc is feasible
+    nc_local = nc > Pop[patch_i].n_breeders ? Pop[patch_i].n_breeders : nc;
+
+    // check which phenotype is most common, those below 0.5 or those above
+    for (int conform_i = 0; conform_i < nc_local; ++conform_i)
+    {
+        phen = Pop[patch_i].breeders[random_local_breeder(rng_r)].phen_ad;
+        if (phen > 0.5)
+        {
+            ++nhi;
+        }
+        else if (phen < 0.5)
+        {
+            ++nlo;
+        }
+    }
+
+    // give conformist cue which is -1, 0 or 1
+    xconformist = nhi > nlo ? 1 : nlo == nhi ? 0 : -1;
+} // end void social_learning
+ 
+
 void replace()
 {
     // randomly chosen remote patch to obtain
     // individuals from
     int random_remote_patch;
-        
+
+    // auxiliary variables to calculate
+    // socially learnt cues through prestige-based social learning
+    // and through conformism-based social learning
+    double prestige_phen, xconformist;
+
     // set up a random number generator to 
     // sample remote patches
     uniform_int_distribution<> patch_sampler(
@@ -839,12 +1126,18 @@ void replace()
                         0,
                         Pop[patch_i].n_breeders - 1);
 
+                social_learning(
+                        patch_i
+                        ,prestige_phen
+                        ,xconformist);
 
                 create_offspring(
                         Pop[patch_i].breeders[random_local_breeder(rng_r)]
                         ,Pop[patch_i].breeders[random_local_breeder(rng_r)]
                         ,Kid
                         ,Pop[patch_i].envt_high
+                        ,prestige_phen
+                        ,xconformist
                 );
             }
             else
@@ -859,12 +1152,19 @@ void replace()
                 uniform_int_distribution<> random_remote_breeder(
                 0,
                 Pop[random_remote_patch].n_breeders - 1);
+                
+                social_learning(
+                        random_remote_patch
+                        ,prestige_phen
+                        ,xconformist);
 
                 create_offspring(
                         Pop[random_remote_patch].breeders[random_remote_breeder(rng_r)]
                         ,Pop[random_remote_patch].breeders[random_remote_breeder(rng_r)]
                         ,Kid
                         ,Pop[random_remote_patch].envt_high
+                        ,prestige_phen
+                        ,xconformist
                 );
             
             }
