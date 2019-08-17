@@ -194,8 +194,8 @@ void init_arguments(int argc, char **argv)
     sdmu_b = atof(argv[36]);
     sdmu_g = atof(argv[37]);
     m = atof(argv[38]);
-    np = atof(argv[39]);
-    nc = atof(argv[40]);
+    np = atoi(argv[39]);
+    nc = atoi(argv[40]);
 }
 
 // write down all parameters in the file
