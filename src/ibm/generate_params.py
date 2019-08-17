@@ -13,11 +13,12 @@ import socket
 sigmoidal_survival = [ 0 ]
 
 # frequency of the high environment
-p = list(np.linspace(0,1,11))
+#p = list(np.linspace(0,1,11))
+p = [ 0.9 ]
 survival_scalar_sig = [-2.5,3.5]
 survival_scalar_quad = [0.8,0.0]
-qmat = [ 0.5, 0.9, 1.0 ]
-qjuv = [ 0.5, 0.9, 1.0 ]
+qmat = [ 0.9 ]
+qjuv = [ 0.5 ]
 
 nloci_g = [ 3 ]
 
@@ -25,7 +26,7 @@ exe = "./xcue_integration"
 
 laplace = 1
 
-nrep = 10
+nrep = 5
 
 initvals = "0 0 0 0 0 0"
 
@@ -38,7 +39,7 @@ sdmat = [ 0.05 ]
 m = [ 0.1]
 
 # mu_g, mu_amat, mu_ajuv, mu_agen, mu_bmat_phen, mu_bmat_envt
-mu_combis = [[ 0.001, 0.001, 0.001, 0.001, 0.001, 0.001 ]]
+mu_combis = [[ 0.01, 0.01, 0.01, 0.01, 0.01, 0.01 ]]
 #mu_combis = [[ 0.0001, 0.0001, 0.0001, 0.0001, 0.0001, 0.0001 ]]
 sdmu = "0.02 0.25 0.25"
 

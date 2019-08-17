@@ -293,7 +293,7 @@ if distribution_available:
             ,label="low envt")
     
     ax.set_xlabel(r"Maternal cue, $x_{\mathrm{mat}}$")
-    ax.set_ylabel(r"Phenotype, $u$")
+    ax.set_ylabel(r"Phenotype Lo, $u$")
 
     ax.set_xlim(0,1)
     ax.set_ylim(0,1)
@@ -314,7 +314,7 @@ if distribution_available:
     ax.set_ylim(0,1)
 
     ax.set_xlabel(r"Maternal cue, $x_{\mathrm{mat}}$")
-    ax.set_ylabel(r"Phenotype, $u$")
+    ax.set_ylabel(r"Phenotype Hi, $u$")
     
     
     rowctr +=1

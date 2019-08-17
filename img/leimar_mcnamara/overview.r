@@ -6,7 +6,7 @@ dat <- read.table("../../data/summary_initial_runs.csv"
 
 pdf("overview_initial_runs_a.pdf")
 print(
-        xyplot(mean_ajuv + mean_amat + mean_agen ~ p | sigmoidal_survival * qmat * qjuv * m
+        xyplot(mean_ajuv + mean_amat + mean_agen ~ p | qmat * qjuv
                 ,auto.key=T
                 ,data=dat
                 ,strip=function(strip.levels,...) { strip.default(strip.levels=T,...) }
@@ -18,7 +18,7 @@ dev.off()
 
 pdf("overview_initial_runs_b.pdf")
 print(
-        xyplot(mean_bmat_phen + mean_bmat_envt ~ p | sigmoidal_survival * qmat * qjuv * m
+        xyplot(mean_bmat_phen + mean_bmat_envt ~ p | qmat * qjuv
                 ,auto.key=T
                 ,data=dat
                 ,strip=function(strip.levels,...) { strip.default(strip.levels=T,...) }
