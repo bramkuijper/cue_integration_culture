@@ -26,7 +26,7 @@ exe = "./xcue_integration"
 
 laplace = 1
 
-nrep = 5
+nrep = 1
 
 initvals = " ".join([str(0.0) for x in range(0, 9) ])
 

@@ -82,7 +82,7 @@ distribution_available = dist_dat.shape[0] > 0
 # initialize the figure
 fig = plt.figure(figsize=(10,40),dpi=200)
 
-nrows = 7
+nrows = 9
 
 if distribution_available:
     nrows += 6
@@ -110,7 +110,7 @@ ax = plt.subplot(gs[rowctr,0])
 
 ax.plot(
         dat["generation"]
-        ,dat["mean_ad_phen"]
+        ,dat["mean_phen_ad"]
         ,label=r"$u$")
 
 ax.set_ylabel(r"Ad phenotype, $a$")
@@ -135,6 +135,11 @@ ax.plot(
         ,dat["mean_agen"]
         ,label=r"$a_{\mathrm{gen}}$")
 
+ax.plot(
+        dat["generation"]
+        ,dat["mean_asoc"]
+        ,label=r"$a_{\mathrm{soc}}$")
+
 ax.set_ylabel(r"Sensitivities, $a$")
 ax.legend()
 
@@ -153,6 +158,23 @@ ax.plot(
         ,label=r"$b_{\mathrm{envt}}$")
 
 ax.set_ylabel(r"Maternal sens, $b$")
+ax.legend()
+
+rowctr +=1
+
+ax = plt.subplot(gs[rowctr,0])
+
+ax.plot(
+        dat["generation"]
+        ,dat["mean_dp"]
+        ,label=r"$d_{\mathrm{p}}$")
+
+ax.plot(
+        dat["generation"]
+        ,dat["mean_dc"]
+        ,label=r"$d_{\mathrm{c}}$")
+
+ax.set_ylabel(r"Social learning sens, $d$")
 ax.legend()
 
 rowctr +=1
@@ -189,20 +211,20 @@ ax = plt.subplot(gs[rowctr,0])
 
 ax.plot(
         dat["generation"]
-        ,dat["mean_ad_phen"] - np.sqrt(dat["var_ad_phen"]) 
+        ,dat["mean_phen_ad"] - np.sqrt(dat["var_phen_ad"]) 
         ,label="_nolabel"
         ,color="#ffadda")
 
 ax.plot(
         dat["generation"]
-        ,dat["mean_ad_phen"] 
+        ,dat["mean_phen_ad"] 
         ,label=r"$\bar{u}$"
         ,color="#ff008d"
         )
 
 ax.plot(
         dat["generation"]
-        ,dat["mean_ad_phen"] + np.sqrt(dat["var_ad_phen"]) 
+        ,dat["mean_phen_ad"] + np.sqrt(dat["var_phen_ad"]) 
         ,label="_nolabel"
         ,color="#ffadda")
 

@@ -726,10 +726,6 @@ void create_offspring(Individual &mother
     // second set of chromosomes of diploid individuals
     bernoulli_distribution allele_sample(0.5);
 
-    double sum_genes = 0.0;
-
-    double allelic_val;
-
     assert((int)mother.g[0].size() == nloci_g);
     
     // reset arrays for the genetic cue values
@@ -740,6 +736,11 @@ void create_offspring(Individual &mother
     }
 
     // inherit genetic cue values
+    // first auxiliary variables
+    double sum_genes = 0.0;
+    double allelic_val;
+
+    // iterate over all gene loci and inherit
     for (int g_loc_i = 0; g_loc_i < nloci_g; ++g_loc_i)
     {
         // maternal values 
@@ -839,7 +840,6 @@ void create_offspring(Individual &mother
 
     double asoc_phen = 0.5 * (offspring.asoc[0] + offspring.asoc[1]);
 
-
     // inheritance of maternal phenotypic cue values 
     offspring.bmat_phen[0] = mutation(
             mother.bmat_phen[allele_sample(rng_r)],
@@ -925,8 +925,12 @@ void create_offspring(Individual &mother
     // noise in the maternal cue
     normal_distribution<> maternal_noise(0.0, sdmat);
 
+    // calculate final value of maternal cue
     offspring.xmat = xoff + maternal_noise(rng_r);
     clamp(offspring.xmat, 0.0, 1.0);
+
+
+    // social learning
 
     offspring.xconformist = xconformist;
     offspring.phen_prestige = phen_prestige;
@@ -936,8 +940,8 @@ void create_offspring(Individual &mother
 
     // generate socially learnt cue
     double xsoc = 1.0 / (1.0 + exp(
-                - 0.5 * dp_phen * (offspring.phen_prestige - 0.5)
-                - 0.5 * dc_phen * offspring.xconformist));
+                - dp_phen * (offspring.phen_prestige - 0.5)
+                - dc_phen * offspring.xconformist));
 
     offspring.xsoc = xsoc + social_noise(rng_r);
 
@@ -947,7 +951,7 @@ void create_offspring(Individual &mother
         (1.0 + exp(
                    -amat_phen * offspring.xmat +
                    -agen_phen * sum_genes +
-                   -ajuv_phen * offspring.cue_juv_envt_high
+                   -ajuv_phen * (offspring.cue_juv_envt_high ? 1 : -1)
                    -asoc_phen * offspring.xsoc
                    ));
 
@@ -1078,6 +1082,7 @@ void social_learning(
     for (int conform_i = 0; conform_i < nc_local; ++conform_i)
     {
         phen = Pop[patch_i].breeders[random_local_breeder(rng_r)].phen_ad;
+
         if (phen > 0.5)
         {
             ++nhi;
@@ -1126,6 +1131,7 @@ void replace()
                         0,
                         Pop[patch_i].n_breeders - 1);
 
+                // prepare cues in local patch from social learning
                 social_learning(
                         patch_i
                         ,prestige_phen
@@ -1152,7 +1158,8 @@ void replace()
                 uniform_int_distribution<> random_remote_breeder(
                 0,
                 Pop[random_remote_patch].n_breeders - 1);
-                
+               
+                // prepare cues in remote patch from social learning
                 social_learning(
                         random_remote_patch
                         ,prestige_phen
