@@ -5,7 +5,7 @@
 import pandas as pd
 import itertools
 import subprocess 
-import math
+import math, string
 import argparse
 import numpy as np
 import sys, re, os.path
@@ -114,6 +114,7 @@ ax.plot(
         ,label=r"$u$")
 
 ax.set_ylabel(r"Ad phenotype, $a$")
+ax.set_title(loc="left", label=string.ascii_uppercase[rowctr])
 
 rowctr +=1
 
@@ -140,7 +141,8 @@ ax.plot(
         ,dat["mean_asoc"]
         ,label=r"$a_{\mathrm{soc}}$")
 
-ax.set_ylabel(r"Sensitivities, $a$")
+ax.set_ylabel(r"Sensitivies to cues, $a$")
+ax.set_title(loc="left", label=string.ascii_uppercase[rowctr])
 ax.legend()
 
 rowctr +=1
@@ -157,7 +159,8 @@ ax.plot(
         ,dat["mean_bmat_envt"]
         ,label=r"$b_{\mathrm{envt}}$")
 
-ax.set_ylabel(r"Maternal sens, $b$")
+ax.set_ylabel(r"Maternal sensitivities, $b$")
+ax.set_title(loc="left", label=string.ascii_uppercase[rowctr])
 ax.legend()
 
 rowctr +=1
@@ -174,8 +177,9 @@ ax.plot(
         ,dat["mean_dc"]
         ,label=r"$d_{\mathrm{c}}$")
 
-ax.set_ylabel(r"Social learning sens, $d$")
+ax.set_ylabel(r"Social learning sensitivities, $d$")
 ax.legend()
+ax.set_title(loc="left", label=string.ascii_uppercase[rowctr])
 
 rowctr +=1
 
@@ -203,6 +207,7 @@ ax.plot(
         )
 
 ax.set_ylabel(r"Genetic cue, $g$")
+ax.set_title(loc="left", label=string.ascii_uppercase[rowctr])
 ax.legend()
 
 rowctr +=1
@@ -228,9 +233,8 @@ ax.plot(
         ,label="_nolabel"
         ,color="#ffadda")
 
-ax.set_ylabel(r"Genetic cue, $g$")
-
-
+ax.set_ylabel(r"Mean phenotype, $g$")
+ax.set_title(loc="left", label=string.ascii_uppercase[rowctr])
 
 rowctr +=1
 
@@ -246,8 +250,9 @@ ax.plot(
         ,dat["mean_surv1"]
         ,label=r"Surv $e_{\mathrm{high}}$")
 
-ax.set_ylabel(r"Survival")
-ax.set_xlabel(r"Generation, $t$")
+ax.set_ylabel(r"Survival probability, $S$")
+ax.set_title(loc="left", label=string.ascii_uppercase[rowctr])
+
 ax.legend()
 
 rowctr +=1
@@ -260,6 +265,8 @@ ax.plot(
 
 ax.set_ylabel(r"Freq high envt")
 ax.set_xlabel(r"Generation, $t$")
+ax.set_title(loc="left", label=string.ascii_uppercase[rowctr])
+
 
 if distribution_available:
     rowctr +=1
@@ -283,6 +290,8 @@ if distribution_available:
     
     ax.set_xlabel(r"Maternal phenotype, $u_{\mathrm{mat}}$")
     ax.set_ylabel(r"Cue to offspring, $x_{\mathrm{mat}}$")
+    ax.set_title(loc="left", label=string.ascii_uppercase[rowctr])
+
 
     rowctr +=1
 
@@ -298,6 +307,7 @@ if distribution_available:
 
     ax.set_xlabel(r"Maternal phenotype, $u_{\mathrm{mat}}$")
     ax.set_ylabel(r"Cue to offspring, $x_{\mathrm{mat}}$")
+    ax.set_title(loc="left", label=string.ascii_uppercase[rowctr])
     
     ax.set_xlim(0,1)
     ax.set_ylim(0,1)
@@ -319,6 +329,7 @@ if distribution_available:
 
     ax.set_xlim(0,1)
     ax.set_ylim(0,1)
+    ax.set_title(loc="left", label=string.ascii_uppercase[rowctr])
     
     rowctr +=1
 
@@ -337,6 +348,7 @@ if distribution_available:
 
     ax.set_xlabel(r"Maternal cue, $x_{\mathrm{mat}}$")
     ax.set_ylabel(r"Phenotype Hi, $u$")
+    ax.set_title(loc="left", label=string.ascii_uppercase[rowctr])
     
     
     rowctr +=1
@@ -356,6 +368,7 @@ if distribution_available:
 
     ax.set_xlabel(r"Environment, $e$")
     ax.set_ylabel(r"Genotype, $g$")
+    ax.set_title(loc="left", label=string.ascii_uppercase[rowctr])
 
     rowctr +=1
     
@@ -383,6 +396,9 @@ if distribution_available:
 
     ax.set_xlabel(r"Environment, $e$")
     ax.set_ylabel(r"Genotype, $g$")
+    ax.set_title(loc="left", label=string.ascii_uppercase[rowctr])
+
+
 format = "jpg"
 
 filename = os.path.join(
