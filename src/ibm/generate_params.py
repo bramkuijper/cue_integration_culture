@@ -13,8 +13,8 @@ import socket
 sigmoidal_survival = [ 0 ]
 
 # frequency of the high environment
-p = list(np.linspace(0,1,7))
-#p = [ 0.9 ]
+#p = list(np.linspace(0,1,11))
+p = [ 0.9 ]
 survival_scalar_sig = [-2.5,3.5]
 survival_scalar_quad = [0.8,0.0]
 qmat = [ 0.9 ]
@@ -26,27 +26,23 @@ exe = "./xcue_integration"
 
 laplace = 1
 
-nrep = 3
+nrep = 5
 
-initvals = " ".join([str(0.0) for x in range(0, 9) ])
+initvals = "0 0 0 0 0 0"
 
 aminmax = "0.0 8.0"
 gminmax = "-1.0 1.0"
 bminmax = "-10.0 10.0"
 
 sdmat = [ 0.05 ]
-sdsoc = [ 0.05 ]
 #m = list(np.linspace(0, 1.0, 11))
 m = [ 0.1]
 
 # mu_g, mu_amat, mu_ajuv, mu_agen, mu_bmat_phen, mu_bmat_envt
-mu_combis = [ [ 0.01 for x in range(0,9) ]]
+mu_combis = [[ 0.01, 0.01, 0.01, 0.01, 0.01, 0.01 ]]
 #mu_combis = [[ 0.0001, 0.0001, 0.0001, 0.0001, 0.0001, 0.0001 ]]
 sdmu = "0.02 0.25 0.25"
 
-# sample sizes for social learning
-# [ sample size prestige, sample size conformism ]
-npc_combs = [ [10, 10 ] ]
 # counter for the number of jobs
 ctr = 1
 
@@ -79,40 +75,32 @@ for rep_i in range(0,nrep):
                 for qjuv_i in qjuv:
                     for nloci_g_i in nloci_g:
                         for sdmat_i in sdmat:
-                            for sdsoc_i in sdsoc:
-                                for m_i in m:
-                                    m_i = round(m_i,3)
-                                    for mu_combi_i in mu_combis:
-                                        
-                                        mu_combi_i_str = " ".join(
-                                                str(x) for x in mu_combi_i)
+                            for m_i in m:
+                                m_i = round(m_i,3)
+                                for mu_combi_i in mu_combis:
+                                    
+                                    mu_combi_i_str = " ".join(
+                                            str(x) for x in mu_combi_i)
 
-                                        for npc_combi_i in npc_combs:
-                                            np_i = npc_combi_i[0]
-                                            nc_i = npc_combi_i[1]
+                                    print("echo " + str(ctr))
 
-                                            print("echo " + str(ctr))
+                                    ctr += 1
 
-                                            ctr += 1
-
-                                            print(exe + " "
-                                                    + str(sigmoidal_survival_i) + " "
-                                                    + str(laplace) + " "
-                                                    + str(p_i) + " "
-                                                    + survival_scalar_i_str + " "
-                                                    + str(qmat_i) + " "
-                                                    + str(qjuv_i) + " "
-                                                    + str(nloci_g_i) + " "
-                                                    + initvals + " "
-                                                    + gminmax + " "
-                                                    + aminmax + " "
-                                                    + bminmax + " "
-                                                    + str(sdmat_i) + " "
-                                                    + str(sdsoc_i) + " "
-                                                    + mu_combi_i_str + " "
-                                                    + sdmu + " " 
-                                                    + str(m_i) + " "
-                                                    + str(np_i) + " "
-                                                    + str(nc_i) + " "
-                                                    + bg
-                                                    )
+                                    print(exe + " "
+                                            + str(sigmoidal_survival_i) + " "
+                                            + str(laplace) + " "
+                                            + str(p_i) + " "
+                                            + survival_scalar_i_str + " "
+                                            + str(qmat_i) + " "
+                                            + str(qjuv_i) + " "
+                                            + str(nloci_g_i) + " "
+                                            + initvals + " "
+                                            + gminmax + " "
+                                            + aminmax + " "
+                                            + bminmax + " "
+                                            + str(sdmat_i) + " "
+                                            + mu_combi_i_str + " "
+                                            + sdmu + " " 
+                                            + str(m_i) + " "
+                                            + bg
+                                            )
