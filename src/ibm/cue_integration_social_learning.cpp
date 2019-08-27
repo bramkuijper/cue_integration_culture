@@ -540,38 +540,38 @@ void write_stats(ofstream &DataFile, int generation, int timestep)
     } // end for (int patch_i = 0; patch_i < NPatches; ++patch_i)
 
     mean_phen_ad /= NPatches * NBreeder;
-    double var_phen_ad = ss_phen_ad / NPatches * NBreeder - mean_phen_ad * mean_phen_ad;
+    double var_phen_ad = ss_phen_ad / (NPatches * NBreeder) - mean_phen_ad * mean_phen_ad;
     
     mean_phen_prestige /= NPatches * NBreeder;
-    double var_phen_prestige = ss_phen_prestige / NPatches * NBreeder 
+    double var_phen_prestige = ss_phen_prestige / (NPatches * NBreeder) 
         - mean_phen_prestige * mean_phen_prestige;
    
     mean_agen /= NPatches * NBreeder;
-    double var_agen = ss_agen / NPatches * NBreeder - mean_agen * mean_agen;
+    double var_agen = ss_agen / (NPatches * NBreeder) - mean_agen * mean_agen;
    
     mean_amat /= NPatches * NBreeder;
     double var_amat = NPatches * NBreeder - mean_amat * mean_amat;
     
     mean_ajuv /= NPatches * NBreeder;
-    double var_ajuv = ss_ajuv / NPatches * NBreeder - mean_ajuv * mean_ajuv;
+    double var_ajuv = ss_ajuv / (NPatches * NBreeder) -  mean_ajuv * mean_ajuv;
     
     mean_asoc /= NPatches * NBreeder;
-    double var_asoc = ss_asoc / NPatches * NBreeder - mean_asoc * mean_asoc;
+    double var_asoc = ss_asoc / (NPatches * NBreeder) - mean_asoc * mean_asoc;
     
     mean_bmat_phen /= NPatches * NBreeder;
-    double var_bmat_phen = ss_bmat_phen / NPatches * NBreeder - mean_bmat_phen * mean_bmat_phen;
+    double var_bmat_phen = ss_bmat_phen / (NPatches * NBreeder) - mean_bmat_phen * mean_bmat_phen;
     
     mean_bmat_envt /= NPatches * NBreeder;
-    double var_bmat_envt = ss_bmat_envt / NPatches * NBreeder - mean_bmat_envt * mean_bmat_envt;
+    double var_bmat_envt = ss_bmat_envt / (NPatches * NBreeder) - mean_bmat_envt * mean_bmat_envt;
     
     mean_dp /= NPatches * NBreeder;
-    double var_dp = ss_dp / NPatches * NBreeder - mean_dp * mean_dp;
+    double var_dp = ss_dp / (NPatches * NBreeder) - mean_dp * mean_dp;
     
     mean_dc /= NPatches * NBreeder;
-    double var_dc = ss_dc / NPatches * NBreeder - mean_dc * mean_dc;
+    double var_dc = ss_dc / (NPatches * NBreeder) - mean_dc * mean_dc;
 
     mean_g /= NPatches * NBreeder;
-    double var_g = ss_g / NPatches * NBreeder - mean_g * mean_g;
+    double var_g = ss_g / (NPatches * NBreeder) - mean_g * mean_g;
 
     freq_high /= NPatches;
 
@@ -980,8 +980,7 @@ void survive()
 
     for (int patch_i = 0; patch_i < NPatches; ++patch_i)
     {
-        assert(Pop[patch_i].n_breeders > 0);
-        assert(Pop[patch_i].n_breeders <= NBreeder);
+        assert(Pop[patch_i].n_breeders == NBreeder);
         
         // keep track of the number of breeders in a
         // high envt
@@ -1055,6 +1054,9 @@ void social_learning(
 
     // keep track on the current phenotype and survival value
     // of the individual with the highest 'prestige'
+    //
+    // if no individuals are sampled to learn about prestige
+    // cue value is always 0.0. 
     prestige_phen = 0.0;
     double prestige_surv = 0.0;
 
