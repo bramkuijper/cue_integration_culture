@@ -11,6 +11,7 @@
 \usepackage{apjfonts}
 \usepackage{doi}
 \usepackage{amsmath}
+\renewcommand\ttdefault{cmtt}
 
 
 \usepackage[mathlines]{lineno}
@@ -44,7 +45,7 @@
 \fontencoding global
 \font_roman "default" "default"
 \font_sans "default" "default"
-\font_typewriter "default" "default"
+\font_typewriter "beramono" "default"
 \font_math "auto" "auto"
 \font_default_family default
 \use_non_tex_fonts false
@@ -195,6 +196,10 @@ literal "false"
 \begin_inset Formula $1/1-p$
 \end_inset
 
+, while the global frequency of each patch type is 
+\begin_inset Formula $f_{e_{1}}=0.5$
+\end_inset
+
 .
  The simulations are written in 
 \begin_inset ERT
@@ -334,7 +339,7 @@ Upon birth, an individual's phenotype
  We have
 \begin_inset Formula 
 \begin{align}
-u & =\frac{1}{1+\exp\left(-a_{\mathrm{juv}}x_{\mathrm{juv}}-a_{\mathrm{gen}}x_{\mathrm{gen}}-a_{\mathrm{mat}}x_{\mathrm{mat}}-a_{\mathrm{soc}}x_{\mathrm{soc}}\right)},\label{eq:liability}
+u & =\frac{1}{1+\exp\left(-a_{\mathrm{juv}}x_{\mathrm{juv}}-a_{\mathrm{gen}}x_{\mathrm{gen}}-a_{\mathrm{mat}}x_{\mathrm{mat}}-a_{\mathrm{soc,vert}}x_{\mathrm{soc,vert}}-a_{\mathrm{soc,hor}}x_{\mathrm{soc,hor}}\right)},\label{eq:liability}
 \end{align}
 
 \end_inset
@@ -351,15 +356,23 @@ where
 \begin_inset Formula $a_{\mathrm{mat}}$
 \end_inset
 
+, 
+\begin_inset Formula $a_{\mathrm{soc,vert}}$
+\end_inset
+
  and 
-\begin_inset Formula $a_{\mathrm{soc}}$
+\begin_inset Formula $a_{\mathrm{soc,hor}}$
 \end_inset
 
  are diploid, unlinked loci (bounded on the interval [0,8]) that reflect
- evolving levels of sensitivity to each of the following cues
+ evolving levels of sensitivity to different cues 
+\begin_inset Formula $x_{i}$
+\end_inset
+
+, each of which is set out below.
 \end_layout
 
-\begin_layout Paragraph
+\begin_layout Subsubsection
 Juveniles cues (phenotypic plasticity)
 \end_layout
 
@@ -369,28 +382,35 @@ Upon birth and before dispersal, each individual offspring receives a binary
 \begin_inset Formula $x_{\mathrm{juv}}\in[-1,1]$
 \end_inset
 
- about its local environment, where 
+ about its local environment.
+ Let 
+\begin_inset Formula $0\leq q_{\mathrm{juv}}\leq1$
+\end_inset
+
+ be a parameter that specifies the accuracy of the juvenile cue, so that
+ 
 \begin_inset Formula $x_{\mathrm{juv}}$
 \end_inset
 
- is identical to the local environment with probability 
+ is identical to the local environment when 
 \begin_inset Formula $0.5\leq q_{\mathrm{juv}}\leq1.0$
 \end_inset
 
-, and 
+, while 
 \begin_inset Formula $x_{\mathrm{juv}}$
 \end_inset
 
- is identical to the opposite environment otherwise.
+ provides a cue of the wrong environmental state otherwise.
+ 
 \end_layout
 
-\begin_layout Paragraph
+\begin_layout Subsubsection
 Genetic cues
 \end_layout
 
 \begin_layout Standard
 Upon birth, individuals receive a genetic cue 
-\begin_inset Formula $x_{\mathrm{gen}}$
+\begin_inset Formula $x_{\mathrm{gen}}=\sum_{i=0}^{2n_{g}}g_{i}$
 \end_inset
 
 , which is the sum of the allelic values of 
@@ -401,15 +421,41 @@ Upon birth, individuals receive a genetic cue
 \begin_inset Formula $g_{i}$
 \end_inset
 
-, with 
+.
+ Each of these alleles can have values in the range of 
 \begin_inset Formula $-1\leq g_{i}\leq1$
 \end_inset
 
 .
- 
+ As has been previously shown by 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "Leimar2005"
+literal "false"
+
+\end_inset
+
+, 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Leimar2015"
+literal "false"
+
+\end_inset
+
+ and 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "Leimar2019"
+literal "false"
+
+\end_inset
+
+, limited dispersal and strong selection can result in scenarios where alleles
+ become associated with the local environment, so that they become informative.
 \end_layout
 
-\begin_layout Paragraph
+\begin_layout Subsubsection
 Maternal cues
 \end_layout
 
@@ -418,8 +464,8 @@ Upon birth, individuals receive a maternal cue
 \begin_inset Formula $x_{\mathrm{mat}}$
 \end_inset
 
-, which is given by a sigmoid function that reflects (i) the relative influence
- of the maternal phenotype 
+, which is a sigmoid function that reflects (i) the relative influence of
+ the maternal phenotype 
 \begin_inset Formula $u$
 \end_inset
 
@@ -515,33 +561,22 @@ literal "false"
 .
 \end_layout
 
-\begin_layout Paragraph
-Social cues
+\begin_layout Subsubsection
+Parental social cues
 \end_layout
 
 \begin_layout Standard
-Upon birth, individuals receive a social cue 
-\begin_inset Formula $x_{\mathrm{soc}}$
+Upon birth, individuals receive a cue 
+\begin_inset Formula $x_{\mathrm{soc,vert}}$
 \end_inset
 
- which reflects phenotypic (cues which more directly inform offspring about
- the local environment [similar to 
-\begin_inset Formula $e_{\mathrm{mat}}$
-\end_inset
+ obtained through vertical social learning (i.e., social learning from the
+ parental generation).
+ These cues are derived from the phenotypes 
+\end_layout
 
- in eq.
- (
-\begin_inset CommandInset ref
-LatexCommand ref
-reference "eq:social_cue"
-plural "false"
-caps "false"
-noprefix "false"
-
-\end_inset
-
-)] will be considered later), obtained either through prestige biases or
- through conformity biases.
+\begin_layout Standard
+obtained either through prestige biases or through conformity biases.
  We have
 \begin_inset Formula 
 \begin{align}
