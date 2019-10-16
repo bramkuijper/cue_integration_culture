@@ -4,12 +4,13 @@ Individual::Individual():
     phen_juv{0.0},
     phen_ad{0.0},
     phen_mat{0.0},
-    phen_prestige{0.0},
+    phen_prestige_horiz{0.0},
+    phen_prestige_vert{0.0},
     xmat{0.0},
-    xsoc_vert{0.0},
     xsoc_horiz{0.0},
-    xconformist_vert{0.0},
+    xsoc_vert{0.0},
     xconformist_horiz{0.0},
+    xconformist_vert{0.0},
     agen{0.0,0.0},
     amat{0.0,0.0},
     ajuv{0.0,0.0},
@@ -30,7 +31,8 @@ Individual::Individual(Individual const &other):
     phen_juv{other.phen_juv},
     phen_ad{other.phen_ad},
     phen_mat{other.phen_mat},
-    phen_prestige{other.phen_prestige},
+    phen_prestige_horiz{other.phen_prestige_horiz},
+    phen_prestige_vert{other.phen_prestige_vert},
     g{other.g[0],other.g[1]},
     xmat{other.xmat},
     xsoc_horiz{other.xsoc_horiz},
@@ -59,12 +61,13 @@ void Individual::operator=(Individual const &other)
     phen_juv = other.phen_juv;
     phen_ad = other.phen_ad;
     phen_mat = other.phen_mat;
-    phen_prestige = other.phen_prestige;
+    phen_prestige_horiz = other.phen_prestige_horiz;
+    phen_prestige_vert = other.phen_prestige_vert;
     xmat = other.xmat;
-    xconformist_vert = other.xconformist_vert;
     xconformist_horiz = other.xconformist_horiz;
-    xsoc_vert = other.xsoc_vert;
+    xconformist_vert = other.xconformist_vert;
     xsoc_horiz = other.xsoc_horiz;
+    xsoc_vert = other.xsoc_vert;
 
     agen[0] = other.agen[0];
     agen[1] = other.agen[1];

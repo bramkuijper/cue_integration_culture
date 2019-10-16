@@ -19,11 +19,12 @@ class Individual
         // the maternal phenotype (stats purposes)
         double phen_mat;
 
-        // phenotypic cue from vertically learnt prestige bias
-        double phen_prestige_vert;
         
         // phenotypic cue from horizontally learnt prestige bias
         double phen_prestige_horiz;
+
+        // phenotypic cue from vertically learnt prestige bias
+        double phen_prestige_vert;
 
         // diploid loci for the genetic cue (unlinked)
         std::vector < double > g[2];
@@ -38,11 +39,11 @@ class Individual
         // vertical socially learnt cue
         double xsoc_vert;
         
-        // vertical socially learnt conformism-based cue 
-        double xconformist_vert;
-        
         // horizontal socially learnt conformism-based cue 
         double xconformist_horiz;
+        
+        // vertical socially learnt conformism-based cue 
+        double xconformist_vert;
 
         // evolving strategy locus for the genetic cue
         double agen[2];
