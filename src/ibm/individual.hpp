@@ -14,8 +14,11 @@ class Individual
         // the maternal phenotype (stats purposes)
         double phen_mat;
 
-        // phenotypic cue from prestige bias
-        double phen_prestige;
+        // phenotypic cue from vertically learnt prestige bias
+        double phen_prestige_vert;
+        
+        // phenotypic cue from horizontally learnt prestige bias
+        double phen_prestige_horiz;
 
         // diploid loci for the genetic cue (unlinked)
         std::vector < double > g[2];
@@ -24,11 +27,17 @@ class Individual
         // including noise
         double xmat;
         
-        // socially learnt cue
-        double xsoc;
+        // horizontal socially learnt cue
+        double xsoc_horiz;
         
-        // socially learnt conformism-based cue 
-        double xconformist;
+        // vertical socially learnt cue
+        double xsoc_vert;
+        
+        // vertical socially learnt conformism-based cue 
+        double xconformist_vert;
+        
+        // horizontal socially learnt conformism-based cue 
+        double xconformist_horiz;
 
         // evolving strategy locus for the genetic cue
         double agen[2];
@@ -39,8 +48,11 @@ class Individual
         // evolving strategy locus for the binary envt'al cue
         double ajuv[2];
 
-        // evolving strategy locus for the social learning strategy
-        double asoc[2];
+        // evolving strategy locus for the vertical social learning strategy
+        double asoc_vert[2];
+        
+        // evolving strategy locus for the vertical social learning strategy
+        double asoc_horiz[2];
 
         // evolving strategy to weigh maternal enviromental cues
         double bmat_envt[2];
@@ -48,11 +60,26 @@ class Individual
         // evolving strategy to weigh maternal phenotypic cues
         double bmat_phen[2];
 
-        // evolving strategy to weigh cues from prestige-based social learning
-        double dp[2];
+        // evolving strategy to weigh cues from 
+        // vertical
+        // prestige-based social learning
+        double vp[2];
         
-        // evolving strategy to weigh cues from conformism-based social learning
-        double dc[2];
+        // evolving strategy to weigh cues from 
+        // vertical
+        // conformism-based social learning
+        double vc[2];
+        
+        
+        // evolving strategy to weigh cues from 
+        // horizontal
+        // prestige-based social learning
+        double hp[2];
+        
+        // evolving strategy to weigh cues from 
+        // horizontal
+        // conformism-based social learning
+        double hc[2];
 
         // adult cue
         bool cue_ad_envt_high;
@@ -60,10 +87,13 @@ class Individual
         // juvenile cue
         bool cue_juv_envt_high;
 
+        // default constructor
         Individual();
 
+        // copy constructor
         Individual(Individual const &other);
 
+        // assignment operator
         void operator=(Individual const &other);
 };
 
