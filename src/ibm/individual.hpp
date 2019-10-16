@@ -7,6 +7,11 @@ class Individual
 {
     public:
         
+        // an individual's juvenile phenotype
+        // which is the adult phenotype prior to 
+        // horizontal social learning
+        double phen_juv;
+        
         // the actual phenotype of an individual
         // affecting survival
         double phen_ad;

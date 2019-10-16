@@ -543,6 +543,21 @@ literal "false"
 \begin_inset Formula $e_{\mathrm{mat}}$
 \end_inset
 
+ attains the value
+\begin_inset Formula 
+\begin{align*}
+e_{\mathrm{mat}} & \begin{cases}
+1 & \text{when signaling the high environment}\\
+-1 & \text{when signaling the low environment}
+\end{cases}.
+\end{align*}
+
+\end_inset
+
+The perceived environment 
+\begin_inset Formula $e_{\mathrm{mat}}$
+\end_inset
+
  is identical to the actual environment she experienced during early adulthood
  (before environmental change and before survival selection, see life cycle
  above) with probability 
@@ -570,21 +585,20 @@ Upon birth, individuals receive a cue
 \begin_inset Formula $x_{\mathrm{soc,vert}}$
 \end_inset
 
- obtained through vertical social learning (i.e., social learning from the
- parental generation).
+ obtained through vertical social learning.
  These cues are obtained by learning the phenotypes of members of the parental
  generation (e.g., when that phenotype is a certain behaviour), where learning
  either occurs through a prestige or a conformity bias mechanism.
  We have
 \begin_inset Formula 
 \begin{align}
-x_{\mathrm{soc,\mathrm{vert}}}\left(u_{\mathrm{p}},x_{\mathrm{c}}\right) & =\frac{1}{1+\exp\left[-d_{\mathrm{p}}\left(u_{\mathrm{p}}-0.5\right)-d_{\mathrm{c}}\left(x_{\mathrm{c}}-0.5\right)\right]}+\xi_{\mathrm{soc},\mathrm{vert}},\label{eq:social_cue}
+x_{\mathrm{soc,\mathrm{vert}}}\left(u_{\mathrm{p,v}},x_{\mathrm{c},\mathrm{v}}\right) & =\frac{1}{1+\exp\left[-v_{\mathrm{p}}\left(u_{\mathrm{p,v}}-0.5\right)-v_{\mathrm{c}}x_{\mathrm{c},\mathrm{v}}\right]}+\xi_{\mathrm{soc},\mathrm{vert}},\label{eq:social_cue}
 \end{align}
 
 \end_inset
 
 where 
-\begin_inset Formula $x_{\mathrm{soc,vert}}(u_{\mathrm{p}},x_{\mathrm{c}})$
+\begin_inset Formula $x_{\mathrm{soc,vert}}(u_{\mathrm{p,v}},x_{\mathrm{c,h}})$
 \end_inset
 
  is truncated to the interval 
@@ -607,20 +621,20 @@ where
 
 .
  In the first part of the expression, 
-\begin_inset Formula $d_{\mathrm{p}}$
+\begin_inset Formula $v_{\mathrm{p}}$
 \end_inset
 
  and 
-\begin_inset Formula $d_{\mathrm{c}}$
+\begin_inset Formula $v_{\mathrm{c}}$
 \end_inset
 
  reflect two unlinked, diploid evolving loci that reflect sensitivity to
  phenotypic cues acquired through prestige-based (
-\begin_inset Formula $u_{\mathrm{p}}$
+\begin_inset Formula $u_{\mathrm{p,v}}$
 \end_inset
 
 ) and conformity-based (
-\begin_inset Formula $x_{\mathrm{c}}$
+\begin_inset Formula $x_{\mathrm{c},\mathrm{v}}$
 \end_inset
 
 ) social learning.
@@ -729,19 +743,28 @@ literal "false"
 \begin_inset Formula 
 \begin{align*}
 x_{c} & =\begin{cases}
-0 & n_{\mathrm{c,lo}}>n_{\mathrm{c,hi}}\\
-0.5 & n_{\mathrm{c,lo}}=n_{\mathrm{c,hi}}\\
-1 & n_{\mathrm{c,lo}}<n_{\mathrm{c,hi}}
+-1 & n_{\mathrm{c,lo}}>n_{\mathrm{c,hi}}\text{ (low-matching phenotype predominates)}\\
+0 & n_{\mathrm{c,lo}}=n_{\mathrm{c,hi}}\text{\text{ (no phenotype predominates)}}\\
+1 & n_{\mathrm{c,lo}}<n_{\mathrm{c,hi}}\text{\text{ (high-matching phenotype predominates)}}
 \end{cases}.
 \end{align*}
 
 \end_inset
 
+
+\end_layout
+
+\begin_layout Paragraph
+Random social learning
+\end_layout
+
+\begin_layout Standard
 Finally, note that when 
 \begin_inset Formula $n_{c}=0,n_{\mathrm{p}}=1$
 \end_inset
 
-, individuals obtain cues from a single, randomly chosen individual instead.
+, individuals obtain cues from a single, randomly chosen individual instead,
+ a case which can be considered as random social learning.
  Note that 
 \begin_inset CommandInset citation
 LatexCommand citet
@@ -767,7 +790,65 @@ Social learning from the current generation (horizontal social learning)
 \end_layout
 
 \begin_layout Standard
-Up
+After establishment as a breeder and environmental change, but before survival
+ selection, individuals receive a cue 
+\begin_inset Formula $x_{\mathrm{soc,hor}}$
+\end_inset
+
+ obtained through horizontal social learning .
+ These cues are obtained by learning the phenotypes of members of the offspring
+ generation (e.g., when that phenotype is a certain behaviour), where learning
+ either occurs through a prestige or a conformity bias mechanism.
+ We have
+\begin_inset Formula 
+\begin{align}
+x_{\mathrm{soc,\mathrm{hor}}}\left(u_{\mathrm{p,h}},x_{\mathrm{c,h}}\right) & =\frac{1}{1+\exp\left[-h_{\mathrm{p}}\left(u_{\mathrm{p,h}}-0.5\right)-h_{\mathrm{c}}x_{\mathrm{c,h}}\right]}+\xi_{\mathrm{soc},\mathrm{hor}},\label{eq:social_cue_horizontal}
+\end{align}
+
+\end_inset
+
+where 
+\begin_inset Formula $x_{\mathrm{soc,vert}}(u_{\mathrm{p,h}},x_{\mathrm{c,h}})$
+\end_inset
+
+ is truncated to the interval 
+\begin_inset Formula $[0,1]$
+\end_inset
+
+.
+ In the expression above, 
+\begin_inset Formula $\xi_{\mathrm{soc,hor}}$
+\end_inset
+
+ reflects the amount of noise in the vertically transmitted social cue,
+ which is a normally distributed variable with mean 
+\begin_inset Formula $0$
+\end_inset
+
+ and standard deviation 
+\begin_inset Formula $\sigma_{\mathrm{soc},\mathrm{vert}}=0.05$
+\end_inset
+
+.
+ In the first part of the expression, 
+\begin_inset Formula $v_{\mathrm{p}}$
+\end_inset
+
+ and 
+\begin_inset Formula $v_{\mathrm{c}}$
+\end_inset
+
+ reflect two unlinked, diploid evolving loci that reflect sensitivity to
+ phenotypic cues acquired through prestige-based (
+\begin_inset Formula $u_{\mathrm{p}}$
+\end_inset
+
+) and conformity-based (
+\begin_inset Formula $x_{\mathrm{c}}$
+\end_inset
+
+) social learning.
+ 
 \end_layout
 
 \begin_layout Subsection

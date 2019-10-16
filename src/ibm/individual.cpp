@@ -1,6 +1,7 @@
 #include "individual.hpp"
 
 Individual::Individual():
+    phen_juv{0.0},
     phen_ad{0.0},
     phen_mat{0.0},
     phen_prestige{0.0},
@@ -26,6 +27,7 @@ Individual::Individual():
 }
 
 Individual::Individual(Individual const &other):
+    phen_juv{other.phen_juv},
     phen_ad{other.phen_ad},
     phen_mat{other.phen_mat},
     phen_prestige{other.phen_prestige},
@@ -54,6 +56,7 @@ Individual::Individual(Individual const &other):
 // overload the assignment operator 
 void Individual::operator=(Individual const &other) 
 {
+    phen_juv = other.phen_juv;
     phen_ad = other.phen_ad;
     phen_mat = other.phen_mat;
     phen_prestige = other.phen_prestige;
