@@ -1155,12 +1155,23 @@ void create_offspring(Individual &mother
     // store the maternal phenotype for stats purposes
     offspring.phen_mat = mother.phen_ad;
 
+    // express maternal 
+    double b_phen = 0.5 * (offspring.bmat_phen[0] + offspring.bmat_phen[1]);
+
+    assert(b_phen >= bmin);
+    assert(b_phen <= bmax);
+
+    double b_envt = 0.5 * (offspring.bmat_envt[0] + offspring.bmat_envt[1]);
+
+    assert(b_envt >= bmin);
+    assert(b_phen <= bmax);
+
     // generate maternal cue
     double xoff = 1.0 /
         (1.0 + exp(
-                   -0.5 * (mother.bmat_phen[0] + mother.bmat_phen[1]) * (mother.phen_ad - 0.5) 
+                   -b_phen * (mother.phen_ad - 0.5) 
                    + 
-                   dmat_weighting * 0.5 * (mother.bmat_envt[0] + mother.bmat_envt[1])));
+                   dmat_weighting * b_phen));
 
     // noise in the maternal cue
     normal_distribution<> maternal_noise(0.0, sdmat);
@@ -1189,7 +1200,7 @@ void create_offspring(Individual &mother
         (1.0 + exp(
                    -amat_phen * offspring.xmat +
                    -agen_phen * sum_genes +
-                   -ajuv_phen * (offspring.cue_juv_envt_high ? 1 : -1)
+                   -ajuv_phen * offspring.cue_juv_envt_high
                    -asoc_vert_phen * offspring.xsoc_vert
                    ));
 
