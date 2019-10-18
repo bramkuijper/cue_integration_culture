@@ -1233,7 +1233,9 @@ void survive()
         for (int breeder_i = 0; breeder_i < Pop[patch_i].n_breeders; ++breeder_i)
         {
             // check whether adult phenotypes indeed exist
-            assert(abs(::isnan(Pop[patch_i].breeders[breeder_i].phen_ad)) > 0);
+            assert(abs(::isnormal(Pop[patch_i].breeders[breeder_i].phen_ad)) > 0);
+
+
             // calculate survival probability
             surv = survival_probability(
                         Pop[patch_i].breeders[breeder_i].phen_ad
