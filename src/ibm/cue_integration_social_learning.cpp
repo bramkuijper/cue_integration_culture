@@ -16,6 +16,9 @@
 
 // various functions, such as unique filename creation
 #include "auxiliary.hpp"
+
+// the individual class, which defines properties of each
+// individual used here
 #include "individual.hpp"
 
 #define DEBUG
@@ -29,13 +32,15 @@ mt19937 rng_r{static_cast<long unsigned int>(seed)};
 uniform_real_distribution<> uniform(0.0,1.0);
 
 // parameters & variables:
+// a lot of the parameters declared here will be overridden
+// in the init_arguments function which reads parameters from the command line
 
 // number of individuals in population
 const int NPatches = 400;
 const int NBreeder = 100;
 
 // number of generations
-int number_generations = 50000;
+int number_generations = 10;
 
 // environmental switch rate
 //
@@ -56,9 +61,10 @@ double qmat = 0.5;
 // noise in maternal cue 
 double sdmat = 0.0;
 
-// noise in social cue
-double sdsoc = 0.0;
-
+// noise in social cue which is obtained 
+// vertically and/or horizontally
+double sdsoc_vert = 0.0;
+double sdsoc_horiz = 0.0;
 
 // whether survival selection has a sigmoidal or a quadratic function
 bool sigmoidal_survival = true;
@@ -69,15 +75,20 @@ bool laplace = true;
 int nloci_g = 3;
 
 // initial values
+// these will be overridden when the function
+// init_arguments is called
 double init_g = 0.0;
 double init_amat = 0.0;
 double init_ajuv = 0.0;
 double init_agen = 0.0;
-double init_asoc = 0.0;
+double init_asoc_vert = 0.0;
+double init_asoc_horiz = 0.0;
 double init_bmat_phen = 0.0;
 double init_bmat_envt = 0.0;
-double init_dc = 0.0;
-double init_dp = 0.0;
+double init_hc = 0.0;
+double init_hp = 0.0;
+double init_vc = 0.0;
+double init_vp = 0.0;
 
 // ranges for traits
 double gmin = 0.0;
@@ -92,23 +103,34 @@ double mu_g = 0.0;
 double mu_amat = 0.0;
 double mu_ajuv = 0.0;
 double mu_agen = 0.0;
-double mu_asoc = 0.0;
+double mu_asoc_horiz = 0.0;
+double mu_asoc_vert = 0.0;
 double mu_bmat_phen = 0.0;
 double mu_bmat_envt = 0.0;
-double mu_dp = 0.0;
-double mu_dc = 0.0;
+double mu_hp = 0.0;
+double mu_hc = 0.0;
+double mu_vp = 0.0;
+double mu_vc = 0.0;
 
 double sdmu_a = 0.0;
 double sdmu_b = 0.0;
 double sdmu_g = 0.0;
 
-int np = 0;
-int nc = 0;
+// number of individuals to sample
+// in case of horizontal social learning
+int nph = 0; // performance bias
+int nch = 0; // conformity bias
+
+// number of individuals to sample
+// in case of vertical social learning
+int npv = 0; // performance bias
+int ncv = 0; // conformity bias
 
 // migration rates
 double m = 0.0;
 
-//write out the data every nth generation
+//write out the data 
+//every nth generation
 int data_nth_generation = 10;
 
 // survival statistics which I obtain in the survive()
@@ -116,7 +138,7 @@ int data_nth_generation = 10;
 double mean_survival[2] = {0.0,0.0};
 double var_survival[2] = {0.0,0.0};
 
-
+// the patch with its breeders
 struct Patch
 {
     // number of hermaphroditic breeder
@@ -166,39 +188,48 @@ void init_arguments(int argc, char **argv)
     init_amat = atof(argv[10]);
     init_ajuv = atof(argv[11]);
     init_agen = atof(argv[12]);
-    init_asoc = atof(argv[13]);
-    init_bmat_phen = atof(argv[14]);
-    init_bmat_envt = atof(argv[15]);
-    init_dp = atof(argv[16]);
-    init_dc = atof(argv[17]);
+    init_asoc_horiz = atof(argv[13]);
+    init_asoc_vert = atof(argv[14]);
+    init_bmat_phen = atof(argv[15]);
+    init_bmat_envt = atof(argv[16]);
+    init_hp = atof(argv[17]);
+    init_hc = atof(argv[18]);
+    init_vp = atof(argv[19]);
+    init_vc = atof(argv[20]);
 
-    gmin = atof(argv[18]);
-    gmax = atof(argv[19]);
-    amin = atof(argv[20]);
-    amax = atof(argv[21]);
-    bmin = atof(argv[22]);
-    bmax = atof(argv[23]);
-    sdmat = atof(argv[24]);
-    sdsoc = atof(argv[25]);
+    gmin = atof(argv[21]);
+    gmax = atof(argv[22]);
+    amin = atof(argv[23]);
+    amax = atof(argv[24]);
+    bmin = atof(argv[25]);
+    bmax = atof(argv[26]);
+    sdmat = atof(argv[27]);
+    sdsoc_vert = atof(argv[28]);
+    sdsoc_horiz = atof(argv[29]);
 
-    mu_g = atof(argv[26]);
-    mu_amat = atof(argv[27]);
-    mu_ajuv = atof(argv[28]);
-    mu_agen = atof(argv[29]);
-    mu_asoc = atof(argv[30]);
-    mu_bmat_phen = atof(argv[31]);
-    mu_bmat_envt = atof(argv[32]);
-    mu_dp = atof(argv[33]);
-    mu_dc = atof(argv[34]);
-    sdmu_a = atof(argv[35]);
-    sdmu_b = atof(argv[36]);
-    sdmu_g = atof(argv[37]);
-    m = atof(argv[38]);
-    np = atoi(argv[39]);
-    nc = atoi(argv[40]);
+    mu_g = atof(argv[30]);
+    mu_amat = atof(argv[31]);
+    mu_ajuv = atof(argv[32]);
+    mu_agen = atof(argv[33]);
+    mu_asoc_horiz = atof(argv[34]);
+    mu_asoc_vert = atof(argv[35]);
+    mu_bmat_phen = atof(argv[36]);
+    mu_bmat_envt = atof(argv[37]);
+    mu_hp = atof(argv[38]);
+    mu_hc = atof(argv[39]);
+    mu_vp = atof(argv[40]);
+    mu_vc = atof(argv[41]);
+    sdmu_a = atof(argv[42]);
+    sdmu_b = atof(argv[43]);
+    sdmu_g = atof(argv[44]);
+    m = atof(argv[45]);
+    nph = atoi(argv[46]);
+    nch = atoi(argv[47]);
+    npv = atoi(argv[48]);
+    ncv = atoi(argv[49]);
 }
 
-// write down all parameters in the file
+// write down all parameters to the file DataFile
 void write_parameters(ofstream &DataFile)
 {
     DataFile << endl << endl
@@ -212,11 +243,14 @@ void write_parameters(ofstream &DataFile)
         << "init_amat;" << init_amat << ";"<< endl
         << "init_ajuv;" << init_ajuv << ";"<< endl
         << "init_agen;" << init_agen << ";"<< endl
-        << "init_asoc;" << init_asoc << ";"<< endl
+        << "init_asoc_vert;" << init_asoc_vert << ";"<< endl
+        << "init_asoc_horiz;" << init_asoc_horiz << ";"<< endl
         << "init_bmat_phen;" << init_bmat_phen << ";"<< endl
         << "init_bmat_envt;" << init_bmat_envt << ";"<< endl
-        << "init_dp;" << init_dp << ";"<< endl
-        << "init_dc;" << init_dc << ";"<< endl
+        << "init_hp;" << init_hp << ";"<< endl
+        << "init_hc;" << init_hc << ";"<< endl
+        << "init_vp;" << init_vp << ";"<< endl
+        << "init_vc;" << init_vc << ";"<< endl
         << "gmin;" << gmin << ";"<< endl
         << "gmax;" << gmax << ";"<< endl
         << "amin;" << amin << ";"<< endl
@@ -224,31 +258,44 @@ void write_parameters(ofstream &DataFile)
         << "bmin;" << bmin << ";"<< endl
         << "bmax;" << bmax << ";"<< endl
         << "sdmat;" << sdmat << ";"<< endl
-        << "sdsoc;" << sdsoc<< ";"<< endl
+        << "sdsoc_vert;" << sdsoc_vert << ";"<< endl
+        << "sdsoc_horiz;" << sdsoc_horiz << ";"<< endl
         << "mu_g;" << mu_g << ";"<< endl
         << "sdmu_g;" << sdmu_g << ";"<< endl
         << "mu_amat;" << mu_amat << ";"<< endl
         << "mu_ajuv;" << mu_ajuv << ";"<< endl
         << "mu_agen;" << mu_agen << ";"<< endl
-        << "mu_asoc;" << mu_asoc << ";"<< endl
+        << "mu_asoc_horiz;" << mu_asoc_horiz << ";"<< endl
+        << "mu_asoc_vert;" << mu_asoc_vert << ";"<< endl
         << "mu_bmat_phen;" << mu_bmat_phen << ";"<< endl
         << "mu_bmat_envt;" << mu_bmat_envt << ";"<< endl
-        << "mu_dc;" << mu_dc << ";"<< endl
-        << "mu_dp;" << mu_dp << ";"<< endl
+        << "mu_vc;" << mu_vc << ";"<< endl
+        << "mu_vp;" << mu_vp << ";"<< endl
+        << "mu_hc;" << mu_hc << ";"<< endl
+        << "mu_hp;" << mu_hp << ";"<< endl
         << "sdmu_a;" << sdmu_a << ";"<< endl
         << "sdmu_b;" << sdmu_b << ";"<< endl
         << "m;" << m << ";"<< endl
-        << "np;" << np << ";"<< endl
-        << "nc;" << nc << ";"<< endl
+        << "nph;" << nph << ";"<< endl
+        << "nch;" << nch << ";"<< endl
+        << "npv;" << npv << ";"<< endl
+        << "ncv;" << ncv << ";"<< endl
         << "survival_scalar0;" << survival_scalar[0] << ";"<< endl
         << "survival_scalar1;" << survival_scalar[1] << ";"<< endl
         << "seed;" << seed << ";" << endl;
 
 } // void write_parameters(ofstream &DataFile)
 
+
+// write all properties of all individuals
+// to the file DataFile (to obtain information about
+// the distribution of traits)
 void write_dist(ofstream &DataFile)
 {
-    double g;
+    double g; // auxiliary variable to temporarily 
+                // store trait expression
+
+    
     for (int patch_i = 0; patch_i < NPatches; ++patch_i)
     {
         for (int breeder_i = 0; breeder_i < NBreeder; ++breeder_i)
@@ -257,10 +304,13 @@ void write_dist(ofstream &DataFile)
                 << breeder_i << ";"
                 << Pop[patch_i].breeders[breeder_i].phen_ad << ";"
                 << Pop[patch_i].breeders[breeder_i].phen_mat << ";"
-                << Pop[patch_i].breeders[breeder_i].phen_prestige << ";"
+                << Pop[patch_i].breeders[breeder_i].phen_prestige_vert << ";"
+                << Pop[patch_i].breeders[breeder_i].phen_prestige_horiz << ";"
                 << Pop[patch_i].breeders[breeder_i].xmat << ";"
-                << Pop[patch_i].breeders[breeder_i].xsoc << ";"
-                << Pop[patch_i].breeders[breeder_i].xconformist<< ";"
+                << Pop[patch_i].breeders[breeder_i].xsoc_vert << ";"
+                << Pop[patch_i].breeders[breeder_i].xsoc_horiz << ";"
+                << Pop[patch_i].breeders[breeder_i].xconformist_vert << ";"
+                << Pop[patch_i].breeders[breeder_i].xconformist_horiz << ";"
 
                 // agen
                 << 0.5 * (Pop[patch_i].breeders[breeder_i].agen[0]
@@ -277,10 +327,15 @@ void write_dist(ofstream &DataFile)
                     +
                     Pop[patch_i].breeders[breeder_i].amat[1]) << ";"
 
-                // asoc
-                << 0.5 * (Pop[patch_i].breeders[breeder_i].asoc[0]
+                // asoc_vert 
+                << 0.5 * (Pop[patch_i].breeders[breeder_i].asoc_vert[0]
                     +
-                    Pop[patch_i].breeders[breeder_i].asoc[1]) << ";"
+                    Pop[patch_i].breeders[breeder_i].asoc_vert[1]) << ";"
+                
+                // asoc_horiz 
+                << 0.5 * (Pop[patch_i].breeders[breeder_i].asoc_horiz[0]
+                    +
+                    Pop[patch_i].breeders[breeder_i].asoc_horiz[1]) << ";"
 
                 // bmat_phen
                 << 0.5 * (Pop[patch_i].breeders[breeder_i].bmat_phen[0]
@@ -292,15 +347,25 @@ void write_dist(ofstream &DataFile)
                     +
                     Pop[patch_i].breeders[breeder_i].bmat_envt[1]) << ";"
 
-                // dc
-                << 0.5 * (Pop[patch_i].breeders[breeder_i].dc[0]
+                // hc
+                << 0.5 * (Pop[patch_i].breeders[breeder_i].hc[0]
                     +
-                    Pop[patch_i].breeders[breeder_i].dc[1]) << ";"
+                    Pop[patch_i].breeders[breeder_i].hc[1]) << ";"
 
-                // dp
-                << 0.5 * (Pop[patch_i].breeders[breeder_i].dp[0]
+                // hp
+                << 0.5 * (Pop[patch_i].breeders[breeder_i].hp[0]
                     +
-                    Pop[patch_i].breeders[breeder_i].dp[1]) << ";";
+                    Pop[patch_i].breeders[breeder_i].hp[1]) << ";"
+                
+                // vc
+                << 0.5 * (Pop[patch_i].breeders[breeder_i].vc[0]
+                    +
+                    Pop[patch_i].breeders[breeder_i].vc[1]) << ";"
+
+                // vp
+                << 0.5 * (Pop[patch_i].breeders[breeder_i].vp[0]
+                    +
+                    Pop[patch_i].breeders[breeder_i].vp[1]) << ";";
 
             g = 0.0;
 
@@ -332,18 +397,24 @@ void write_data_headers_dist(ofstream &DataFile)
         << "id;" 
         << "phen_ad;" 
         << "phen_mat;" 
-        << "phen_prestige;" 
+        << "phen_prestige_vert;" 
+        << "phen_prestige_horiz;" 
         << "xmat;" 
-        << "xsoc;" 
-        << "xconformist;" 
+        << "xsoc_vert;" 
+        << "xsoc_horiz;" 
+        << "xconformist_vert;" 
+        << "xconformist_horiz;" 
         << "agen;" 
         << "ajuv;" 
         << "amat;" 
-        << "asoc;" 
+        << "asoc_vert;" 
+        << "asoc_horiz;" 
         << "bmat_phen;" 
         << "bmat_envt;" 
-        << "dc;" 
-        << "dp;" 
+        << "hc;" 
+        << "hp;" 
+        << "vc;" 
+        << "vp;" 
         << "g;" 
         << "envt;" 
         << "cue_ad_envt_high;" 
@@ -357,26 +428,34 @@ void write_data_headers(ofstream &DataFile)
     DataFile 
         << "generation;" 
         << "mean_phen_ad;" 
-        << "mean_phen_prestige;" 
+        << "mean_phen_prestige_vert;" 
+        << "mean_phen_prestige_horiz;" 
         << "mean_agen;" 
         << "mean_ajuv;" 
         << "mean_amat;" 
-        << "mean_asoc;" 
+        << "mean_asoc_vert;" 
+        << "mean_asoc_horiz;" 
         << "mean_bmat_phen;" 
         << "mean_bmat_envt;" 
-        << "mean_dc;" 
-        << "mean_dp;" 
+        << "mean_hc;" 
+        << "mean_hp;" 
+        << "mean_vc;" 
+        << "mean_vp;" 
         << "mean_g;" 
         << "var_phen_ad;" 
-        << "var_phen_prestige;" 
+        << "var_phen_prestige_vert;" 
+        << "var_phen_prestige_horiz;" 
         << "var_agen;" 
         << "var_ajuv;" 
         << "var_amat;" 
-        << "var_asoc;" 
+        << "var_asoc_vert;" 
+        << "var_asoc_horiz;" 
         << "var_bmat_phen;" 
         << "var_bmat_envt;" 
-        << "var_dc;" 
-        << "var_dp;" 
+        << "var_hc;" 
+        << "var_hp;" 
+        << "var_vc;" 
+        << "var_vp;" 
         << "var_g;" 
         << "freq_high;" 
         << "mean_surv0;" 
@@ -393,8 +472,11 @@ void write_stats(ofstream &DataFile, int generation, int timestep)
     double mean_phen_ad = 0.0;
     double ss_phen_ad = 0.0;
     
-    double mean_phen_prestige = 0.0;
-    double ss_phen_prestige = 0.0;
+    double mean_phen_prestige_vert = 0.0;
+    double ss_phen_prestige_vert = 0.0;
+    
+    double mean_phen_prestige_horiz = 0.0;
+    double ss_phen_prestige_horiz = 0.0;
    
     double mean_agen = 0.0;
     double ss_agen = 0.0;
@@ -405,8 +487,11 @@ void write_stats(ofstream &DataFile, int generation, int timestep)
     double mean_ajuv = 0.0;
     double ss_ajuv = 0.0;
     
-    double mean_asoc = 0.0;
-    double ss_asoc = 0.0;
+    double mean_asoc_vert = 0.0;
+    double ss_asoc_vert = 0.0;
+    
+    double mean_asoc_horiz = 0.0;
+    double ss_asoc_horiz = 0.0;
     
     double mean_bmat_phen = 0.0;
     double ss_bmat_phen = 0.0;
@@ -414,11 +499,17 @@ void write_stats(ofstream &DataFile, int generation, int timestep)
     double mean_bmat_envt = 0.0;
     double ss_bmat_envt = 0.0;
     
-    double mean_dc = 0.0;
-    double ss_dc = 0.0;
+    double mean_hc = 0.0;
+    double ss_hc = 0.0;
 
-    double mean_dp = 0.0;
-    double ss_dp = 0.0;
+    double mean_hp = 0.0;
+    double ss_hp = 0.0;
+    
+    double mean_vc = 0.0;
+    double ss_vc = 0.0;
+
+    double mean_vp = 0.0;
+    double ss_vp = 0.0;
 
     double mean_g = 0.0;
     double ss_g = 0.0;
@@ -426,7 +517,7 @@ void write_stats(ofstream &DataFile, int generation, int timestep)
     double freq_high = 0.0;
 
     // auxiliary variables to calculate an individual's phenotype
-    double g, phen_ad, phen_prestige, agen, amat, asoc, ajuv, bmat_phen, bmat_envt, dp, dc;
+    double g, z;
 
     // summing means and sums of squares over all patches and breeders
     for (int patch_i = 0; patch_i < NPatches; ++patch_i)
@@ -448,155 +539,218 @@ void write_stats(ofstream &DataFile, int generation, int timestep)
             } // end for (int g_i = 0; g_i < nloci_g; ++g_i)
 
             // adult phenotype
-            phen_ad = Pop[patch_i].breeders[breeder_i].phen_ad;
-            mean_phen_ad += phen_ad;
-            ss_phen_ad += phen_ad * phen_ad;
+            z = Pop[patch_i].breeders[breeder_i].phen_ad;
+            mean_phen_ad += z;
+            ss_phen_ad += z * z;
             
             // prestige phenotype
-            phen_prestige = Pop[patch_i].breeders[breeder_i].phen_prestige;
-            mean_phen_prestige += phen_prestige;
-            ss_phen_prestige += phen_prestige * phen_prestige;
+            z = Pop[patch_i].breeders[breeder_i].phen_prestige_vert;
+            mean_phen_prestige_vert += z;
+            ss_phen_prestige_vert += z * z;
+            
+            // prestige phenotype
+            z = Pop[patch_i].breeders[breeder_i].phen_prestige_horiz;
+            mean_phen_prestige_horiz += z;
+            ss_phen_prestige_horiz += z * z;
 
             // sensitivity to genetic cues
-            agen = 0.5 * (
+            z = 0.5 * (
                     Pop[patch_i].breeders[breeder_i].agen[0] 
                     +
                     Pop[patch_i].breeders[breeder_i].agen[1] 
                     );
 
-            mean_agen += agen;
-            ss_agen += agen * agen;
+            mean_agen += z;
+            ss_agen += z * z;
             
             // sensitivity to maternal cues
-            amat = 0.5 * (
+            z = 0.5 * (
                     Pop[patch_i].breeders[breeder_i].amat[0] 
                     +
                     Pop[patch_i].breeders[breeder_i].amat[1] 
                     );
 
-            mean_amat += amat;
-            ss_amat += amat * amat;
+            mean_amat += z;
+            ss_amat += z * z;
             
             // sensitivity to juvenile cues
-            ajuv = 0.5 * (
+            z = 0.5 * (
                     Pop[patch_i].breeders[breeder_i].ajuv[0] 
                     +
                     Pop[patch_i].breeders[breeder_i].ajuv[1] 
                     );
             
-            mean_ajuv += ajuv;
-            ss_ajuv += ajuv * ajuv;
+            mean_ajuv += z;
+            ss_ajuv += z * z;
 
-            // sensitivity to juvenile cues
-            asoc = 0.5 * (
-                    Pop[patch_i].breeders[breeder_i].asoc[0] 
+            // sensitivity to socially learnt cues (vertically)
+            z = 0.5 * (
+                    Pop[patch_i].breeders[breeder_i].asoc_vert[0] 
                     +
-                    Pop[patch_i].breeders[breeder_i].asoc[1] 
+                    Pop[patch_i].breeders[breeder_i].asoc_vert[1] 
                     );
 
-            mean_asoc += asoc;
-            ss_asoc += asoc * asoc;
+            mean_asoc_vert += z;
+            ss_asoc_vert += z * z;
+            
+            // sensitivity to socially learnt cues (horizontally)
+            z = 0.5 * (
+                    Pop[patch_i].breeders[breeder_i].asoc_horiz[0] 
+                    +
+                    Pop[patch_i].breeders[breeder_i].asoc_horiz[1] 
+                    );
+
+            mean_asoc_horiz += z;
+            ss_asoc_horiz += z * z;
             
             // maternal sensitivity to phenotypic cues
-            bmat_phen = 0.5 * (
+            z = 0.5 * (
                     Pop[patch_i].breeders[breeder_i].bmat_phen[0] 
                     +
                     Pop[patch_i].breeders[breeder_i].bmat_phen[1] 
                     );
 
-            mean_bmat_phen += bmat_phen;
-            ss_bmat_phen += bmat_phen * bmat_phen;
+            mean_bmat_phen += z;
+            ss_bmat_phen += z * z;
             
             // maternal sensitivity to environmental cues
-            bmat_envt = 0.5 * (
+            z = 0.5 * (
                     Pop[patch_i].breeders[breeder_i].bmat_envt[0] 
                     +
                     Pop[patch_i].breeders[breeder_i].bmat_envt[1] 
                     );
 
-            mean_bmat_envt += bmat_envt;
-            ss_bmat_envt += bmat_envt * bmat_envt;
+            mean_bmat_envt += z;
+            ss_bmat_envt += z * z;
             
-            // sensitivity to juvenile cues
-            dp = 0.5 * (
-                    Pop[patch_i].breeders[breeder_i].dp[0] 
+            // sensitivity to performance-based cues when learning
+            // horizontally
+            z = 0.5 * (
+                    Pop[patch_i].breeders[breeder_i].hp[0] 
                     +
-                    Pop[patch_i].breeders[breeder_i].dp[1] 
+                    Pop[patch_i].breeders[breeder_i].hp[1] 
                     );
 
-            mean_dp += dp;
-            ss_dp += dp * dp;
+            mean_hp += z;
+            ss_hp += z * z;
             
-            // sensitivity to juvenile cues
-            dc = 0.5 * (
-                    Pop[patch_i].breeders[breeder_i].dc[0] 
+            // sensitivity to confirmity-based cues when learning
+            // horizontally
+            z = 0.5 * (
+                    Pop[patch_i].breeders[breeder_i].hc[0] 
                     +
-                    Pop[patch_i].breeders[breeder_i].dc[1] 
+                    Pop[patch_i].breeders[breeder_i].hc[1] 
                     );
 
-            mean_dc += dc;
-            ss_dc += dc * dc;
+            mean_hc += z;
+            ss_hc += z * z;
+            
+            
+            // sensitivity to performance-based cues when learning
+            // vertically 
+            z = 0.5 * (
+                    Pop[patch_i].breeders[breeder_i].vp[0] 
+                    +
+                    Pop[patch_i].breeders[breeder_i].vp[1] 
+                    );
+
+            mean_vp += z;
+            ss_vp += z * z;
+            
+            // sensitivity to confirmity-based cues when learning
+            // vertically
+            z = 0.5 * (
+                    Pop[patch_i].breeders[breeder_i].vc[0] 
+                    +
+                    Pop[patch_i].breeders[breeder_i].vc[1] 
+                    );
+
+            mean_vc += z;
+            ss_vc += z * z;
         } // end for (int breeder_i = 0; breeder_i < NBreeder; ++breeder_i)
     } // end for (int patch_i = 0; patch_i < NPatches; ++patch_i)
 
     mean_phen_ad /= NPatches * NBreeder;
-    double var_phen_ad = ss_phen_ad / NPatches * NBreeder - mean_phen_ad * mean_phen_ad;
+    double var_phen_ad = ss_phen_ad / (NPatches * NBreeder) - mean_phen_ad * mean_phen_ad;
     
-    mean_phen_prestige /= NPatches * NBreeder;
-    double var_phen_prestige = ss_phen_prestige / NPatches * NBreeder 
-        - mean_phen_prestige * mean_phen_prestige;
+    mean_phen_prestige_vert /= NPatches * NBreeder;
+
+    double var_phen_prestige_vert = ss_phen_prestige_vert / (NPatches * NBreeder) 
+        - mean_phen_prestige_vert * mean_phen_prestige_vert;
    
+    mean_phen_prestige_horiz /= NPatches * NBreeder;
+
+    double var_phen_prestige_horiz = ss_phen_prestige_horiz / (NPatches * NBreeder) 
+        - mean_phen_prestige_horiz * mean_phen_prestige_horiz;
+
     mean_agen /= NPatches * NBreeder;
-    double var_agen = ss_agen / NPatches * NBreeder - mean_agen * mean_agen;
+    double var_agen = ss_agen / (NPatches * NBreeder) - mean_agen * mean_agen;
    
     mean_amat /= NPatches * NBreeder;
     double var_amat = NPatches * NBreeder - mean_amat * mean_amat;
     
     mean_ajuv /= NPatches * NBreeder;
-    double var_ajuv = ss_ajuv / NPatches * NBreeder - mean_ajuv * mean_ajuv;
+    double var_ajuv = ss_ajuv / (NPatches * NBreeder) -  mean_ajuv * mean_ajuv;
     
-    mean_asoc /= NPatches * NBreeder;
-    double var_asoc = ss_asoc / NPatches * NBreeder - mean_asoc * mean_asoc;
+    mean_asoc_vert /= NPatches * NBreeder;
+    double var_asoc_vert = ss_asoc_vert / (NPatches * NBreeder) - mean_asoc_vert * mean_asoc_vert;
+    
+    mean_asoc_horiz /= NPatches * NBreeder;
+    double var_asoc_horiz = ss_asoc_horiz / (NPatches * NBreeder) - mean_asoc_horiz * mean_asoc_horiz;
     
     mean_bmat_phen /= NPatches * NBreeder;
-    double var_bmat_phen = ss_bmat_phen / NPatches * NBreeder - mean_bmat_phen * mean_bmat_phen;
+    double var_bmat_phen = ss_bmat_phen / (NPatches * NBreeder) - mean_bmat_phen * mean_bmat_phen;
     
     mean_bmat_envt /= NPatches * NBreeder;
-    double var_bmat_envt = ss_bmat_envt / NPatches * NBreeder - mean_bmat_envt * mean_bmat_envt;
+    double var_bmat_envt = ss_bmat_envt / (NPatches * NBreeder) - mean_bmat_envt * mean_bmat_envt;
     
-    mean_dp /= NPatches * NBreeder;
-    double var_dp = ss_dp / NPatches * NBreeder - mean_dp * mean_dp;
+    mean_hp /= NPatches * NBreeder;
+    double var_hp = ss_hp / (NPatches * NBreeder) - mean_hp * mean_hp;
     
-    mean_dc /= NPatches * NBreeder;
-    double var_dc = ss_dc / NPatches * NBreeder - mean_dc * mean_dc;
+    mean_hc /= NPatches * NBreeder;
+    double var_hc = ss_hc / (NPatches * NBreeder) - mean_hc * mean_hc;
+    
+    mean_vp /= NPatches * NBreeder;
+    double var_vp = ss_vp / (NPatches * NBreeder) - mean_vp * mean_vp;
+    
+    mean_vc /= NPatches * NBreeder;
+    double var_vc = ss_vc / (NPatches * NBreeder) - mean_vc * mean_vc;
 
     mean_g /= NPatches * NBreeder;
-    double var_g = ss_g / NPatches * NBreeder - mean_g * mean_g;
+    double var_g = ss_g / (NPatches * NBreeder) - mean_g * mean_g;
 
     freq_high /= NPatches;
 
     DataFile << generation << ";"
         << mean_phen_ad << ";"
-        << mean_phen_prestige << ";"
+        << mean_phen_prestige_vert << ";"
+        << mean_phen_prestige_horiz << ";"
         << mean_agen << ";"
         << mean_ajuv << ";"
         << mean_amat << ";"
-        << mean_asoc << ";"
+        << mean_asoc_vert << ";"
+        << mean_asoc_horiz << ";"
         << mean_bmat_phen << ";"
         << mean_bmat_envt << ";"
-        << mean_dc << ";"
-        << mean_dp << ";"
+        << mean_hc << ";"
+        << mean_hp << ";"
+        << mean_vc << ";"
+        << mean_vp << ";"
         << mean_g << ";"
         << var_phen_ad << ";"
-        << var_phen_prestige << ";"
+        << var_phen_prestige_vert << ";"
+        << var_phen_prestige_horiz << ";"
         << var_agen << ";"
         << var_ajuv << ";"
         << var_amat << ";"
-        << var_asoc << ";"
+        << var_asoc_vert << ";"
+        << var_asoc_horiz << ";"
         << var_bmat_phen << ";"
         << var_bmat_envt << ";"
-        << var_dc << ";"
-        << var_dp << ";"
+        << var_hc << ";"
+        << var_hp << ";"
+        << var_vc << ";"
+        << var_vp << ";"
         << var_g << ";" 
         << freq_high << ";" 
         << mean_survival[0] << ";" 
@@ -645,8 +799,11 @@ void init_population()
                 // genetic cue weighting
                 Pop[patch_i].breeders[breeder_i].agen[allele_i] = init_agen;
                 
-                // social cue weighting
-                Pop[patch_i].breeders[breeder_i].asoc[allele_i] = init_asoc;
+                // vertical social cue weighting
+                Pop[patch_i].breeders[breeder_i].asoc_vert[allele_i] = init_asoc_vert;
+                
+                // horizontal social cue weighting
+                Pop[patch_i].breeders[breeder_i].asoc_horiz[allele_i] = init_asoc_horiz;
                 
                 // maternal phenotypic cue weighting
                 Pop[patch_i].breeders[breeder_i].bmat_phen[allele_i] = init_bmat_phen;
@@ -654,11 +811,18 @@ void init_population()
                 // maternal phenotypic cue weighting
                 Pop[patch_i].breeders[breeder_i].bmat_envt[allele_i] = init_bmat_envt;
                 
-                // weighting of prestige cue
-                Pop[patch_i].breeders[breeder_i].dp[allele_i] = init_dp;
+                // weighting of a horizontally learnt prestige cue
+                Pop[patch_i].breeders[breeder_i].hp[allele_i] = init_hp;
                 
-                // weighting of conformist cue
-                Pop[patch_i].breeders[breeder_i].dc[allele_i] = init_dc;
+                // weighting of a horizontally learnt conformist cue
+                Pop[patch_i].breeders[breeder_i].hc[allele_i] = init_hc;
+                
+                // weighting of a horizontally learnt prestige cue
+                Pop[patch_i].breeders[breeder_i].vp[allele_i] = init_vp;
+                
+                // weighting of a horizontally learnt conformist cue
+                Pop[patch_i].breeders[breeder_i].vc[allele_i] = init_vc;
+
             } //end for allele_i
             
             Pop[patch_i].n_breeders = NBreeder;
@@ -670,9 +834,13 @@ void init_population()
             Pop[patch_i].breeders[breeder_i].cue_juv_envt_high = 
                 cue_ad_envt_high;
 
-            // as this is generation t=0, forget about maternal cues for now
+            double cue_sum = -init_agen * init_g
+                -init_ajuv * cue_ad_envt_high;
+
+            // as this is generation t=0, forget about 
+            // most cues when determining phenotype
             Pop[patch_i].breeders[breeder_i].phen_ad = 1.0 /
-                (1.0 + exp(-init_agen * init_g - init_ajuv * cue_ad_envt_high));
+                (1.0 + exp(cue_sum));
         } // end for breeder_i
     } // end for patch_i
 } // end void init_population()
@@ -718,8 +886,9 @@ void create_offspring(Individual &mother
         ,Individual &father
         ,Individual &offspring
         ,bool const offspring_envt
-        ,double const phen_prestige
-        ,double const xconformist)
+        ,double const phen_prestige_vert
+        ,double const xconformist_vert
+        )
 {
     // set up a bernoulli distribution that returns 0s or 1s
     // at equal probability to sample alleles from the first or
@@ -747,7 +916,8 @@ void create_offspring(Individual &mother
         allelic_val = mutation(
                 mother.g[allele_sample(rng_r)][g_loc_i],
                 mu_g,
-                sdmu_g);
+                sdmu_g
+                );
 
         clamp(allelic_val, gmin, gmax);
 
@@ -823,22 +993,39 @@ void create_offspring(Individual &mother
     double agen_phen = 0.5 * (offspring.agen[0] + offspring.agen[1]);
     
     
-    // inheritance of social cue sensitivity values 
-    offspring.asoc[0] = mutation(
-            mother.asoc[allele_sample(rng_r)],
-            mu_asoc,
+    // inheritance of vertical social cue sensitivity values 
+    offspring.asoc_vert[0] = mutation(
+            mother.asoc_vert[allele_sample(rng_r)],
+            mu_asoc_vert,
             sdmu_a);
 
-    clamp(offspring.asoc[0], amin, amax);
+    clamp(offspring.asoc_vert[0], amin, amax);
 
-    offspring.asoc[1] = mutation(
-            father.asoc[allele_sample(rng_r)],
-            mu_asoc,
+    offspring.asoc_vert[1] = mutation(
+            father.asoc_vert[allele_sample(rng_r)],
+            mu_asoc_vert,
             sdmu_a);
 
-    clamp(offspring.asoc[1], amin, amax);
+    clamp(offspring.asoc_vert[1], amin, amax);
 
-    double asoc_phen = 0.5 * (offspring.asoc[0] + offspring.asoc[1]);
+    double asoc_vert_phen = 0.5 * (offspring.asoc_vert[0] + offspring.asoc_vert[1]);
+    
+    
+    // inheritance of horizontal social cue sensitivity values 
+    offspring.asoc_horiz[0] = mutation(
+            mother.asoc_horiz[allele_sample(rng_r)],
+            mu_asoc_horiz,
+            sdmu_a);
+
+    clamp(offspring.asoc_horiz[0], amin, amax);
+
+    offspring.asoc_horiz[1] = mutation(
+            father.asoc_horiz[allele_sample(rng_r)],
+            mu_asoc_horiz,
+            sdmu_a);
+
+    clamp(offspring.asoc_horiz[1], amin, amax);
+
 
     // inheritance of maternal phenotypic cue values 
     offspring.bmat_phen[0] = mutation(
@@ -869,40 +1056,77 @@ void create_offspring(Individual &mother
             sdmu_b);
 
     clamp(offspring.bmat_envt[1], bmin, bmax);
+
+
     
-    // inheritance of rel. sensitivity to prestige biases
-    offspring.dp[0] = mutation(
-            mother.dp[allele_sample(rng_r)],
-            mu_dp,
+    // inheritance of rel. sensitivity to 
+    // vertical prestige biases
+    offspring.vp[0] = mutation(
+            mother.vp[allele_sample(rng_r)],
+            mu_vp,
             sdmu_b);
 
-    clamp(offspring.dp[0], bmin, bmax);
+    clamp(offspring.vp[0], bmin, bmax);
 
-    offspring.dp[1] = mutation(
-            father.dp[allele_sample(rng_r)],
-            mu_dp,
+    offspring.vp[1] = mutation(
+            father.vp[allele_sample(rng_r)],
+            mu_vp,
             sdmu_b);
 
-    clamp(offspring.dp[1], bmin, bmax);
+    clamp(offspring.vp[1], bmin, bmax);
 
-    double dp_phen = 0.5 * (offspring.dp[0] + offspring.dp[1]);
+    double vp_phen = 0.5 * (offspring.vp[0] + offspring.vp[1]);
     
-    // inheritance of rel. sensitivity to prestige biases
-    offspring.dc[0] = mutation(
-            mother.dc[allele_sample(rng_r)],
-            mu_dc,
+    // inheritance of rel. sensitivity to 
+    // vertical conformity biases
+    offspring.vc[0] = mutation(
+            mother.vc[allele_sample(rng_r)],
+            mu_vc,
             sdmu_b);
 
-    clamp(offspring.dc[0], bmin, bmax);
+    clamp(offspring.vc[0], bmin, bmax);
 
-    offspring.dc[1] = mutation(
-            father.dc[allele_sample(rng_r)],
-            mu_dc,
+    offspring.vc[1] = mutation(
+            father.vc[allele_sample(rng_r)],
+            mu_vc,
             sdmu_b);
 
-    clamp(offspring.dc[1], bmin, bmax);
+    clamp(offspring.vc[1], bmin, bmax);
 
-    double dc_phen = 0.5 * (offspring.dc[0] + offspring.dc[1]);
+    double vc_phen = 0.5 * (offspring.vc[0] + offspring.vc[1]);
+    
+    
+    // inheritance of rel. sensitivity to 
+    // horizontal prestige biases
+    offspring.hp[0] = mutation(
+            mother.hp[allele_sample(rng_r)],
+            mu_hp,
+            sdmu_b);
+
+    clamp(offspring.hp[0], bmin, bmax);
+
+    offspring.hp[1] = mutation(
+            father.hp[allele_sample(rng_r)],
+            mu_hp,
+            sdmu_b);
+
+    clamp(offspring.hp[1], bmin, bmax);
+
+    // inheritance of rel. sensitivity to 
+    // horizontal conformity biases
+    offspring.hc[0] = mutation(
+            mother.hc[allele_sample(rng_r)],
+            mu_hc,
+            sdmu_b);
+
+    clamp(offspring.hc[0], bmin, bmax);
+
+    offspring.hc[1] = mutation(
+            father.hc[allele_sample(rng_r)],
+            mu_hc,
+            sdmu_b);
+
+    clamp(offspring.hc[1], bmin, bmax);
 
     // kid receives juvenile cue
     offspring.cue_juv_envt_high = uniform(rng_r) < qjuv ? 
@@ -919,7 +1143,8 @@ void create_offspring(Individual &mother
     // generate maternal cue
     double xoff = 1.0 /
         (1.0 + exp(
-                   -0.5 * (mother.bmat_phen[0] + mother.bmat_phen[1]) * (mother.phen_ad - 0.5) + 
+                   -0.5 * (mother.bmat_phen[0] + mother.bmat_phen[1]) * (mother.phen_ad - 0.5) 
+                   + 
                    dmat_weighting * 0.5 * (mother.bmat_envt[0] + mother.bmat_envt[1])));
 
     // noise in the maternal cue
@@ -929,32 +1154,31 @@ void create_offspring(Individual &mother
     offspring.xmat = xoff + maternal_noise(rng_r);
     clamp(offspring.xmat, 0.0, 1.0);
 
-
     // social learning
-
-    offspring.xconformist = xconformist;
-    offspring.phen_prestige = phen_prestige;
-
-    normal_distribution<> social_noise(0.0, sdsoc);
+    offspring.xconformist_vert = xconformist_vert;
+    offspring.phen_prestige_vert = phen_prestige_vert;
 
 
-    // generate socially learnt cue
-    double xsoc = 1.0 / (1.0 + exp(
-                - dp_phen * (offspring.phen_prestige - 0.5)
-                - dc_phen * offspring.xconformist));
+    // generate vertical socially learnt cue
+    double xsoc_vert = 1.0 / (1.0 + exp(
+                - vp_phen * (offspring.phen_prestige_vert - 0.5)
+                - vc_phen * offspring.xconformist_vert));
 
-    offspring.xsoc = xsoc + social_noise(rng_r);
+    normal_distribution<> social_noise(0.0, sdsoc_vert);
+    offspring.xsoc_vert = xsoc_vert + social_noise(rng_r);
 
-    clamp(offspring.xsoc, 0.0, 1.0);
+    clamp(offspring.xsoc_vert, 0.0, 1.0);
 
-    offspring.phen_ad = 1.0 / 
+    // expressing a juvenile phenotype
+    offspring.phen_juv = 1.0 / 
         (1.0 + exp(
                    -amat_phen * offspring.xmat +
                    -agen_phen * sum_genes +
                    -ajuv_phen * (offspring.cue_juv_envt_high ? 1 : -1)
-                   -asoc_phen * offspring.xsoc
+                   -asoc_vert_phen * (offspring.xsoc_vert - 0.5)
                    ));
 
+    offspring.phen_ad = NAN;
 } // end create_offspring()
 
 void survive()
@@ -980,8 +1204,7 @@ void survive()
 
     for (int patch_i = 0; patch_i < NPatches; ++patch_i)
     {
-        assert(Pop[patch_i].n_breeders > 0);
-        assert(Pop[patch_i].n_breeders <= NBreeder);
+        assert(Pop[patch_i].n_breeders == NBreeder);
         
         // keep track of the number of breeders in a
         // high envt
@@ -1035,13 +1258,17 @@ void survive()
 } // end survive_reproduce()
 
 void social_learning(
-        int const patch_i
-        ,double &prestige_phen
-        ,double &xconformist)
+        int const patch_i  // the patch in which social learning takes place
+        ,bool const learning_is_horizontal // whether learning is horizontal or vertical
+        ,double &prestige_phen // returning the prestige-bias phenotype
+        ,double &xconformist) // returning the conformism-bias cue
 {
     double surv, phen;
 
     int np_local, nc_local;
+
+    int np = learning_is_horizontal ? nph : npv;
+    int nc = learning_is_horizontal ? nch : ncv;
 
     // set up a random number generator to 
     // sample and socially learn from 
@@ -1055,13 +1282,22 @@ void social_learning(
 
     // keep track on the current phenotype and survival value
     // of the individual with the highest 'prestige'
+    //
+    // if no individuals are sampled to learn about prestige
+    // cue value is always 0.0. 
     prestige_phen = 0.0;
     double prestige_surv = 0.0;
 
     // compare survivorship values from np breeders and pick the highest
     for (int prest_i = 0; prest_i < np_local; ++prest_i)
     {
-        phen = Pop[patch_i].breeders[random_local_breeder(rng_r)].phen_ad;
+        // if learning is horizontal learn from other individual's juvenile 
+        // phenotypes, otherwise learn from parental generation adult phenotypes
+        phen = learning_is_horizontal ?
+            Pop[patch_i].breeders[random_local_breeder(rng_r)].phen_juv
+            :
+            Pop[patch_i].breeders[random_local_breeder(rng_r)].phen_ad;
+
         surv = survival_probability(phen,Pop[patch_i].envt_high);
 
         if (surv > prestige_surv)
@@ -1081,7 +1317,10 @@ void social_learning(
     // check which phenotype is most common, those below 0.5 or those above
     for (int conform_i = 0; conform_i < nc_local; ++conform_i)
     {
-        phen = Pop[patch_i].breeders[random_local_breeder(rng_r)].phen_ad;
+        phen = learning_is_horizontal ?
+            Pop[patch_i].breeders[random_local_breeder(rng_r)].phen_juv
+            :
+            Pop[patch_i].breeders[random_local_breeder(rng_r)].phen_ad;
 
         if (phen > 0.5)
         {
@@ -1134,6 +1373,7 @@ void replace()
                 // prepare cues in local patch from social learning
                 social_learning(
                         patch_i
+                        ,false
                         ,prestige_phen
                         ,xconformist);
 
@@ -1159,9 +1399,11 @@ void replace()
                 0,
                 Pop[random_remote_patch].n_breeders - 1);
                
-                // prepare cues in remote patch from social learning
+                // prepare cues in remote patch (where parents are breeding)
+                // from social learning
                 social_learning(
                         random_remote_patch
+                        ,false
                         ,prestige_phen
                         ,xconformist);
 
@@ -1185,7 +1427,14 @@ void replace()
 
     bool cue_ad_envt_high;
 
-    // all new breeders established, copy them over
+    // auxiliary variables for horizontal social learning
+    double hp, hc, asoc_horiz, xsoc_horiz;
+
+    // random number for errors in horizontal social learning
+    normal_distribution<> social_noise(0.0, sdsoc_horiz);
+
+    // all new breeders born etc, copy them over
+    // and perform horiz social learning
     for (int patch_i = 0; patch_i < NPatches; ++patch_i)
     {
         // calculate adult cue value supplied to mothers
@@ -1207,6 +1456,57 @@ void replace()
             // give breeder an environmental cue as adult
             Pop[patch_i].breeders[breeder_i].cue_ad_envt_high = 
                 cue_ad_envt_high;
+        } // all juveniles are now assigned a breeding position
+
+        // horizontal social learning 
+        for (int breeder_i = 0; breeder_i < NBreeder; ++breeder_i)
+        {
+            // ad_phen should be NaN as it is yet to be set
+            assert(abs(::isnan(Pop[patch_i].breeders[breeder_i].phen_ad)) > 0);
+
+            social_learning(
+                    patch_i
+                    ,true
+                    ,prestige_phen
+                    ,xconformist);
+
+            hp = 0.5 * (
+                    Pop[patch_i].breeders[breeder_i].hp[0]
+                    + 
+                    Pop[patch_i].breeders[breeder_i].hp[1]);
+            
+            hc = 0.5 * (
+                    Pop[patch_i].breeders[breeder_i].hc[0]
+                    + 
+                    Pop[patch_i].breeders[breeder_i].hc[1]);
+
+            asoc_horiz = 0.5 * (
+                    Pop[patch_i].breeders[breeder_i].asoc_horiz[0]
+                    + 
+                    Pop[patch_i].breeders[breeder_i].asoc_horiz[1]);
+
+            Pop[patch_i].breeders[breeder_i].xconformist_horiz = xconformist;
+            Pop[patch_i].breeders[breeder_i].phen_prestige_horiz = prestige_phen;
+
+            // generate the horizontally learnt cue and add error
+            xsoc_horiz = 1.0 /
+                (1.0 + exp(
+                           -hp * (prestige_phen - 0.5)
+                           -hc * xconformist)
+                ) + social_noise(rng_r);
+
+            clamp(xsoc_horiz, 0.0, 1.0);
+
+            // assign the horizontal social learnt 
+            // conformism bias cue to the breeding individual
+            Pop[patch_i].breeders[breeder_i].xsoc_horiz = 
+                xsoc_horiz;
+
+            // add social learning to the adult phenotype
+            Pop[patch_i].breeders[breeder_i].phen_ad = 1.0 / 
+                (1.0 + exp(
+                            log(1.0 / Pop[patch_i].breeders[breeder_i].phen_juv - 1.0) 
+                            -asoc_horiz * xsoc_horiz));
         }
 
         // envtal change
@@ -1214,6 +1514,7 @@ void replace()
         {
             Pop[patch_i].envt_high = !Pop[patch_i].envt_high;
         }
+
     } // end for (int patch_i = 0
 }
 

@@ -11,6 +11,7 @@
 \usepackage{apjfonts}
 \usepackage{doi}
 \usepackage{amsmath}
+\renewcommand\ttdefault{cmtt}
 
 
 \usepackage[mathlines]{lineno}
@@ -44,7 +45,7 @@
 \fontencoding global
 \font_roman "default" "default"
 \font_sans "default" "default"
-\font_typewriter "default" "default"
+\font_typewriter "beramono" "default"
 \font_math "auto" "auto"
 \font_default_family default
 \use_non_tex_fonts false
@@ -195,6 +196,10 @@ literal "false"
 \begin_inset Formula $1/1-p$
 \end_inset
 
+, while the global frequency of each patch type is 
+\begin_inset Formula $f_{e_{1}}=0.5$
+\end_inset
+
 .
  The simulations are written in 
 \begin_inset ERT
@@ -334,7 +339,7 @@ Upon birth, an individual's phenotype
  We have
 \begin_inset Formula 
 \begin{align}
-u & =\frac{1}{1+\exp\left(-a_{\mathrm{juv}}x_{\mathrm{juv}}-a_{\mathrm{gen}}x_{\mathrm{gen}}-a_{\mathrm{mat}}x_{\mathrm{mat}}-a_{\mathrm{soc}}x_{\mathrm{soc}}\right)},\label{eq:liability}
+u & =\frac{1}{1+\exp\left(-a_{\mathrm{juv}}x_{\mathrm{juv}}-a_{\mathrm{gen}}x_{\mathrm{gen}}-a_{\mathrm{mat}}x_{\mathrm{mat}}-a_{\mathrm{soc,vert}}x_{\mathrm{soc,vert}}-a_{\mathrm{soc,hor}}x_{\mathrm{soc,hor}}\right)},\label{eq:liability}
 \end{align}
 
 \end_inset
@@ -351,16 +356,24 @@ where
 \begin_inset Formula $a_{\mathrm{mat}}$
 \end_inset
 
+, 
+\begin_inset Formula $a_{\mathrm{soc,vert}}$
+\end_inset
+
  and 
-\begin_inset Formula $a_{\mathrm{soc}}$
+\begin_inset Formula $a_{\mathrm{soc,hor}}$
 \end_inset
 
  are diploid, unlinked loci (bounded on the interval [0,8]) that reflect
- evolving levels of sensitivity to each of the following cues
+ evolving levels of sensitivity to different cues 
+\begin_inset Formula $x_{i}$
+\end_inset
+
+, each of which is set out below.
 \end_layout
 
-\begin_layout Paragraph
-Juveniles cues (phenotypic plasticity)
+\begin_layout Subsubsection
+Juvenile cues (phenotypic plasticity)
 \end_layout
 
 \begin_layout Standard
@@ -369,28 +382,35 @@ Upon birth and before dispersal, each individual offspring receives a binary
 \begin_inset Formula $x_{\mathrm{juv}}\in[-1,1]$
 \end_inset
 
- about its local environment, where 
+ about its local environment.
+ Let 
+\begin_inset Formula $0\leq q_{\mathrm{juv}}\leq1$
+\end_inset
+
+ be a parameter that specifies the accuracy of the juvenile cue, so that
+ 
 \begin_inset Formula $x_{\mathrm{juv}}$
 \end_inset
 
- is identical to the local environment with probability 
+ is identical to the local environment when 
 \begin_inset Formula $0.5\leq q_{\mathrm{juv}}\leq1.0$
 \end_inset
 
-, and 
+, while 
 \begin_inset Formula $x_{\mathrm{juv}}$
 \end_inset
 
- is identical to the opposite environment otherwise.
+ provides a cue of the wrong environmental state otherwise.
+ 
 \end_layout
 
-\begin_layout Paragraph
+\begin_layout Subsubsection
 Genetic cues
 \end_layout
 
 \begin_layout Standard
 Upon birth, individuals receive a genetic cue 
-\begin_inset Formula $x_{\mathrm{gen}}$
+\begin_inset Formula $x_{\mathrm{gen}}=\sum_{i=0}^{2n_{g}}g_{i}$
 \end_inset
 
 , which is the sum of the allelic values of 
@@ -401,15 +421,41 @@ Upon birth, individuals receive a genetic cue
 \begin_inset Formula $g_{i}$
 \end_inset
 
-, with 
+.
+ Each allele can have values in the range of 
 \begin_inset Formula $-1\leq g_{i}\leq1$
 \end_inset
 
 .
- 
+ As has been previously shown by 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "Leimar2005"
+literal "false"
+
+\end_inset
+
+, 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Leimar2015"
+literal "false"
+
+\end_inset
+
+ and 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "Leimar2019"
+literal "false"
+
+\end_inset
+
+, limited dispersal and strong selection can result in scenarios where alleles
+ become associated with the local environment, so that they become informative.
 \end_layout
 
-\begin_layout Paragraph
+\begin_layout Subsubsection
 Maternal cues
 \end_layout
 
@@ -418,8 +464,8 @@ Upon birth, individuals receive a maternal cue
 \begin_inset Formula $x_{\mathrm{mat}}$
 \end_inset
 
-, which is given by a sigmoid function that reflects (i) the relative influence
- of the maternal phenotype 
+, which is a sigmoid function that reflects (i) the relative influence of
+ the maternal phenotype 
 \begin_inset Formula $u$
 \end_inset
 
@@ -497,6 +543,21 @@ literal "false"
 \begin_inset Formula $e_{\mathrm{mat}}$
 \end_inset
 
+ attains the value
+\begin_inset Formula 
+\begin{align*}
+e_{\mathrm{mat}} & \begin{cases}
+1 & \text{when signaling the high environment}\\
+-1 & \text{when signaling the low environment}
+\end{cases}.
+\end{align*}
+
+\end_inset
+
+The perceived environment 
+\begin_inset Formula $e_{\mathrm{mat}}$
+\end_inset
+
  is identical to the actual environment she experienced during early adulthood
  (before environmental change and before survival selection, see life cycle
  above) with probability 
@@ -515,98 +576,73 @@ literal "false"
 .
 \end_layout
 
-\begin_layout Paragraph
-Social cues
+\begin_layout Subsubsection
+Social learning from the parental generation (vertical social learning)
 \end_layout
 
 \begin_layout Standard
-Upon birth, individuals receive a social cue 
-\begin_inset Formula $x_{\mathrm{soc}}$
+Upon birth, individuals receive a cue 
+\begin_inset Formula $x_{\mathrm{soc,vert}}$
 \end_inset
 
- which reflects phenotypic (cues which more directly inform offspring about
- the local environment [similar to 
-\begin_inset Formula $e_{\mathrm{mat}}$
-\end_inset
-
- in eq.
- (
-\begin_inset CommandInset ref
-LatexCommand ref
-reference "eq:social_cue"
-plural "false"
-caps "false"
-noprefix "false"
-
-\end_inset
-
-)] will be considered later), obtained either through prestige biases or
- through conformity biases.
+ obtained through vertical social learning.
+ These cues are obtained by learning the phenotypes of members of the parental
+ generation (e.g., when that phenotype is a certain behaviour), where learning
+ either occurs through a prestige or a conformity bias mechanism.
  We have
 \begin_inset Formula 
 \begin{align}
-x_{\mathrm{soc}}\left(u_{\mathrm{p}},x_{\mathrm{c}}\right) & =\frac{1}{1+\exp\left[-d_{\mathrm{p}}\left(u_{\mathrm{p}}-0.5\right)-d_{\mathrm{c}}\left(x_{\mathrm{c}}-0.5\right)\right]}+\xi_{\mathrm{soc}},\label{eq:social_cue}
+x_{\mathrm{soc,\mathrm{vert}}}\left(u_{\mathrm{p,v}},x_{\mathrm{c},\mathrm{v}}\right) & =\frac{1}{1+\exp\left[-v_{\mathrm{p}}\left(u_{\mathrm{p,v}}-0.5\right)-v_{\mathrm{c}}x_{\mathrm{c},\mathrm{v}}\right]}+\xi_{\mathrm{soc},\mathrm{vert}},\label{eq:social_cue}
 \end{align}
 
 \end_inset
 
 where 
-\begin_inset Formula $x_{\mathrm{soc}}\left(u_{\mathrm{p}},x_{\mathrm{c}}\right)$
+\begin_inset Formula $x_{\mathrm{soc,vert}}(u_{\mathrm{p,v}},x_{\mathrm{c,h}})$
 \end_inset
 
- is truncated to the interval [0,1].
+ is truncated to the interval 
+\begin_inset Formula $[0,1]$
+\end_inset
+
+.
  In the expression above, 
 \begin_inset Formula $\xi_{\mathrm{soc}}$
 \end_inset
 
- reflects the amount of noise in the social cue, which is a normally distributed
- variable with mean 
+ reflects the amount of noise in the vertically transmitted social cue,
+ which is a normally distributed variable with mean 
 \begin_inset Formula $0$
 \end_inset
 
  and standard deviation 
-\begin_inset Formula $\sigma_{\mathrm{soc}}=0.05$
+\begin_inset Formula $\sigma_{\mathrm{soc},\mathrm{vert}}=0.05$
 \end_inset
 
 .
  In the first part of the expression, 
-\begin_inset Formula $d_{\mathrm{p}}$
+\begin_inset Formula $v_{\mathrm{p}}$
 \end_inset
 
  and 
-\begin_inset Formula $d_{\mathrm{c}}$
+\begin_inset Formula $v_{\mathrm{c}}$
 \end_inset
 
  reflect two unlinked, diploid evolving loci that reflect sensitivity to
  phenotypic cues acquired through prestige-based (
-\begin_inset Formula $u_{\mathrm{p}}$
+\begin_inset Formula $u_{\mathrm{p,v}}$
 \end_inset
 
 ) and conformity-based (
-\begin_inset Formula $x_{\mathrm{c}}$
+\begin_inset Formula $x_{\mathrm{c},\mathrm{v}}$
 \end_inset
 
 ) social learning.
- Here, prestige-based social learning is defined as the learning of cues
- possessed by individuals perceived as more successful or knowledgeable
  
-\begin_inset CommandInset citation
-LatexCommand citep
-key "Henrich2001"
-literal "false"
+\end_layout
 
-\end_inset
-
-, while conformity-based social learning is not directly determined by features
- of the cue itself, but by its commonality 
-\begin_inset CommandInset citation
-LatexCommand citep
-key "Henrich2003"
-literal "false"
-
-\end_inset
-
-.
+\begin_layout Paragraph
+Prestige biases
 \end_layout
 
 \begin_layout Standard
@@ -651,12 +687,16 @@ literal "false"
 
  (thus increasing the amount of variation in parental survivorship apparent
  to offspring).
- Errors in ranking individuals or errors in copying socially learned cues
+ Errors in ranking individuals or errors in copying socially learnt cues
  will have to be considered later.
 \end_layout
 
+\begin_layout Paragraph
+Conformity-biases
+\end_layout
+
 \begin_layout Standard
-Following models of conformity-based social learning 
+We follow previous models of conformity-based social learning 
 \begin_inset CommandInset citation
 LatexCommand citep
 before "e.g.,"
@@ -665,7 +705,7 @@ literal "false"
 
 \end_inset
 
-, individuals evaluate phenotypes 
+ where individuals evaluate phenotypes 
 \begin_inset Formula $u_{i}$
 \end_inset
 
@@ -703,19 +743,28 @@ literal "false"
 \begin_inset Formula 
 \begin{align*}
 x_{c} & =\begin{cases}
-0 & n_{\mathrm{c,lo}}>n_{\mathrm{c,hi}}\\
-0.5 & n_{\mathrm{c,lo}}=n_{\mathrm{c,hi}}\\
-1 & n_{\mathrm{c,lo}}<n_{\mathrm{c,hi}}
+-1 & n_{\mathrm{c,lo}}>n_{\mathrm{c,hi}}\text{ (low-matching phenotype predominates)}\\
+0 & n_{\mathrm{c,lo}}=n_{\mathrm{c,hi}}\text{\text{ (no phenotype predominates)}}\\
+1 & n_{\mathrm{c,lo}}<n_{\mathrm{c,hi}}\text{\text{ (high-matching phenotype predominates)}}
 \end{cases}.
 \end{align*}
 
 \end_inset
 
+
+\end_layout
+
+\begin_layout Paragraph
+Random social learning
+\end_layout
+
+\begin_layout Standard
 Finally, note that when 
 \begin_inset Formula $n_{c}=0,n_{\mathrm{p}}=1$
 \end_inset
 
-, individuals obtain cues from a single, randomly chosen individual instead.
+, individuals obtain cues from a single, randomly chosen individual instead,
+ a case which can be considered as random social learning.
  Note that 
 \begin_inset CommandInset citation
 LatexCommand citet
@@ -736,12 +785,78 @@ literal "false"
  for island models with random learning).
 \end_layout
 
+\begin_layout Subsubsection
+Social learning from the current generation (horizontal social learning)
+\end_layout
+
+\begin_layout Standard
+After establishment as a breeder and environmental change, but before survival
+ selection, individuals receive a cue 
+\begin_inset Formula $x_{\mathrm{soc,hor}}$
+\end_inset
+
+ obtained through horizontal social learning .
+ These cues are obtained by learning the phenotypes of members of the offspring
+ generation (e.g., when that phenotype is a certain behaviour), where learning
+ either occurs through a prestige or a conformity bias mechanism.
+ We have
+\begin_inset Formula 
+\begin{align}
+x_{\mathrm{soc,\mathrm{hor}}}\left(u_{\mathrm{p,h}},x_{\mathrm{c,h}}\right) & =\frac{1}{1+\exp\left[-h_{\mathrm{p}}\left(u_{\mathrm{p,h}}-0.5\right)-h_{\mathrm{c}}x_{\mathrm{c,h}}\right]}+\xi_{\mathrm{soc},\mathrm{hor}},\label{eq:social_cue_horizontal}
+\end{align}
+
+\end_inset
+
+where 
+\begin_inset Formula $x_{\mathrm{soc,vert}}(u_{\mathrm{p,h}},x_{\mathrm{c,h}})$
+\end_inset
+
+ is truncated to the interval 
+\begin_inset Formula $[0,1]$
+\end_inset
+
+.
+ In the expression above, 
+\begin_inset Formula $\xi_{\mathrm{soc,hor}}$
+\end_inset
+
+ reflects the amount of noise in the vertically transmitted social cue,
+ which is a normally distributed variable with mean 
+\begin_inset Formula $0$
+\end_inset
+
+ and standard deviation 
+\begin_inset Formula $\sigma_{\mathrm{soc},\mathrm{vert}}=0.05$
+\end_inset
+
+.
+ In the first part of the expression, 
+\begin_inset Formula $v_{\mathrm{p}}$
+\end_inset
+
+ and 
+\begin_inset Formula $v_{\mathrm{c}}$
+\end_inset
+
+ reflect two unlinked, diploid evolving loci that reflect sensitivity to
+ phenotypic cues acquired through prestige-based (
+\begin_inset Formula $u_{\mathrm{p}}$
+\end_inset
+
+) and conformity-based (
+\begin_inset Formula $x_{\mathrm{c}}$
+\end_inset
+
+) social learning.
+ 
+\end_layout
+
 \begin_layout Subsection
 Potential other features
 \end_layout
 
 \begin_layout Itemize
-Errors in ranking individuals or errors in copying socially learned cues
+Errors in ranking individuals or errors in copying socially learnt cues
  will have to be considered later.
 \end_layout
 
