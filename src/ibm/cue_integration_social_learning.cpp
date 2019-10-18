@@ -40,7 +40,7 @@ const int NPatches = 400;
 const int NBreeder = 100;
 
 // number of generations
-int number_generations = 10;
+int number_generations = 50000;
 
 // environmental switch rate
 //
@@ -428,6 +428,7 @@ void write_data_headers(ofstream &DataFile)
     DataFile 
         << "generation;" 
         << "mean_phen_ad;" 
+        << "mean_phen_juv;" 
         << "mean_phen_prestige_vert;" 
         << "mean_phen_prestige_horiz;" 
         << "mean_agen;" 
@@ -443,6 +444,7 @@ void write_data_headers(ofstream &DataFile)
         << "mean_vp;" 
         << "mean_g;" 
         << "var_phen_ad;" 
+        << "var_phen_juv;" 
         << "var_phen_prestige_vert;" 
         << "var_phen_prestige_horiz;" 
         << "var_agen;" 
@@ -471,6 +473,9 @@ void write_stats(ofstream &DataFile, int generation, int timestep)
     // variables to store means and variances
     double mean_phen_ad = 0.0;
     double ss_phen_ad = 0.0;
+    
+    double mean_phen_juv = 0.0;
+    double ss_phen_juv = 0.0;
     
     double mean_phen_prestige_vert = 0.0;
     double ss_phen_prestige_vert = 0.0;
@@ -542,6 +547,11 @@ void write_stats(ofstream &DataFile, int generation, int timestep)
             z = Pop[patch_i].breeders[breeder_i].phen_ad;
             mean_phen_ad += z;
             ss_phen_ad += z * z;
+            
+            // juvenile phenotype
+            z = Pop[patch_i].breeders[breeder_i].phen_juv;
+            mean_phen_juv += z;
+            ss_phen_juv += z * z;
             
             // prestige phenotype
             z = Pop[patch_i].breeders[breeder_i].phen_prestige_vert;
@@ -673,6 +683,9 @@ void write_stats(ofstream &DataFile, int generation, int timestep)
     mean_phen_ad /= NPatches * NBreeder;
     double var_phen_ad = ss_phen_ad / (NPatches * NBreeder) - mean_phen_ad * mean_phen_ad;
     
+    mean_phen_juv /= NPatches * NBreeder;
+    double var_phen_juv = ss_phen_juv / (NPatches * NBreeder) - mean_phen_juv * mean_phen_juv;
+    
     mean_phen_prestige_vert /= NPatches * NBreeder;
 
     double var_phen_prestige_vert = ss_phen_prestige_vert / (NPatches * NBreeder) 
@@ -723,6 +736,7 @@ void write_stats(ofstream &DataFile, int generation, int timestep)
 
     DataFile << generation << ";"
         << mean_phen_ad << ";"
+        << mean_phen_juv << ";"
         << mean_phen_prestige_vert << ";"
         << mean_phen_prestige_horiz << ";"
         << mean_agen << ";"
@@ -738,6 +752,7 @@ void write_stats(ofstream &DataFile, int generation, int timestep)
         << mean_vp << ";"
         << mean_g << ";"
         << var_phen_ad << ";"
+        << var_phen_juv << ";"
         << var_phen_prestige_vert << ";"
         << var_phen_prestige_horiz << ";"
         << var_agen << ";"
@@ -885,7 +900,7 @@ void clamp(double &val, double min, double max)
 void create_offspring(Individual &mother
         ,Individual &father
         ,Individual &offspring
-        ,bool const offspring_envt
+        ,bool const offspring_envt_high
         ,double const phen_prestige_vert
         ,double const xconformist_vert
         )
@@ -1130,7 +1145,7 @@ void create_offspring(Individual &mother
 
     // kid receives juvenile cue
     offspring.cue_juv_envt_high = uniform(rng_r) < qjuv ? 
-        offspring_envt : !offspring_envt;
+        offspring_envt_high : !offspring_envt_high;
 
     // adult cue will be received after potential envt'al change
     //
@@ -1175,9 +1190,10 @@ void create_offspring(Individual &mother
                    -amat_phen * offspring.xmat +
                    -agen_phen * sum_genes +
                    -ajuv_phen * (offspring.cue_juv_envt_high ? 1 : -1)
-                   -asoc_vert_phen * (offspring.xsoc_vert - 0.5)
+                   -asoc_vert_phen * offspring.xsoc_vert
                    ));
 
+    // 
     offspring.phen_ad = NAN;
 } // end create_offspring()
 
@@ -1216,6 +1232,8 @@ void survive()
         // breeders endure survival selection
         for (int breeder_i = 0; breeder_i < Pop[patch_i].n_breeders; ++breeder_i)
         {
+            // check whether adult phenotypes indeed exist
+            assert(abs(::isnan(Pop[patch_i].breeders[breeder_i].phen_ad)) > 0);
             // calculate survival probability
             surv = survival_probability(
                         Pop[patch_i].breeders[breeder_i].phen_ad
@@ -1509,7 +1527,7 @@ void replace()
                             -asoc_horiz * xsoc_horiz));
         }
 
-        // envtal change
+        // envtal change after breeder establishment
         if (uniform(rng_r) < 1.0 - p)
         {
             Pop[patch_i].envt_high = !Pop[patch_i].envt_high;
@@ -1545,8 +1563,12 @@ int main(int argc, char **argv)
 
     for (int generation = 0; generation < number_generations; ++generation)
     {
+        // survival of adult breeders followed by reproduction
         survive();
 
+        // new breeder establishment, 
+        // followed by horizontal learning
+        // and finally enviromental change
         replace();
 
         if (generation % data_nth_generation == 0)
