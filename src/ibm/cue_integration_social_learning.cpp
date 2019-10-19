@@ -1171,7 +1171,7 @@ void create_offspring(Individual &mother
         (1.0 + exp(
                    -b_phen * (mother.phen_ad - 0.5) 
                    + 
-                   dmat_weighting * b_phen));
+                   dmat_weighting * b_envt));
 
     // noise in the maternal cue
     normal_distribution<> maternal_noise(0.0, sdmat);
@@ -1203,7 +1203,6 @@ void create_offspring(Individual &mother
                    -ajuv_phen * offspring.cue_juv_envt_high
                    -asoc_vert_phen * offspring.xsoc_vert
                    ));
-
     // 
     offspring.phen_ad = NAN;
 } // end create_offspring()
@@ -1331,6 +1330,7 @@ void social_learning(
 
         surv = survival_probability(phen,Pop[patch_i].envt_high);
 
+        // update prestige bias
         if (surv > prestige_surv)
         {
             prestige_phen = phen;
@@ -1391,7 +1391,8 @@ void replace()
         {
             Individual Kid;
 
-            if (uniform(rng_r) > m 
+            // offspring born in local patch
+            if (uniform(rng_r) < 1.0 - m 
                     &&
                     Pop[patch_i].n_breeders > 0)
             {
@@ -1417,8 +1418,9 @@ void replace()
                         ,xconformist
                 );
             }
-            else
+            else // offspring born in remote patch
             {
+                // sample a random remote pathc
                 do {
 
                     random_remote_patch = patch_sampler(rng_r);
