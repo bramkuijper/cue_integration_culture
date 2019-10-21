@@ -873,10 +873,10 @@ double mutation(double val, double mu, double sdmu)
             uniform_real_distribution<> mutational_effect(-0.5 + 0.0000001, 0.5);
             double U = mutational_effect(rng_r);
 
-            double sgnU = U < 0.0 ? -1 : U > 0.0 ? 1.0 : 0.0;
+            double sgnU = U < 0.0 ? -1.0 : U > 0.0 ? 1.0 : 0.0;
 
             // effect size of Laplace
-            double x = -sdmu * sgnU * log(1.0 - 2 * fabs(U));
+            double x = -sdmu/sqrt(2.0) * sgnU * log(1.0 - 2 * fabs(U));
 
             val += x;
         }

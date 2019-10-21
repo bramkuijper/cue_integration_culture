@@ -138,8 +138,13 @@ ax.plot(
 
 ax.plot(
         dat["generation"]
-        ,dat["mean_asoc"]
-        ,label=r"$a_{\mathrm{soc}}$")
+        ,dat["mean_asoc_vert"]
+        ,label=r"$a_{\mathrm{soc,vert}}$")
+
+ax.plot(
+        dat["generation"]
+        ,dat["mean_asoc_horiz"]
+        ,label=r"$a_{\mathrm{soc,horiz}}$")
 
 ax.set_ylabel(r"Sensitivies to cues, $a$")
 ax.set_title(loc="left", label=string.ascii_uppercase[rowctr])
@@ -169,15 +174,34 @@ ax = plt.subplot(gs[rowctr,0])
 
 ax.plot(
         dat["generation"]
-        ,dat["mean_dp"]
-        ,label=r"$d_{\mathrm{p}}$")
+        ,dat["mean_hp"]
+        ,label=r"$h_{\mathrm{p}}$")
 
 ax.plot(
         dat["generation"]
-        ,dat["mean_dc"]
-        ,label=r"$d_{\mathrm{c}}$")
+        ,dat["mean_hc"]
+        ,label=r"$h_{\mathrm{c}}$")
 
-ax.set_ylabel(r"Social learning sensitivities, $d$")
+ax.set_ylabel(r"Horiz soc sens, $h$")
+ax.legend()
+ax.set_title(loc="left", label=string.ascii_uppercase[rowctr])
+
+rowctr +=1
+
+
+ax = plt.subplot(gs[rowctr,0])
+
+ax.plot(
+        dat["generation"]
+        ,dat["mean_vp"]
+        ,label=r"$v_{\mathrm{p}}$")
+
+ax.plot(
+        dat["generation"]
+        ,dat["mean_vc"]
+        ,label=r"$v_{\mathrm{c}}$")
+
+ax.set_ylabel(r"Vert soc sens, $v$")
 ax.legend()
 ax.set_title(loc="left", label=string.ascii_uppercase[rowctr])
 
@@ -277,7 +301,7 @@ if distribution_available:
     dist_dat_sub1 = dist_dat[(dist_dat["envt"] == 1)]
 
     ax.plot(
-            dist_dat_sub0["ad_mat"]
+            dist_dat_sub0["phen_mat"]
             ,dist_dat_sub0["xmat"]
             ,linestyle=""
             ,markersize=0.5
@@ -298,7 +322,7 @@ if distribution_available:
     ax = plt.subplot(gs[rowctr,0])
 
     ax.plot(
-            dist_dat_sub1["ad_mat"]
+            dist_dat_sub1["phen_mat"]
             ,dist_dat_sub1["xmat"]
             ,linestyle=""
             ,markersize=0.5
@@ -318,7 +342,7 @@ if distribution_available:
     
     ax.plot(
             dist_dat_sub0["xmat"]
-            ,dist_dat_sub0["ad_phen"]
+            ,dist_dat_sub0["phen_ad"]
             ,linestyle=""
             ,markersize=0.5
             ,marker="."
@@ -337,7 +361,7 @@ if distribution_available:
 
     ax.plot(
             dist_dat_sub1["xmat"]
-            ,dist_dat_sub1["ad_phen"]
+            ,dist_dat_sub1["phen_ad"]
             ,linestyle=""
             ,markersize=0.5
             ,marker="."
