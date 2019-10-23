@@ -22,6 +22,9 @@ import matplotlib.gridspec as gridspec
 from matplotlib.ticker import AutoMinorLocator
 from matplotlib import cm
 
+# import stats for kernel density estimation
+from scipy import stats
+
 
 #########################################
 #           check where data ends
@@ -80,7 +83,7 @@ distribution_available = dist_dat.shape[0] > 0
 #########################################
 
 # initialize the figure
-fig = plt.figure(figsize=(10,40),dpi=200)
+fig = plt.figure(figsize=(10,60),dpi=200)
 
 nrows = 9
 
@@ -374,52 +377,37 @@ if distribution_available:
     ax.set_ylabel(r"Phenotype Hi, $u$")
     ax.set_title(loc="left", label=string.ascii_uppercase[rowctr])
     
-    
     rowctr +=1
+   
+    # do some kernel density estimation
+    subset_lo = dist_dat[(dist_dat["envt"] == 0)]
+    subset_hi = dist_dat[(dist_dat["envt"] == 1)]
+
+    # do the kernel estimation
+    kernel_lo = stats.gaussian_kde(subset_lo["phen_ad"])
+    kernel_hi = stats.gaussian_kde(subset_hi["phen_ad"])
 
     ax = plt.subplot(gs[rowctr,0])
 
-    ax.plot(
-            dist_dat["envt"]
-            ,dist_dat["g"]
-            ,color="red"
-            ,linestyle=""
-            ,markersize=0.5
-            ,marker=".")
-
-    ax.set_xlim(-0.1,1.1)
-    ax.set_ylim(-3.5,3.5)
-
-    ax.set_xlabel(r"Environment, $e$")
-    ax.set_ylabel(r"Genotype, $g$")
-    ax.set_title(loc="left", label=string.ascii_uppercase[rowctr])
-
-    rowctr +=1
-    
-    ax = plt.subplot(gs[rowctr,0])
+    xvals = np.linspace(0,1,100)
 
     ax.plot(
-            dist_dat["envt"]
-            ,dist_dat["cue_ad_envt_high"]-0.01
-            ,color="red"
-            ,linestyle=""
-            ,label="Adult cue"
-            ,marker=".")
-    
-    ax.plot(
-            dist_dat["envt"]
-            ,dist_dat["cue_juv_envt_high"]
+            xvals
+            ,kernel_lo.evaluate(xvals)
             ,color="blue"
-            ,linestyle=""
-            ,label="Juvenile cue"
-            ,marker=".")
+            ,label="Low envt")
+    
+    ax.plot(
+            xvals
+            ,kernel_hi.evaluate(xvals)
+            ,color="red"
+            ,label="High envt")
 
     ax.set_xlim(-0.1,1.1)
-    ax.set_ylim(-0.1,1.1)
     ax.legend()
 
     ax.set_xlabel(r"Environment, $e$")
-    ax.set_ylabel(r"Genotype, $g$")
+    ax.set_ylabel(r"Density")
     ax.set_title(loc="left", label=string.ascii_uppercase[rowctr])
 
 

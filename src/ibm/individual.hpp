@@ -86,6 +86,9 @@ class Individual
         // horizontal
         // conformism-based social learning
         double hc[2];
+        
+        // the maternal cue (stats purposes)
+        bool maternal_cue;
 
         // adult cue
         bool cue_ad_envt_high;
