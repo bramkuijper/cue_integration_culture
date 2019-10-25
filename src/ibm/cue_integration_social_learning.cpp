@@ -523,6 +523,18 @@ void write_stats(ofstream &DataFile, int generation, int timestep)
 
     double freq_high = 0.0;
 
+    // now some stats at the logit scale
+    // maternal variance relative to total variance
+    double mat_envt_component = 0.0;
+    double mat_phen_component = 0.0;
+    double gen_component = 0.0;
+    double social_vert_c_component = 0.0;
+    double social_vert_p_component = 0.0;
+    double social_horiz_c_component = 0.0;
+    double social_horiz_p_component = 0.0;
+    double juv_component = 0.0;
+    double total_component = 0.0;
+
     // auxiliary variables to calculate an individual's phenotype
     double g, z;
 
@@ -533,17 +545,19 @@ void write_stats(ofstream &DataFile, int generation, int timestep)
 
         for (int breeder_i = 0; breeder_i < NBreeder; ++breeder_i)
         {
+            g = 0.0;
             for (int g_i = 0; g_i < nloci_g; ++g_i)
             {
-                g =  0.5 * (
+                g +=  0.5 * (
                         Pop[patch_i].breeders[breeder_i].g[0][g_i]
                         +
                         Pop[patch_i].breeders[breeder_i].g[1][g_i]
                         );
 
-                mean_g += g;
-                ss_g += g * g;
             } // end for (int g_i = 0; g_i < nloci_g; ++g_i)
+
+            mean_g += g;
+            ss_g += g * g;
 
             // adult phenotype
             z = Pop[patch_i].breeders[breeder_i].phen_ad;
@@ -574,7 +588,16 @@ void write_stats(ofstream &DataFile, int generation, int timestep)
 
             mean_agen += z;
             ss_agen += z * z;
+
+            // variance components (liability scale)
+            // sum of squares for the 
+            // genetic variance component is
+            // var(agen * sum(g)) = E[agen^2 * sum(g)^2] - E[agen * sum(g)]^2
+            ss1_gen_component += z * g;
+            ss2_gen_component += z * z * g * g;
             
+
+
             // sensitivity to maternal cues
             z = 0.5 * (
                     Pop[patch_i].breeders[breeder_i].amat[0] 
@@ -584,7 +607,28 @@ void write_stats(ofstream &DataFile, int generation, int timestep)
 
             mean_amat += z;
             ss_amat += z * z;
-            
+
+            // variance components (liability scale)
+            // sum of squares for the 
+            // maternal environmental component
+            ss1_amat_envt_component += z * Pop[patch_i].breeders.xmat_envt_only;
+            ss2_amat_envt_component += z * z * 
+                Pop[patch_i].breeders.xmat_envt_only * Pop[patch_i].breeders.xmat_envt_only;
+
+            // variance components (liability scale)
+            // sum of squares for the 
+            // maternal phenotypic component
+            ss1_amat_phen_component += z * Pop[patch_i].breeders.xmat_phen_only;
+            ss2_amat_phen_component += z * z * 
+                Pop[patch_i].breeders.xmat_phen_only * Pop[patch_i].breeders.xmat_phen_only;
+
+            // variance components (liability scale)
+            // sum of squares for the 
+            // total maternal component
+            ss1_amat_component += z * Pop[patch_i].breeders.xmat;
+            ss2_amat_component += z * z * 
+                Pop[patch_i].breeders.xmat * Pop[patch_i].breeders.xmat;
+
             // sensitivity to juvenile cues
             z = 0.5 * (
                     Pop[patch_i].breeders[breeder_i].ajuv[0] 
@@ -594,6 +638,8 @@ void write_stats(ofstream &DataFile, int generation, int timestep)
             
             mean_ajuv += z;
             ss_ajuv += z * z;
+
+            ss1_cov_amat_juv += 
 
             // sensitivity to socially learnt cues (vertically)
             z = 0.5 * (
@@ -1158,14 +1204,13 @@ void create_offspring(Individual &mother
     offspring.phen_mat = mother.phen_ad;
     offspring.maternal_cue = mother.cue_ad_envt_high;
 
-    // express maternal 
+    // express sensitivity to maternal phenotype
     double b_phen = 0.5 * (offspring.bmat_phen[0] + offspring.bmat_phen[1]);
-
     assert(b_phen >= bmin);
     assert(b_phen <= bmax);
 
+    // express sensitivity to maternal environment 
     double b_envt = 0.5 * (offspring.bmat_envt[0] + offspring.bmat_envt[1]);
-
     assert(b_envt >= bmin);
     assert(b_phen <= bmax);
 
@@ -1176,11 +1221,28 @@ void create_offspring(Individual &mother
                    + 
                    dmat_weighting * b_envt));
 
+    // generate maternal cue again 
+    // but then holding the maternal environment constant
+    // this is for stats purposes
+    double xoff_phen_only = 1.0 /
+        (1.0 + exp(
+                   -b_phen * (mother.phen_ad - 0.5)));
+
+    // generate maternal cue again 
+    // but then holding the maternal phenotype constant
+    // this is for stats purposes
+    double xoff_envt_only = 1.0 /
+        (1.0 + exp(dmat_weighting * b_envt));
+
     // noise in the maternal cue
     normal_distribution<> maternal_noise(0.0, sdmat);
 
+    double maternal_noise = maternal_noise(rng_r);
+
     // calculate final value of maternal cue
-    offspring.xmat = xoff + maternal_noise(rng_r);
+    offspring.xmat = xoff + maternal_noise;
+    offspring.xmat_phen_only = xoff_phen_only + maternal_noise;
+    offspring.xmat_envt_only = xoff_phen_only + maternal_noise;
     clamp(offspring.xmat, 0.0, 1.0);
 
     // social learning
