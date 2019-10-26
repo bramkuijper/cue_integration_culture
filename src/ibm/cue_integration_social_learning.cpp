@@ -466,6 +466,33 @@ void write_data_headers(ofstream &DataFile)
         << "mean_surv1;" 
         << "var_surv0;" 
         << "var_surv1;" 
+        << "var_component_gen;"
+        << "var_component_ajuv;"
+        << "var_component_amat;"
+        << "var_component_amat_envt;"
+        << "var_component_amat_phen;"
+        << "cov_amat_ajuv;"
+        << "cov_amat_envt_ajuv;"
+        << "cov_amat_phen_ajuv;"
+        << "var_component_asoc_vert;"
+        << "var_component_asoc_vert_p;"
+        << "var_component_asoc_vert_c;"
+        << "cov_amat_asoc_vert;"
+        << "cov_amat_asoc_vert_c;"
+        << "cov_amat_asoc_vert_p;"
+        << "cov_amat_envt_asoc_vert;"
+        << "cov_amat_envt_asoc_vert_c;"
+        << "cov_amat_envt_asoc_vert_p;"
+        << "cov_amat_phen_asoc_vert;"
+        << "cov_amat_phen_asoc_vert_c;"
+        << "cov_amat_phen_asoc_vert_p;"
+        << "cov_ajuv_asoc_vert;"
+        << "cov_ajuv_asoc_vert_c;"
+        << "cov_ajuv_asoc_vert_p;"
+        << "cov_agen_asoc_vert;"
+        << "cov_agen_asoc_vert_c;"
+        << "cov_agen_asoc_vert_p;"
+        << "cov_agen_ajuv;"
         << endl; 
 }
 
@@ -525,18 +552,59 @@ void write_stats(ofstream &DataFile, int generation, int timestep)
 
     // now some stats at the logit scale
     // maternal variance relative to total variance
-    double mat_envt_component = 0.0;
-    double mat_phen_component = 0.0;
-    double gen_component = 0.0;
-    double social_vert_c_component = 0.0;
-    double social_vert_p_component = 0.0;
-    double social_horiz_c_component = 0.0;
-    double social_horiz_p_component = 0.0;
-    double juv_component = 0.0;
-    double total_component = 0.0;
+    double ss1_gen_component = 0.0;
+    double ss2_gen_component = 0.0;
+
+    double ss1_ajuv_component = 0.0;
+    double ss2_ajuv_component = 0.0;
+
+    double ss1_amat_component = 0.0;
+    double ss2_amat_component = 0.0;
+
+    double ss1_amat_envt_component = 0.0;
+    double ss2_amat_envt_component = 0.0;
+
+    double ss1_amat_phen_component = 0.0;
+    double ss2_amat_phen_component = 0.0;
+
+    double ss1_asoc_vert_component = 0.0;
+    double ss2_asoc_vert_component = 0.0;
+
+    double ss1_asoc_vert_c_component = 0.0;
+    double ss2_asoc_vert_c_component = 0.0;
+    double ss1_asoc_vert_p_component = 0.0;
+    double ss2_asoc_vert_p_component = 0.0;
+
+    double ss2_cov_agen_ajuv = 0.0;
+
+    double ss2_cov_amat_ajuv = 0.0;
+    double ss2_cov_amat_envt_ajuv = 0.0;
+    double ss2_cov_amat_phen_ajuv = 0.0;
+
+    double ss2_cov_agen_asoc_vert = 0.0;
+    double ss2_cov_agen_asoc_vert_c = 0.0;
+    double ss2_cov_agen_asoc_vert_p = 0.0;
+
+    double ss2_cov_ajuv_asoc_vert = 0.0;
+    double ss2_cov_ajuv_asoc_vert_c = 0.0;
+    double ss2_cov_ajuv_asoc_vert_p = 0.0;
+
+    double ss2_cov_amat_asoc_vert = 0.0;
+    double ss2_cov_amat_asoc_vert_c = 0.0;
+    double ss2_cov_amat_asoc_vert_p = 0.0;
+
+    double ss2_cov_amat_phen_asoc_vert = 0.0;
+    double ss2_cov_amat_phen_asoc_vert_c = 0.0;
+    double ss2_cov_amat_phen_asoc_vert_p = 0.0;
+    
+    double ss2_cov_amat_envt_asoc_vert = 0.0;
+    double ss2_cov_amat_envt_asoc_vert_c = 0.0;
+    double ss2_cov_amat_envt_asoc_vert_p = 0.0;
 
     // auxiliary variables to calculate an individual's phenotype
-    double g, z;
+    double g, z, agen, amat, ajuv, xmat_envt, xmat, xmat_phen, xsoc_vert, xsoc_vert_p, xsoc_vert_c, asoc_horiz, asoc_vert, cue_ad;
+
+
 
     // summing means and sums of squares over all patches and breeders
     for (int patch_i = 0; patch_i < NPatches; ++patch_i)
@@ -580,77 +648,130 @@ void write_stats(ofstream &DataFile, int generation, int timestep)
             ss_phen_prestige_horiz += z * z;
 
             // sensitivity to genetic cues
-            z = 0.5 * (
+            agen = 0.5 * (
                     Pop[patch_i].breeders[breeder_i].agen[0] 
                     +
                     Pop[patch_i].breeders[breeder_i].agen[1] 
                     );
 
-            mean_agen += z;
-            ss_agen += z * z;
+            mean_agen += agen;
+            ss_agen += agen * agen;
 
             // variance components (liability scale)
             // sum of squares for the 
             // genetic variance component is
             // var(agen * sum(g)) = E[agen^2 * sum(g)^2] - E[agen * sum(g)]^2
-            ss1_gen_component += z * g;
-            ss2_gen_component += z * z * g * g;
-            
-
+            ss1_gen_component += agen * g;
+            ss2_gen_component += agen * agen * g * g;
 
             // sensitivity to maternal cues
-            z = 0.5 * (
+            amat = 0.5 * (
                     Pop[patch_i].breeders[breeder_i].amat[0] 
                     +
                     Pop[patch_i].breeders[breeder_i].amat[1] 
                     );
 
-            mean_amat += z;
-            ss_amat += z * z;
+            mean_amat += amat;
+            ss_amat += amat * amat;
+
+            xmat_envt = Pop[patch_i].breeders[breeder_i].xmat_envt_only;
+            xmat_phen  = Pop[patch_i].breeders[breeder_i].xmat_phen_only;
+            xmat = Pop[patch_i].breeders[breeder_i].xmat;
 
             // variance components (liability scale)
             // sum of squares for the 
             // maternal environmental component
-            ss1_amat_envt_component += z * Pop[patch_i].breeders.xmat_envt_only;
-            ss2_amat_envt_component += z * z * 
-                Pop[patch_i].breeders.xmat_envt_only * Pop[patch_i].breeders.xmat_envt_only;
+            ss1_amat_envt_component += amat * xmat_envt;
+            ss2_amat_envt_component += amat * amat * xmat_envt * xmat_envt;
 
             // variance components (liability scale)
             // sum of squares for the 
             // maternal phenotypic component
-            ss1_amat_phen_component += z * Pop[patch_i].breeders.xmat_phen_only;
-            ss2_amat_phen_component += z * z * 
-                Pop[patch_i].breeders.xmat_phen_only * Pop[patch_i].breeders.xmat_phen_only;
+            ss1_amat_phen_component += amat * xmat_phen;
+            ss2_amat_phen_component += amat * amat * xmat_phen * xmat_phen;
 
             // variance components (liability scale)
             // sum of squares for the 
             // total maternal component
-            ss1_amat_component += z * Pop[patch_i].breeders.xmat;
-            ss2_amat_component += z * z * 
-                Pop[patch_i].breeders.xmat * Pop[patch_i].breeders.xmat;
+            ss1_amat_component += amat * xmat;
+            ss2_amat_component += amat * amat * xmat * xmat;
 
             // sensitivity to juvenile cues
-            z = 0.5 * (
+            ajuv = 0.5 * (
                     Pop[patch_i].breeders[breeder_i].ajuv[0] 
                     +
                     Pop[patch_i].breeders[breeder_i].ajuv[1] 
                     );
             
-            mean_ajuv += z;
-            ss_ajuv += z * z;
+            mean_ajuv += ajuv;
+            ss_ajuv += ajuv * ajuv;
 
-            ss1_cov_amat_juv += 
+            cue_ad = Pop[patch_i].breeders[breeder_i].cue_ad_envt_high;
+
+            // variance components juvenile cue
+            ss1_ajuv_component += ajuv * cue_ad;
+            ss2_ajuv_component += ajuv * ajuv * cue_ad * cue_ad;
+
+            // covariance between juvenile cue and maternal total effect
+            // E[abcd] - E[ab]E[cd] (the latter product was what we already
+            // calculated before)
+            ss2_cov_amat_ajuv += amat * xmat * ajuv * cue_ad;
+            ss2_cov_amat_envt_ajuv += amat * xmat_envt * ajuv * cue_ad;
+            ss2_cov_amat_phen_ajuv += amat * xmat_phen * ajuv * cue_ad;
+
+            ss2_cov_agen_ajuv += ajuv * cue_ad * agen * g;
 
             // sensitivity to socially learnt cues (vertically)
-            z = 0.5 * (
+            asoc_vert = 0.5 * (
                     Pop[patch_i].breeders[breeder_i].asoc_vert[0] 
                     +
                     Pop[patch_i].breeders[breeder_i].asoc_vert[1] 
                     );
 
-            mean_asoc_vert += z;
-            ss_asoc_vert += z * z;
+            mean_asoc_vert += asoc_vert;
+            ss_asoc_vert += asoc_vert * asoc_vert;
+
+            xsoc_vert = Pop[patch_i].breeders[breeder_i].xsoc_vert;
+            xsoc_vert_c = Pop[patch_i].breeders[breeder_i].xsoc_vert_c;
+            xsoc_vert_p = Pop[patch_i].breeders[breeder_i].xsoc_vert_p;
+
+            // variance due to the total socially learnt component
+            ss1_asoc_vert_component += asoc_vert * xsoc_vert;
+            ss2_asoc_vert_component += asoc_vert * asoc_vert * xsoc_vert * xsoc_vert;
+
+            // variance due to the conformity bias socially learnt component
+            ss1_asoc_vert_c_component += asoc_vert * xsoc_vert_c;
+            ss2_asoc_vert_c_component += asoc_vert * asoc_vert * xsoc_vert_c * xsoc_vert_c;
             
+            // variance due to the prestige bias socially learnt component
+            ss1_asoc_vert_p_component += asoc_vert * xsoc_vert_p;
+            ss2_asoc_vert_p_component += asoc_vert * asoc_vert * xsoc_vert_p * xsoc_vert_p;
+            
+            // covariance between maternal and vertically learnt components
+            ss2_cov_amat_asoc_vert += amat * xmat * asoc_vert * xsoc_vert;
+            ss2_cov_amat_asoc_vert_c += amat * xmat * asoc_vert * xsoc_vert_c;
+            ss2_cov_amat_asoc_vert_p += amat * xmat * asoc_vert * xsoc_vert_p;
+
+            // covariance between maternal environment and vertically learnt components
+            ss2_cov_amat_envt_asoc_vert += amat * xmat_envt * asoc_vert * xsoc_vert;
+            ss2_cov_amat_envt_asoc_vert_c += amat * xmat_envt * asoc_vert * xsoc_vert_c;
+            ss2_cov_amat_envt_asoc_vert_p += amat * xmat_envt * asoc_vert * xsoc_vert_p;
+
+            // covariance between maternal phenotype and vertically learnt components
+            ss2_cov_amat_phen_asoc_vert += amat * xmat_phen * asoc_vert * xsoc_vert;
+            ss2_cov_amat_phen_asoc_vert_c += amat * xmat_phen * asoc_vert * xsoc_vert_c;
+            ss2_cov_amat_phen_asoc_vert_p += amat * xmat_phen * asoc_vert * xsoc_vert_p;
+            
+            // covariance between juvenile cue and vertically learnt components
+            ss2_cov_ajuv_asoc_vert += ajuv * cue_ad * asoc_vert * xsoc_vert;
+            ss2_cov_ajuv_asoc_vert_c += ajuv * cue_ad * asoc_vert * xsoc_vert_c;
+            ss2_cov_ajuv_asoc_vert_p += ajuv * cue_ad * asoc_vert * xsoc_vert_p;
+
+            // covariance between genetic cue and vertically learnt components
+            ss2_cov_agen_asoc_vert += agen * g * asoc_vert * xsoc_vert;
+            ss2_cov_agen_asoc_vert_c += agen * g * asoc_vert * xsoc_vert_c;
+            ss2_cov_agen_asoc_vert_p += agen * g * asoc_vert * xsoc_vert_p;
+
             // sensitivity to socially learnt cues (horizontally)
             z = 0.5 * (
                     Pop[patch_i].breeders[breeder_i].asoc_horiz[0] 
@@ -780,6 +901,89 @@ void write_stats(ofstream &DataFile, int generation, int timestep)
     mean_g /= NPatches * NBreeder;
     double var_g = ss_g / (NPatches * NBreeder) - mean_g * mean_g;
 
+
+
+    // Variance components at the logit scale
+
+    double var_component_gen = ss2_gen_component / (NPatches * NBreeder) - 
+        pow(ss1_gen_component / (NPatches * NBreeder),2);
+    
+    double var_component_ajuv  = ss2_ajuv_component / (NPatches * NBreeder) - 
+        pow(ss1_ajuv_component / (NPatches * NBreeder),2);
+
+    double var_component_amat  = ss2_amat_component / (NPatches * NBreeder) - 
+        pow(ss1_amat_component / (NPatches * NBreeder),2);
+
+    double var_component_amat_envt  = ss2_amat_envt_component / (NPatches * NBreeder) - 
+        pow(ss1_amat_envt_component / (NPatches * NBreeder),2);
+    
+    double var_component_amat_phen  = ss2_amat_phen_component / (NPatches * NBreeder) - 
+        pow(ss1_amat_phen_component / (NPatches * NBreeder),2);
+    
+    double cov_amat_ajuv = ss2_cov_amat_ajuv / (NPatches * NBreeder) - 
+        ss1_amat_component / (NPatches * NBreeder) * ss1_ajuv_component / (NPatches * NBreeder);
+    
+    double cov_amat_envt_ajuv = ss2_cov_amat_envt_ajuv / (NPatches * NBreeder) - 
+        ss1_amat_envt_component / (NPatches * NBreeder) * ss1_ajuv_component / (NPatches * NBreeder);
+    
+    double cov_amat_phen_ajuv = ss2_cov_amat_phen_ajuv / (NPatches * NBreeder) - 
+        ss1_amat_phen_component / (NPatches * NBreeder) * ss1_ajuv_component / (NPatches * NBreeder);
+
+    double var_component_asoc_vert = ss2_asoc_vert_component / (NPatches * NBreeder) - 
+        pow(ss1_asoc_vert_component / (NPatches * NBreeder),2);
+
+    double var_component_asoc_vert_p = ss2_asoc_vert_p_component / (NPatches * NBreeder) - 
+        pow(ss1_asoc_vert_p_component / (NPatches * NBreeder),2);
+
+    double var_component_asoc_vert_c = ss2_asoc_vert_c_component / (NPatches * NBreeder) - 
+        pow(ss1_asoc_vert_c_component / (NPatches * NBreeder),2);
+
+    double cov_amat_asoc_vert = ss2_cov_amat_asoc_vert / (NPatches * NBreeder) -
+        ss1_amat_component / (NPatches * NBreeder) * ss1_asoc_vert_component / (NPatches * NBreeder);
+    double cov_amat_asoc_vert_c = ss2_cov_amat_asoc_vert_c / (NPatches * NBreeder) -
+        ss1_amat_component / (NPatches * NBreeder) * ss1_asoc_vert_c_component / (NPatches * NBreeder);
+    
+    double cov_amat_asoc_vert_p = ss2_cov_amat_asoc_vert_p / (NPatches * NBreeder) -
+        ss1_amat_component / (NPatches * NBreeder) * ss1_asoc_vert_p_component / (NPatches * NBreeder);
+    
+    double cov_amat_envt_asoc_vert = ss2_cov_amat_envt_asoc_vert / (NPatches * NBreeder) -
+        ss1_amat_envt_component / (NPatches * NBreeder) * ss1_asoc_vert_component / (NPatches * NBreeder);
+    double cov_amat_envt_asoc_vert_c = ss2_cov_amat_envt_asoc_vert_c / (NPatches * NBreeder) -
+        ss1_amat_envt_component / (NPatches * NBreeder) * ss1_asoc_vert_c_component / (NPatches * NBreeder);
+    
+    double cov_amat_envt_asoc_vert_p = ss2_cov_amat_envt_asoc_vert_p / (NPatches * NBreeder) -
+        ss1_amat_envt_component / (NPatches * NBreeder) * ss1_asoc_vert_p_component / (NPatches * NBreeder);
+
+    double cov_amat_phen_asoc_vert = ss2_cov_amat_phen_asoc_vert / (NPatches * NBreeder) -
+        ss1_amat_phen_component / (NPatches * NBreeder) * ss1_asoc_vert_component / (NPatches * NBreeder);
+    double cov_amat_phen_asoc_vert_c = ss2_cov_amat_phen_asoc_vert_c / (NPatches * NBreeder) -
+        ss1_amat_phen_component / (NPatches * NBreeder) * ss1_asoc_vert_c_component / (NPatches * NBreeder);
+    
+    double cov_amat_phen_asoc_vert_p = ss2_cov_amat_phen_asoc_vert_p / (NPatches * NBreeder) -
+        ss1_amat_phen_component / (NPatches * NBreeder) * ss1_asoc_vert_p_component / (NPatches * NBreeder);
+
+    double cov_ajuv_asoc_vert = ss2_cov_ajuv_asoc_vert / (NPatches * NBreeder) -
+        ss1_ajuv_component / (NPatches * NBreeder) * ss1_asoc_vert_component / (NPatches * NBreeder);
+    
+    double cov_ajuv_asoc_vert_p = ss2_cov_ajuv_asoc_vert_p / (NPatches * NBreeder) -
+        ss1_ajuv_component / (NPatches * NBreeder) * ss1_asoc_vert_p_component / (NPatches * NBreeder);
+    
+    double cov_ajuv_asoc_vert_c = ss2_cov_ajuv_asoc_vert_c / (NPatches * NBreeder) -
+        ss1_ajuv_component / (NPatches * NBreeder) * ss1_asoc_vert_c_component / (NPatches * NBreeder);
+
+
+    double cov_agen_asoc_vert = ss2_cov_agen_asoc_vert / (NPatches * NBreeder) -
+        ss1_gen_component / (NPatches * NBreeder) * ss1_asoc_vert_component / (NPatches * NBreeder);
+    
+    double cov_agen_asoc_vert_p = ss2_cov_agen_asoc_vert_p / (NPatches * NBreeder) -
+        ss1_gen_component / (NPatches * NBreeder) * ss1_asoc_vert_p_component / (NPatches * NBreeder);
+    
+    double cov_agen_asoc_vert_c = ss2_cov_agen_asoc_vert_c / (NPatches * NBreeder) -
+        ss1_gen_component / (NPatches * NBreeder) * ss1_asoc_vert_c_component / (NPatches * NBreeder);
+
+    double cov_agen_ajuv = ss2_cov_agen_ajuv / (NPatches * NBreeder) -
+        ss1_gen_component / (NPatches * NBreeder) * ss1_ajuv_component / (NPatches * NBreeder);
+
     freq_high /= NPatches;
 
     DataFile << generation << ";"
@@ -820,6 +1024,33 @@ void write_stats(ofstream &DataFile, int generation, int timestep)
         << mean_survival[1] << ";" 
         << var_survival[0] << ";" 
         << var_survival[1] << ";" 
+        << var_component_gen << ";"
+        << var_component_ajuv << ";"
+        << var_component_amat << ";"
+        << var_component_amat_envt << ";"
+        << var_component_amat_phen << ";"
+        << cov_amat_ajuv << ";"
+        << cov_amat_envt_ajuv << ";"
+        << cov_amat_phen_ajuv << ";"
+        << var_component_asoc_vert << ";"
+        << var_component_asoc_vert_p << ";"
+        << var_component_asoc_vert_c << ";"
+        << cov_amat_asoc_vert << ";"
+        << cov_amat_asoc_vert_c << ";"
+        << cov_amat_asoc_vert_p << ";"
+        << cov_amat_envt_asoc_vert << ";"
+        << cov_amat_envt_asoc_vert_c << ";"
+        << cov_amat_envt_asoc_vert_p << ";"
+        << cov_amat_phen_asoc_vert << ";"
+        << cov_amat_phen_asoc_vert_c << ";"
+        << cov_amat_phen_asoc_vert_p << ";"
+        << cov_ajuv_asoc_vert << ";"
+        << cov_ajuv_asoc_vert_c << ";"
+        << cov_ajuv_asoc_vert_p << ";"
+        << cov_agen_asoc_vert << ";"
+        << cov_agen_asoc_vert_c << ";"
+        << cov_agen_asoc_vert_p << ";"
+        << cov_agen_ajuv << ";"
         << endl;
 }
 
@@ -1237,12 +1468,12 @@ void create_offspring(Individual &mother
     // noise in the maternal cue
     normal_distribution<> maternal_noise(0.0, sdmat);
 
-    double maternal_noise = maternal_noise(rng_r);
+    double mnoise = maternal_noise(rng_r);
 
     // calculate final value of maternal cue
-    offspring.xmat = xoff + maternal_noise;
-    offspring.xmat_phen_only = xoff_phen_only + maternal_noise;
-    offspring.xmat_envt_only = xoff_phen_only + maternal_noise;
+    offspring.xmat = xoff + mnoise;
+    offspring.xmat_phen_only = xoff_phen_only + mnoise;
+    offspring.xmat_envt_only = xoff_envt_only + mnoise;
     clamp(offspring.xmat, 0.0, 1.0);
 
     // social learning
@@ -1255,8 +1486,20 @@ void create_offspring(Individual &mother
                 - vp_phen * (offspring.phen_prestige_vert - 0.5)
                 - vc_phen * offspring.xconformist_vert));
 
+    // also calculate vertical social cues for prestige only
+    double xsoc_vert_c = 1.0 / (1.0 + exp(
+                - vc_phen * offspring.xconformist_vert));
+
+    double xsoc_vert_p = 1.0 / (1.0 + exp(
+                - vp_phen * (offspring.phen_prestige_vert - 0.5)));
+
     normal_distribution<> social_noise(0.0, sdsoc_vert);
-    offspring.xsoc_vert = xsoc_vert + social_noise(rng_r);
+
+    double socnoise = social_noise(rng_r);
+
+    offspring.xsoc_vert = xsoc_vert + socnoise;
+    offspring.xsoc_vert_c = xsoc_vert_c + socnoise;
+    offspring.xsoc_vert_p = xsoc_vert_p + socnoise;
 
     clamp(offspring.xsoc_vert, 0.0, 1.0);
 
