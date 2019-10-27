@@ -471,6 +471,7 @@ void write_data_headers(ofstream &DataFile)
         << "var_component_amat;"
         << "var_component_amat_envt;"
         << "var_component_amat_phen;"
+        << "cov_amat_phen_amat_envt;"
         << "cov_amat_ajuv;"
         << "cov_amat_envt_ajuv;"
         << "cov_amat_phen_ajuv;"
@@ -607,6 +608,7 @@ void write_stats(ofstream &DataFile, int generation, int timestep)
     double ss2_asoc_horiz_p_component = 0.0;
 
     double ss2_cov_agen_ajuv = 0.0;
+    double ss2_cov_amat_phen_amat_envt = 0.0;
 
     double ss2_cov_amat_ajuv = 0.0;
     double ss2_cov_amat_envt_ajuv = 0.0;
@@ -746,6 +748,9 @@ void write_stats(ofstream &DataFile, int generation, int timestep)
             ss1_amat_component += amat * xmat;
             ss2_amat_component += amat * amat * xmat * xmat;
 
+            // covariance between different types of maternal effect
+            ss2_cov_amat_phen_amat_envt += amat * xmat_envt * amat * xmat_phen;
+
             // sensitivity to juvenile cues
             ajuv = 0.5 * (
                     Pop[patch_i].breeders[breeder_i].ajuv[0] 
@@ -768,6 +773,7 @@ void write_stats(ofstream &DataFile, int generation, int timestep)
             ss2_cov_amat_ajuv += amat * xmat * ajuv * cue_ad;
             ss2_cov_amat_envt_ajuv += amat * xmat_envt * ajuv * cue_ad;
             ss2_cov_amat_phen_ajuv += amat * xmat_phen * ajuv * cue_ad;
+
 
             ss2_cov_agen_ajuv += ajuv * cue_ad * agen * g;
 
@@ -1007,7 +1013,12 @@ void write_stats(ofstream &DataFile, int generation, int timestep)
     
     double var_component_amat_phen  = ss2_amat_phen_component / (NPatches * NBreeder) - 
         pow(ss1_amat_phen_component / (NPatches * NBreeder),2);
-    
+  
+    // covariance between environmental and phenotypic maternal effects
+    double cov_amat_phen_amat_envt = ss2_cov_amat_phen_amat_envt / (NPatches * NBreeder) -
+        ss1_amat_envt_component / (NPatches * NBreeder) * ss1_amat_phen_component / (NPatches * NBreeder);
+
+    // covariance between juvenile cue and maternal effects
     double cov_amat_ajuv = ss2_cov_amat_ajuv / (NPatches * NBreeder) - 
         ss1_amat_component / (NPatches * NBreeder) * ss1_ajuv_component / (NPatches * NBreeder);
     
@@ -1194,6 +1205,7 @@ void write_stats(ofstream &DataFile, int generation, int timestep)
         << var_component_amat << ";"
         << var_component_amat_envt << ";"
         << var_component_amat_phen << ";"
+        << cov_amat_phen_amat_envt << ";"
 
         << cov_amat_ajuv << ";"
         << cov_amat_envt_ajuv << ";"
@@ -1230,7 +1242,6 @@ void write_stats(ofstream &DataFile, int generation, int timestep)
         << cov_amat_phen_asoc_horiz << ";"
         << cov_amat_phen_asoc_horiz_c << ";"
         << cov_amat_phen_asoc_horiz_p << ";"
-
 
         << cov_ajuv_asoc_vert << ";"
         << cov_ajuv_asoc_vert_c << ";"
