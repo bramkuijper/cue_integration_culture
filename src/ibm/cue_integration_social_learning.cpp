@@ -40,7 +40,7 @@ const int NPatches = 400;
 const int NBreeder = 100;
 
 // number of generations
-int number_generations = 50000;
+int number_generations = 75000;
 
 // environmental switch rate
 //
@@ -131,7 +131,7 @@ double m = 0.0;
 
 //write out the data 
 //every nth generation
-int data_nth_generation = 10;
+int data_nth_generation = 50;
 
 // survival statistics which I obtain in the survive()
 // function and then use in the write_data() function
@@ -381,6 +381,7 @@ void write_dist(ofstream &DataFile)
                 << Pop[patch_i].envt_high << ";"
                 << Pop[patch_i].breeders[breeder_i].cue_ad_envt_high << ";"
                 << Pop[patch_i].breeders[breeder_i].cue_juv_envt_high << ";"
+                << Pop[patch_i].breeders[breeder_i].maternal_cue << ";"
                 << endl;
         } // end for (int breeder_i = 0; breeder_i < NPatches; ++breeder_i)
     } // end for (int patch_i = 0; patch_i < NPatches; ++patch_i)
@@ -419,6 +420,7 @@ void write_data_headers_dist(ofstream &DataFile)
         << "envt;" 
         << "cue_ad_envt_high;" 
         << "cue_juv_envt_high;" 
+        << "maternal_cue;" 
         << endl; 
 }
 
@@ -873,10 +875,10 @@ double mutation(double val, double mu, double sdmu)
             uniform_real_distribution<> mutational_effect(-0.5 + 0.0000001, 0.5);
             double U = mutational_effect(rng_r);
 
-            double sgnU = U < 0.0 ? -1 : U > 0.0 ? 1.0 : 0.0;
+            double sgnU = U < 0.0 ? -1.0 : U > 0.0 ? 1.0 : 0.0;
 
             // effect size of Laplace
-            double x = -sdmu * sgnU * log(1.0 - 2 * fabs(U));
+            double x = -sdmu/sqrt(2.0) * sgnU * log(1.0 - 2 * fabs(U));
 
             val += x;
         }
@@ -1154,13 +1156,25 @@ void create_offspring(Individual &mother
 
     // store the maternal phenotype for stats purposes
     offspring.phen_mat = mother.phen_ad;
+    offspring.maternal_cue = mother.cue_ad_envt_high;
+
+    // express maternal 
+    double b_phen = 0.5 * (offspring.bmat_phen[0] + offspring.bmat_phen[1]);
+
+    assert(b_phen >= bmin);
+    assert(b_phen <= bmax);
+
+    double b_envt = 0.5 * (offspring.bmat_envt[0] + offspring.bmat_envt[1]);
+
+    assert(b_envt >= bmin);
+    assert(b_phen <= bmax);
 
     // generate maternal cue
     double xoff = 1.0 /
         (1.0 + exp(
-                   -0.5 * (mother.bmat_phen[0] + mother.bmat_phen[1]) * (mother.phen_ad - 0.5) 
+                   -b_phen * (mother.phen_ad - 0.5) 
                    + 
-                   dmat_weighting * 0.5 * (mother.bmat_envt[0] + mother.bmat_envt[1])));
+                   dmat_weighting * b_envt));
 
     // noise in the maternal cue
     normal_distribution<> maternal_noise(0.0, sdmat);
@@ -1184,15 +1198,16 @@ void create_offspring(Individual &mother
 
     clamp(offspring.xsoc_vert, 0.0, 1.0);
 
+
+
     // expressing a juvenile phenotype
     offspring.phen_juv = 1.0 / 
         (1.0 + exp(
                    -amat_phen * offspring.xmat +
                    -agen_phen * sum_genes +
-                   -ajuv_phen * (offspring.cue_juv_envt_high ? 1 : -1)
+                   -ajuv_phen * offspring.cue_juv_envt_high
                    -asoc_vert_phen * offspring.xsoc_vert
                    ));
-
     // 
     offspring.phen_ad = NAN;
 } // end create_offspring()
@@ -1320,6 +1335,7 @@ void social_learning(
 
         surv = survival_probability(phen,Pop[patch_i].envt_high);
 
+        // update prestige bias
         if (surv > prestige_surv)
         {
             prestige_phen = phen;
@@ -1380,7 +1396,8 @@ void replace()
         {
             Individual Kid;
 
-            if (uniform(rng_r) > m 
+            // offspring is born in local patch hence sample from local parents
+            if (uniform(rng_r) < 1.0 - m 
                     &&
                     Pop[patch_i].n_breeders > 0)
             {
@@ -1406,8 +1423,9 @@ void replace()
                         ,xconformist
                 );
             }
-            else
+            else // offspring born in remote patch
             {
+                // sample a random remote pathc
                 do {
 
                     random_remote_patch = patch_sampler(rng_r);
@@ -1563,7 +1581,10 @@ int main(int argc, char **argv)
     // initialize the population
     init_population();
 
-    for (int generation = 0; generation < number_generations; ++generation)
+    // auxiliary variable to store current generation
+    int generation;
+
+    for (generation = 0; generation < number_generations; ++generation)
     {
         // survival of adult breeders followed by reproduction
         survive();
@@ -1578,6 +1599,8 @@ int main(int argc, char **argv)
             write_stats(DataFile, generation, 2);
         }
     }
+            
+    write_stats(DataFile, generation, 2);
 
     write_dist(DataFileDist);
     

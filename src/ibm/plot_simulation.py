@@ -22,6 +22,9 @@ import matplotlib.gridspec as gridspec
 from matplotlib.ticker import AutoMinorLocator
 from matplotlib import cm
 
+# import stats for kernel density estimation
+from scipy import stats
+
 
 #########################################
 #           check where data ends
@@ -80,7 +83,7 @@ distribution_available = dist_dat.shape[0] > 0
 #########################################
 
 # initialize the figure
-fig = plt.figure(figsize=(10,40),dpi=200)
+fig = plt.figure(figsize=(10,60),dpi=200)
 
 nrows = 9
 
@@ -138,8 +141,13 @@ ax.plot(
 
 ax.plot(
         dat["generation"]
-        ,dat["mean_asoc"]
-        ,label=r"$a_{\mathrm{soc}}$")
+        ,dat["mean_asoc_vert"]
+        ,label=r"$a_{\mathrm{soc,vert}}$")
+
+ax.plot(
+        dat["generation"]
+        ,dat["mean_asoc_horiz"]
+        ,label=r"$a_{\mathrm{soc,horiz}}$")
 
 ax.set_ylabel(r"Sensitivies to cues, $a$")
 ax.set_title(loc="left", label=string.ascii_uppercase[rowctr])
@@ -169,15 +177,34 @@ ax = plt.subplot(gs[rowctr,0])
 
 ax.plot(
         dat["generation"]
-        ,dat["mean_dp"]
-        ,label=r"$d_{\mathrm{p}}$")
+        ,dat["mean_hp"]
+        ,label=r"$h_{\mathrm{p}}$")
 
 ax.plot(
         dat["generation"]
-        ,dat["mean_dc"]
-        ,label=r"$d_{\mathrm{c}}$")
+        ,dat["mean_hc"]
+        ,label=r"$h_{\mathrm{c}}$")
 
-ax.set_ylabel(r"Social learning sensitivities, $d$")
+ax.set_ylabel(r"Horiz soc sens, $h$")
+ax.legend()
+ax.set_title(loc="left", label=string.ascii_uppercase[rowctr])
+
+rowctr +=1
+
+
+ax = plt.subplot(gs[rowctr,0])
+
+ax.plot(
+        dat["generation"]
+        ,dat["mean_vp"]
+        ,label=r"$v_{\mathrm{p}}$")
+
+ax.plot(
+        dat["generation"]
+        ,dat["mean_vc"]
+        ,label=r"$v_{\mathrm{c}}$")
+
+ax.set_ylabel(r"Vert soc sens, $v$")
 ax.legend()
 ax.set_title(loc="left", label=string.ascii_uppercase[rowctr])
 
@@ -277,7 +304,7 @@ if distribution_available:
     dist_dat_sub1 = dist_dat[(dist_dat["envt"] == 1)]
 
     ax.plot(
-            dist_dat_sub0["ad_mat"]
+            dist_dat_sub0["phen_mat"]
             ,dist_dat_sub0["xmat"]
             ,linestyle=""
             ,markersize=0.5
@@ -298,7 +325,7 @@ if distribution_available:
     ax = plt.subplot(gs[rowctr,0])
 
     ax.plot(
-            dist_dat_sub1["ad_mat"]
+            dist_dat_sub1["phen_mat"]
             ,dist_dat_sub1["xmat"]
             ,linestyle=""
             ,markersize=0.5
@@ -318,7 +345,7 @@ if distribution_available:
     
     ax.plot(
             dist_dat_sub0["xmat"]
-            ,dist_dat_sub0["ad_phen"]
+            ,dist_dat_sub0["phen_ad"]
             ,linestyle=""
             ,markersize=0.5
             ,marker="."
@@ -337,7 +364,7 @@ if distribution_available:
 
     ax.plot(
             dist_dat_sub1["xmat"]
-            ,dist_dat_sub1["ad_phen"]
+            ,dist_dat_sub1["phen_ad"]
             ,linestyle=""
             ,markersize=0.5
             ,marker="."
@@ -350,52 +377,37 @@ if distribution_available:
     ax.set_ylabel(r"Phenotype Hi, $u$")
     ax.set_title(loc="left", label=string.ascii_uppercase[rowctr])
     
-    
     rowctr +=1
+   
+    # do some kernel density estimation
+    subset_lo = dist_dat[(dist_dat["envt"] == 0)]
+    subset_hi = dist_dat[(dist_dat["envt"] == 1)]
+
+    # do the kernel estimation
+    kernel_lo = stats.gaussian_kde(subset_lo["phen_ad"])
+    kernel_hi = stats.gaussian_kde(subset_hi["phen_ad"])
 
     ax = plt.subplot(gs[rowctr,0])
 
-    ax.plot(
-            dist_dat["envt"]
-            ,dist_dat["g"]
-            ,color="red"
-            ,linestyle=""
-            ,markersize=0.5
-            ,marker=".")
-
-    ax.set_xlim(-0.1,1.1)
-    ax.set_ylim(-3.5,3.5)
-
-    ax.set_xlabel(r"Environment, $e$")
-    ax.set_ylabel(r"Genotype, $g$")
-    ax.set_title(loc="left", label=string.ascii_uppercase[rowctr])
-
-    rowctr +=1
-    
-    ax = plt.subplot(gs[rowctr,0])
+    xvals = np.linspace(0,1,100)
 
     ax.plot(
-            dist_dat["envt"]
-            ,dist_dat["cue_ad_envt_high"]-0.01
-            ,color="red"
-            ,linestyle=""
-            ,label="Adult cue"
-            ,marker=".")
-    
-    ax.plot(
-            dist_dat["envt"]
-            ,dist_dat["cue_juv_envt_high"]
+            xvals
+            ,kernel_lo.evaluate(xvals)
             ,color="blue"
-            ,linestyle=""
-            ,label="Juvenile cue"
-            ,marker=".")
+            ,label="Low envt")
+    
+    ax.plot(
+            xvals
+            ,kernel_hi.evaluate(xvals)
+            ,color="red"
+            ,label="High envt")
 
     ax.set_xlim(-0.1,1.1)
-    ax.set_ylim(-0.1,1.1)
     ax.legend()
 
     ax.set_xlabel(r"Environment, $e$")
-    ax.set_ylabel(r"Genotype, $g$")
+    ax.set_ylabel(r"Density")
     ax.set_title(loc="left", label=string.ascii_uppercase[rowctr])
 
 
