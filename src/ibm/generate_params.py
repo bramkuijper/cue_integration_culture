@@ -13,13 +13,14 @@ import socket
 sigmoidal_survival = [ 0 ]
 
 # frequency of the high environment
-p = list(np.linspace(0,1,11))
+#p = list(np.linspace(0,1,11))
 #p = [ 0.05, 0.1,0.25, 0.5, 0.75, 0.9, 0.95, 0.99 ]
-#p = [ 0.9 ]
+p = [ 0.9 ]
 survival_scalar_sig = [-2.5,3.5]
 survival_scalar_quad = [0.8,0.0]
-qmat = [ 0.5 ]
-qjuv = [ 0.5, 0.75, 1.0]
+
+qmat = list(np.linspace(0.5,1.0,6))
+qjuv = [ ]
 
 nloci_g = [ 3 ]
 
@@ -27,7 +28,7 @@ exe = "./xcue_integration"
 
 laplace = 1
 
-nrep = 3
+nrep = 5
 
 # for now we just need 12 zeros, which covers all the traits
 initvals = " ".join([str(0.0) for x in range(0,12)])
@@ -36,22 +37,23 @@ aminmax = "0.0 8.0"
 gminmax = "-1.0 1.0"
 bminmax = "-10.0 10.0"
 
-sdmat = [ 0.05, 1.0 ]
-sdsoc_horiz = [ 0.05, 1.0 ]
-sdsoc_vert = [ 0.05, 1.0 ]
+sdmat = [ 0.05 ]
+sdsoc_horiz = [ 1.0 ]
+sdsoc_vert = [ 1.0 ]
 #m = list(np.linspace(0, 1.0, 11))
-m = [ 0.1 ]
+m = [ 0.1, 0.2]
 
 # mu_g, mu_amat, mu_ajuv, mu_agen, mu_asoc_horiz, mu_asoc_vert, mu_bmat_phen, mu_bmat_envt, mu_hp, mu_hc, mu_vp, mu_vc
-#mu_combis = [[ 0.01, 0.01, 0.01, 0.01, 0, 0, 0.01, 0.01, 0, 0, 0, 0 ]]#[ [ 0.01 for x in range(0,12) ]]
-mu_combis = [[ 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01 ]]#[ [ 0.01 for x in range(0,12) ]]
+mu_combis = [[ 0.01, 0.01, 0.01, 0.01, 0, 0, 0.01, 0.01, 0, 0, 0, 0 ]]#[ [ 0.01 for x in range(0,12) ]]
+#mu_combis = [ [ 0.01 for x in range(0,12) ]]
+
 #mu_combis = [[ 0.0001, 0.0001, 0.0001, 0.0001, 0.0001, 0.0001 ]]
 sdmu = "0.02 0.25 0.25"
 
 # sampling sizes for social learning
 # nph, nch (performance and conformity for horizontal)
 # npv, ncv (performance and conformity for vertical)
-nx = [[5,5,5,5]]
+nx = [[0,0,0,0]]
 
 # counter for the number of jobs
 ctr = 1
@@ -81,6 +83,9 @@ for rep_i in range(0,nrep):
         for p_i in p:
             p_i = round(p_i,3)
             for qmat_i in qmat:
+                
+                qjuv = [ 1.5 - qmat_i ]
+                
                 for qjuv_i in qjuv:
                     for nloci_g_i in nloci_g:
                         for sdmat_i in sdmat:

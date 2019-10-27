@@ -32,12 +32,18 @@ class Individual
         // maternal cue provided to the offspring (stats purposes)
         // including noise
         double xmat;
+        double xmat_envt_only;
+        double xmat_phen_only;
         
         // horizontal socially learnt cue
         double xsoc_horiz;
+        double xsoc_horiz_c;
+        double xsoc_horiz_p;
         
         // vertical socially learnt cue
         double xsoc_vert;
+        double xsoc_vert_c;
+        double xsoc_vert_p;
         
         // horizontal socially learnt conformism-based cue 
         double xconformist_horiz;
