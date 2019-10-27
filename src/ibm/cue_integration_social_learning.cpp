@@ -477,21 +477,44 @@ void write_data_headers(ofstream &DataFile)
         << "var_component_asoc_vert;"
         << "var_component_asoc_vert_p;"
         << "var_component_asoc_vert_c;"
+        << "var_component_asoc_horiz;"
+        << "var_component_asoc_horiz_p;"
+        << "var_component_asoc_horiz_c;"
         << "cov_amat_asoc_vert;"
         << "cov_amat_asoc_vert_c;"
         << "cov_amat_asoc_vert_p;"
+        << "cov_amat_asoc_horiz;"
+        << "cov_amat_asoc_horiz_c;"
+        << "cov_amat_asoc_horiz_p;"
         << "cov_amat_envt_asoc_vert;"
         << "cov_amat_envt_asoc_vert_c;"
         << "cov_amat_envt_asoc_vert_p;"
+        << "cov_amat_envt_asoc_horiz;"
+        << "cov_amat_envt_asoc_horiz_c;"
+        << "cov_amat_envt_asoc_horiz_p;"
         << "cov_amat_phen_asoc_vert;"
         << "cov_amat_phen_asoc_vert_c;"
         << "cov_amat_phen_asoc_vert_p;"
+        << "cov_amat_phen_asoc_horiz;"
+        << "cov_amat_phen_asoc_horiz_c;"
+        << "cov_amat_phen_asoc_horiz_p;"
+
         << "cov_ajuv_asoc_vert;"
         << "cov_ajuv_asoc_vert_c;"
         << "cov_ajuv_asoc_vert_p;"
+        
+        << "cov_ajuv_asoc_horiz;"
+        << "cov_ajuv_asoc_horiz_c;"
+        << "cov_ajuv_asoc_horiz_p;"
+
         << "cov_agen_asoc_vert;"
         << "cov_agen_asoc_vert_c;"
         << "cov_agen_asoc_vert_p;"
+
+        << "cov_agen_asoc_horiz;"
+        << "cov_agen_asoc_horiz_c;"
+        << "cov_agen_asoc_horiz_p;"
+
         << "cov_agen_ajuv;"
         << endl; 
 }
@@ -569,11 +592,19 @@ void write_stats(ofstream &DataFile, int generation, int timestep)
 
     double ss1_asoc_vert_component = 0.0;
     double ss2_asoc_vert_component = 0.0;
+    
+    double ss1_asoc_horiz_component = 0.0;
+    double ss2_asoc_horiz_component = 0.0;
 
     double ss1_asoc_vert_c_component = 0.0;
     double ss2_asoc_vert_c_component = 0.0;
     double ss1_asoc_vert_p_component = 0.0;
     double ss2_asoc_vert_p_component = 0.0;
+    
+    double ss1_asoc_horiz_c_component = 0.0;
+    double ss2_asoc_horiz_c_component = 0.0;
+    double ss1_asoc_horiz_p_component = 0.0;
+    double ss2_asoc_horiz_p_component = 0.0;
 
     double ss2_cov_agen_ajuv = 0.0;
 
@@ -588,10 +619,18 @@ void write_stats(ofstream &DataFile, int generation, int timestep)
     double ss2_cov_ajuv_asoc_vert = 0.0;
     double ss2_cov_ajuv_asoc_vert_c = 0.0;
     double ss2_cov_ajuv_asoc_vert_p = 0.0;
+    
+    double ss2_cov_ajuv_asoc_horiz = 0.0;
+    double ss2_cov_ajuv_asoc_horiz_c = 0.0;
+    double ss2_cov_ajuv_asoc_horiz_p = 0.0;
 
     double ss2_cov_amat_asoc_vert = 0.0;
     double ss2_cov_amat_asoc_vert_c = 0.0;
     double ss2_cov_amat_asoc_vert_p = 0.0;
+    
+    double ss2_cov_amat_asoc_horiz = 0.0;
+    double ss2_cov_amat_asoc_horiz_c = 0.0;
+    double ss2_cov_amat_asoc_horiz_p = 0.0;
 
     double ss2_cov_amat_phen_asoc_vert = 0.0;
     double ss2_cov_amat_phen_asoc_vert_c = 0.0;
@@ -600,10 +639,21 @@ void write_stats(ofstream &DataFile, int generation, int timestep)
     double ss2_cov_amat_envt_asoc_vert = 0.0;
     double ss2_cov_amat_envt_asoc_vert_c = 0.0;
     double ss2_cov_amat_envt_asoc_vert_p = 0.0;
+    
+    double ss2_cov_amat_phen_asoc_horiz = 0.0;
+    double ss2_cov_amat_phen_asoc_horiz_c = 0.0;
+    double ss2_cov_amat_phen_asoc_horiz_p = 0.0;
+    
+    double ss2_cov_amat_envt_asoc_horiz = 0.0;
+    double ss2_cov_amat_envt_asoc_horiz_c = 0.0;
+    double ss2_cov_amat_envt_asoc_horiz_p = 0.0;
+
+    double ss2_cov_agen_asoc_horiz = 0.0;
+    double ss2_cov_agen_asoc_horiz_c = 0.0;
+    double ss2_cov_agen_asoc_horiz_p = 0.0;
 
     // auxiliary variables to calculate an individual's phenotype
-    double g, z, agen, amat, ajuv, xmat_envt, xmat, xmat_phen, xsoc_vert, xsoc_vert_p, xsoc_vert_c, asoc_horiz, asoc_vert, cue_ad;
-
+    double g, z, agen, amat, ajuv, xmat_envt, xmat, xmat_phen, xsoc_vert, xsoc_vert_p, xsoc_vert_c, asoc_horiz, asoc_vert, cue_ad, xsoc_horiz_p, xsoc_horiz_c, xsoc_horiz;
 
 
     // summing means and sums of squares over all patches and breeders
@@ -773,14 +823,52 @@ void write_stats(ofstream &DataFile, int generation, int timestep)
             ss2_cov_agen_asoc_vert_p += agen * g * asoc_vert * xsoc_vert_p;
 
             // sensitivity to socially learnt cues (horizontally)
-            z = 0.5 * (
+            asoc_horiz = 0.5 * (
                     Pop[patch_i].breeders[breeder_i].asoc_horiz[0] 
                     +
                     Pop[patch_i].breeders[breeder_i].asoc_horiz[1] 
                     );
 
-            mean_asoc_horiz += z;
-            ss_asoc_horiz += z * z;
+            mean_asoc_horiz += asoc_horiz;
+            ss_asoc_horiz += asoc_horiz * asoc_horiz;
+
+            xsoc_horiz = Pop[patch_i].breeders[breeder_i].xsoc_horiz;
+            xsoc_horiz_c = Pop[patch_i].breeders[breeder_i].xsoc_horiz_c;
+            xsoc_horiz_p = Pop[patch_i].breeders[breeder_i].xsoc_horiz_p;
+
+            ss1_asoc_horiz_component += asoc_horiz * xsoc_horiz;
+            ss2_asoc_horiz_component += asoc_horiz * asoc_horiz * xsoc_horiz * xsoc_horiz;
+
+            ss1_asoc_horiz_c_component += asoc_horiz * xsoc_horiz_c;
+            ss2_asoc_horiz_c_component += asoc_horiz * asoc_horiz * xsoc_horiz_c * xsoc_horiz_c;
+
+            ss1_asoc_horiz_p_component += asoc_horiz * xsoc_horiz_p;
+            ss2_asoc_horiz_p_component += asoc_horiz * asoc_horiz * xsoc_horiz_p * xsoc_horiz_p;
+
+            // covariance between maternal and vertically learnt components
+            ss2_cov_amat_asoc_horiz += amat * xmat * asoc_horiz * xsoc_horiz;
+            ss2_cov_amat_asoc_horiz_c += amat * xmat * asoc_horiz * xsoc_horiz_c;
+            ss2_cov_amat_asoc_horiz_p += amat * xmat * asoc_horiz * xsoc_horiz_p;
+            
+            // covariance between maternal environmental cue and vertically learnt components
+            ss2_cov_amat_envt_asoc_horiz += amat * xmat_envt * asoc_horiz * xsoc_horiz;
+            ss2_cov_amat_envt_asoc_horiz_c += amat * xmat_envt * asoc_horiz * xsoc_horiz_c;
+            ss2_cov_amat_envt_asoc_horiz_p += amat * xmat_envt * asoc_horiz * xsoc_horiz_p;
+            
+            // covariance between maternal phenotypic cue and vertically learnt components
+            ss2_cov_amat_phen_asoc_horiz += amat * xmat_phen * asoc_horiz * xsoc_horiz;
+            ss2_cov_amat_phen_asoc_horiz_c += amat * xmat_phen * asoc_horiz * xsoc_horiz_c;
+            ss2_cov_amat_phen_asoc_horiz_p += amat * xmat_phen * asoc_horiz * xsoc_horiz_p;
+            
+            // covariance between juvenile cue and horizically learnt components
+            ss2_cov_ajuv_asoc_horiz += ajuv * cue_ad * asoc_horiz * xsoc_horiz;
+            ss2_cov_ajuv_asoc_horiz_c += ajuv * cue_ad * asoc_horiz * xsoc_horiz_c;
+            ss2_cov_ajuv_asoc_horiz_p += ajuv * cue_ad * asoc_horiz * xsoc_horiz_p;
+
+            // covariance between genetic cue and horizically learnt components
+            ss2_cov_agen_asoc_horiz += agen * g * asoc_horiz * xsoc_horiz;
+            ss2_cov_agen_asoc_horiz_c += agen * g * asoc_horiz * xsoc_horiz_c;
+            ss2_cov_agen_asoc_horiz_p += agen * g * asoc_horiz * xsoc_horiz_p;
             
             // maternal sensitivity to phenotypic cues
             z = 0.5 * (
@@ -929,6 +1017,7 @@ void write_stats(ofstream &DataFile, int generation, int timestep)
     double cov_amat_phen_ajuv = ss2_cov_amat_phen_ajuv / (NPatches * NBreeder) - 
         ss1_amat_phen_component / (NPatches * NBreeder) * ss1_ajuv_component / (NPatches * NBreeder);
 
+    // variance of vertical social learning: total, conformism and prestige
     double var_component_asoc_vert = ss2_asoc_vert_component / (NPatches * NBreeder) - 
         pow(ss1_asoc_vert_component / (NPatches * NBreeder),2);
 
@@ -938,6 +1027,20 @@ void write_stats(ofstream &DataFile, int generation, int timestep)
     double var_component_asoc_vert_c = ss2_asoc_vert_c_component / (NPatches * NBreeder) - 
         pow(ss1_asoc_vert_c_component / (NPatches * NBreeder),2);
 
+    // variance of horizontal social learning: total, conformism and prestige
+    double var_component_asoc_horiz = ss2_asoc_horiz_component / (NPatches * NBreeder) - 
+        pow(ss1_asoc_horiz_component / (NPatches * NBreeder),2);
+
+    double var_component_asoc_horiz_p = ss2_asoc_horiz_p_component / (NPatches * NBreeder) - 
+        pow(ss1_asoc_horiz_p_component / (NPatches * NBreeder),2);
+
+    double var_component_asoc_horiz_c = ss2_asoc_horiz_c_component / (NPatches * NBreeder) - 
+        pow(ss1_asoc_horiz_c_component / (NPatches * NBreeder),2);
+
+
+
+    
+    // covariance between maternal total cue and vertical social learning
     double cov_amat_asoc_vert = ss2_cov_amat_asoc_vert / (NPatches * NBreeder) -
         ss1_amat_component / (NPatches * NBreeder) * ss1_asoc_vert_component / (NPatches * NBreeder);
     double cov_amat_asoc_vert_c = ss2_cov_amat_asoc_vert_c / (NPatches * NBreeder) -
@@ -945,7 +1048,21 @@ void write_stats(ofstream &DataFile, int generation, int timestep)
     
     double cov_amat_asoc_vert_p = ss2_cov_amat_asoc_vert_p / (NPatches * NBreeder) -
         ss1_amat_component / (NPatches * NBreeder) * ss1_asoc_vert_p_component / (NPatches * NBreeder);
+
+
     
+    // covariance between maternal total cue and vertical social learning
+    double cov_amat_asoc_horiz = ss2_cov_amat_asoc_horiz / (NPatches * NBreeder) -
+        ss1_amat_component / (NPatches * NBreeder) * ss1_asoc_horiz_component / (NPatches * NBreeder);
+    double cov_amat_asoc_horiz_c = ss2_cov_amat_asoc_horiz_c / (NPatches * NBreeder) -
+        ss1_amat_component / (NPatches * NBreeder) * ss1_asoc_horiz_c_component / (NPatches * NBreeder);
+    
+    double cov_amat_asoc_horiz_p = ss2_cov_amat_asoc_horiz_p / (NPatches * NBreeder) -
+        ss1_amat_component / (NPatches * NBreeder) * ss1_asoc_horiz_p_component / (NPatches * NBreeder);
+
+
+
+    // covariance between maternal environmental cue and vertical social learning
     double cov_amat_envt_asoc_vert = ss2_cov_amat_envt_asoc_vert / (NPatches * NBreeder) -
         ss1_amat_envt_component / (NPatches * NBreeder) * ss1_asoc_vert_component / (NPatches * NBreeder);
     double cov_amat_envt_asoc_vert_c = ss2_cov_amat_envt_asoc_vert_c / (NPatches * NBreeder) -
@@ -954,6 +1071,18 @@ void write_stats(ofstream &DataFile, int generation, int timestep)
     double cov_amat_envt_asoc_vert_p = ss2_cov_amat_envt_asoc_vert_p / (NPatches * NBreeder) -
         ss1_amat_envt_component / (NPatches * NBreeder) * ss1_asoc_vert_p_component / (NPatches * NBreeder);
 
+
+    // covariance between maternal environmental cue and horizontal social learning
+    double cov_amat_envt_asoc_horiz = ss2_cov_amat_envt_asoc_horiz / (NPatches * NBreeder) -
+        ss1_amat_envt_component / (NPatches * NBreeder) * ss1_asoc_horiz_component / (NPatches * NBreeder);
+    double cov_amat_envt_asoc_horiz_c = ss2_cov_amat_envt_asoc_horiz_c / (NPatches * NBreeder) -
+        ss1_amat_envt_component / (NPatches * NBreeder) * ss1_asoc_horiz_c_component / (NPatches * NBreeder);
+    
+    double cov_amat_envt_asoc_horiz_p = ss2_cov_amat_envt_asoc_horiz_p / (NPatches * NBreeder) -
+        ss1_amat_envt_component / (NPatches * NBreeder) * ss1_asoc_horiz_p_component / (NPatches * NBreeder);
+
+
+    // covariance between maternal phenotypic cue and vertical social learning
     double cov_amat_phen_asoc_vert = ss2_cov_amat_phen_asoc_vert / (NPatches * NBreeder) -
         ss1_amat_phen_component / (NPatches * NBreeder) * ss1_asoc_vert_component / (NPatches * NBreeder);
     double cov_amat_phen_asoc_vert_c = ss2_cov_amat_phen_asoc_vert_c / (NPatches * NBreeder) -
@@ -962,6 +1091,18 @@ void write_stats(ofstream &DataFile, int generation, int timestep)
     double cov_amat_phen_asoc_vert_p = ss2_cov_amat_phen_asoc_vert_p / (NPatches * NBreeder) -
         ss1_amat_phen_component / (NPatches * NBreeder) * ss1_asoc_vert_p_component / (NPatches * NBreeder);
 
+
+    // covariance between maternal phenotypic cue and horizontal social learning
+    double cov_amat_phen_asoc_horiz = ss2_cov_amat_phen_asoc_horiz / (NPatches * NBreeder) -
+        ss1_amat_phen_component / (NPatches * NBreeder) * ss1_asoc_horiz_component / (NPatches * NBreeder);
+    double cov_amat_phen_asoc_horiz_c = ss2_cov_amat_phen_asoc_horiz_c / (NPatches * NBreeder) -
+        ss1_amat_phen_component / (NPatches * NBreeder) * ss1_asoc_horiz_c_component / (NPatches * NBreeder);
+    
+    double cov_amat_phen_asoc_horiz_p = ss2_cov_amat_phen_asoc_horiz_p / (NPatches * NBreeder) -
+        ss1_amat_phen_component / (NPatches * NBreeder) * ss1_asoc_horiz_p_component / (NPatches * NBreeder);
+
+
+    // covariance between vertical social learning and juvenile cues
     double cov_ajuv_asoc_vert = ss2_cov_ajuv_asoc_vert / (NPatches * NBreeder) -
         ss1_ajuv_component / (NPatches * NBreeder) * ss1_asoc_vert_component / (NPatches * NBreeder);
     
@@ -971,7 +1112,19 @@ void write_stats(ofstream &DataFile, int generation, int timestep)
     double cov_ajuv_asoc_vert_c = ss2_cov_ajuv_asoc_vert_c / (NPatches * NBreeder) -
         ss1_ajuv_component / (NPatches * NBreeder) * ss1_asoc_vert_c_component / (NPatches * NBreeder);
 
+    
+    // covariance between horizontal social learning and juvenile cues
+    double cov_ajuv_asoc_horiz = ss2_cov_ajuv_asoc_horiz / (NPatches * NBreeder) -
+        ss1_ajuv_component / (NPatches * NBreeder) * ss1_asoc_horiz_component / (NPatches * NBreeder);
+    
+    double cov_ajuv_asoc_horiz_p = ss2_cov_ajuv_asoc_horiz_p / (NPatches * NBreeder) -
+        ss1_ajuv_component / (NPatches * NBreeder) * ss1_asoc_horiz_p_component / (NPatches * NBreeder);
+    
+    double cov_ajuv_asoc_horiz_c = ss2_cov_ajuv_asoc_horiz_c / (NPatches * NBreeder) -
+        ss1_ajuv_component / (NPatches * NBreeder) * ss1_asoc_horiz_c_component / (NPatches * NBreeder);
 
+
+    // covariance between vertical social learning and genetic cues
     double cov_agen_asoc_vert = ss2_cov_agen_asoc_vert / (NPatches * NBreeder) -
         ss1_gen_component / (NPatches * NBreeder) * ss1_asoc_vert_component / (NPatches * NBreeder);
     
@@ -981,6 +1134,17 @@ void write_stats(ofstream &DataFile, int generation, int timestep)
     double cov_agen_asoc_vert_c = ss2_cov_agen_asoc_vert_c / (NPatches * NBreeder) -
         ss1_gen_component / (NPatches * NBreeder) * ss1_asoc_vert_c_component / (NPatches * NBreeder);
 
+    // covariance between horizontal social learning and genetic cues
+    double cov_agen_asoc_horiz = ss2_cov_agen_asoc_horiz / (NPatches * NBreeder) -
+        ss1_gen_component / (NPatches * NBreeder) * ss1_asoc_horiz_component / (NPatches * NBreeder);
+    
+    double cov_agen_asoc_horiz_p = ss2_cov_agen_asoc_horiz_p / (NPatches * NBreeder) -
+        ss1_gen_component / (NPatches * NBreeder) * ss1_asoc_horiz_p_component / (NPatches * NBreeder);
+    
+    double cov_agen_asoc_horiz_c = ss2_cov_agen_asoc_horiz_c / (NPatches * NBreeder) -
+        ss1_gen_component / (NPatches * NBreeder) * ss1_asoc_horiz_c_component / (NPatches * NBreeder);
+
+    // covariance between genetic cue and juvenile cue 
     double cov_agen_ajuv = ss2_cov_agen_ajuv / (NPatches * NBreeder) -
         ss1_gen_component / (NPatches * NBreeder) * ss1_ajuv_component / (NPatches * NBreeder);
 
@@ -1024,32 +1188,66 @@ void write_stats(ofstream &DataFile, int generation, int timestep)
         << mean_survival[1] << ";" 
         << var_survival[0] << ";" 
         << var_survival[1] << ";" 
+
         << var_component_gen << ";"
         << var_component_ajuv << ";"
         << var_component_amat << ";"
         << var_component_amat_envt << ";"
         << var_component_amat_phen << ";"
+
         << cov_amat_ajuv << ";"
         << cov_amat_envt_ajuv << ";"
         << cov_amat_phen_ajuv << ";"
+
         << var_component_asoc_vert << ";"
         << var_component_asoc_vert_p << ";"
         << var_component_asoc_vert_c << ";"
+
+        << var_component_asoc_horiz << ";"
+        << var_component_asoc_horiz_p << ";"
+        << var_component_asoc_horiz_c << ";"
+
         << cov_amat_asoc_vert << ";"
         << cov_amat_asoc_vert_c << ";"
         << cov_amat_asoc_vert_p << ";"
+
+        << cov_amat_asoc_horiz << ";"
+        << cov_amat_asoc_horiz_c << ";"
+        << cov_amat_asoc_horiz_p << ";"
+
         << cov_amat_envt_asoc_vert << ";"
         << cov_amat_envt_asoc_vert_c << ";"
         << cov_amat_envt_asoc_vert_p << ";"
+        
+        << cov_amat_envt_asoc_horiz << ";"
+        << cov_amat_envt_asoc_horiz_c << ";"
+        << cov_amat_envt_asoc_horiz_p << ";"
+
         << cov_amat_phen_asoc_vert << ";"
         << cov_amat_phen_asoc_vert_c << ";"
         << cov_amat_phen_asoc_vert_p << ";"
+
+        << cov_amat_phen_asoc_horiz << ";"
+        << cov_amat_phen_asoc_horiz_c << ";"
+        << cov_amat_phen_asoc_horiz_p << ";"
+
+
         << cov_ajuv_asoc_vert << ";"
         << cov_ajuv_asoc_vert_c << ";"
         << cov_ajuv_asoc_vert_p << ";"
+
+        << cov_ajuv_asoc_horiz << ";"
+        << cov_ajuv_asoc_horiz_c << ";"
+        << cov_ajuv_asoc_horiz_p << ";"
+
         << cov_agen_asoc_vert << ";"
         << cov_agen_asoc_vert_c << ";"
         << cov_agen_asoc_vert_p << ";"
+        
+        << cov_agen_asoc_horiz << ";"
+        << cov_agen_asoc_horiz_c << ";"
+        << cov_agen_asoc_horiz_p << ";"
+
         << cov_agen_ajuv << ";"
         << endl;
 }

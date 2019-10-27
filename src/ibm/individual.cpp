@@ -10,6 +10,8 @@ Individual::Individual():
     xmat_phen_only{0.0},
     xmat_envt_only{0.0},
     xsoc_horiz{0.0},
+    xsoc_horiz_c{0.0},
+    xsoc_horiz_p{0.0},
     xsoc_vert{0.0},
     xsoc_vert_c{0.0},
     xsoc_vert_p{0.0},
@@ -42,6 +44,8 @@ Individual::Individual(Individual const &other):
     xmat_phen_only{other.xmat_phen_only},
     xmat_envt_only{other.xmat_envt_only},
     xsoc_horiz{other.xsoc_horiz},
+    xsoc_horiz_c{other.xsoc_horiz_c},
+    xsoc_horiz_p{other.xsoc_horiz_p},
     xsoc_vert{other.xsoc_vert},
     xsoc_vert_c{other.xsoc_vert_c},
     xsoc_vert_p{other.xsoc_vert_p},
@@ -77,6 +81,8 @@ void Individual::operator=(Individual const &other)
     xconformist_horiz = other.xconformist_horiz;
     xconformist_vert = other.xconformist_vert;
     xsoc_horiz = other.xsoc_horiz;
+    xsoc_horiz_c = other.xsoc_horiz_c;
+    xsoc_horiz_p = other.xsoc_horiz_p;
     xsoc_vert = other.xsoc_vert;
     xsoc_vert_c = other.xsoc_vert_c;
     xsoc_vert_p = other.xsoc_vert_p;

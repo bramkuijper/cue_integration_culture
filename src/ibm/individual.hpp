@@ -37,6 +37,8 @@ class Individual
         
         // horizontal socially learnt cue
         double xsoc_horiz;
+        double xsoc_horiz_c;
+        double xsoc_horiz_p;
         
         // vertical socially learnt cue
         double xsoc_vert;
