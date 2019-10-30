@@ -1726,7 +1726,7 @@ void create_offspring(Individual &mother
     offspring.phen_ad = NAN;
 } // end create_offspring()
 
-void survive()
+void adult_survival()
 {
     // set up a random number generator to 
     // sample from the remaining breeders
@@ -1785,7 +1785,9 @@ void survive()
                 Pop[patch_i].breeders[breeder_i] = 
                     Pop[patch_i].breeders[Pop[patch_i].n_breeders - 1];
 
+                // reduce for-loop counter
                 --breeder_i;
+                // reduce total number of adult breeders
                 --Pop[patch_i].n_breeders;
             }
         } // end for (int breeder_i
@@ -2101,7 +2103,7 @@ int main(int argc, char **argv)
     for (generation = 0; generation < number_generations; ++generation)
     {
         // survival of adult breeders followed by reproduction
-        survive();
+        adult_survival();
 
         // new breeder establishment, 
         // followed by horizontal learning
