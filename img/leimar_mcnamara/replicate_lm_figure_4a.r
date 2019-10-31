@@ -4,7 +4,7 @@ library("magrittr")
 # replicate Leimar & McNamara's Figure 4a
 
 # read in the data
-the.data <- read.table("../../data/summary_vary_qmat_vs_qjuv.csv"
+the.data <- read.table("../../data/summary_vary_qmat_vs_qjuv_variances.csv"
                        ,sep=";"
                        ,header=T)
 
@@ -43,7 +43,8 @@ ggplot(data=the.data.m01
 ) + 
 geom_point(aes(y = cov_amat_envt_ajuv, colour="Cov(Juvenile cue, mat envt)")) +
 geom_point(aes(y = cov_amat_phen_ajuv, colour="Cov(Juvenile cue, mat phen)")) +
-geom_point(aes(y = cov_amat_ajuv, colour="Cov(Juvenile cue, total mat)")) +
+geom_point(aes(y = cov_amat_phen_ajuv, colour="Cov(Juvenile cue, mat phen)")) +
+geom_point(aes(y = cov_amat_phen_amat_envt, colour="Cov(mat envt, mat phen)")) +
 xlab("Accuracy of maternal cue") +
 ylab("Absolute covariance") +
 theme_classic()

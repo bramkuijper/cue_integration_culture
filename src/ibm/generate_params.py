@@ -41,7 +41,7 @@ sdmat = [ 0.05 ]
 sdsoc_horiz = [ 1.0 ]
 sdsoc_vert = [ 1.0 ]
 #m = list(np.linspace(0, 1.0, 11))
-m = [ 0.1, 0.2]
+m = [0.2]
 
 # mu_g, mu_amat, mu_ajuv, mu_agen, mu_asoc_horiz, mu_asoc_vert, mu_bmat_phen, mu_bmat_envt, mu_hp, mu_hc, mu_vp, mu_vc
 mu_combis = [[ 0.01, 0.01, 0.01, 0.01, 0, 0, 0.01, 0.01, 0, 0, 0, 0 ]]#[ [ 0.01 for x in range(0,12) ]]

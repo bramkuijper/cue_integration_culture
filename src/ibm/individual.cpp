@@ -29,7 +29,10 @@ Individual::Individual():
     hp{0.0,0.0},
     hc{0.0,0.0},
     cue_ad_envt_high{false},
-    cue_juv_envt_high{false}
+    cue_juv_envt_high{false},
+    mnoise{0.0},
+    svnoise{0.0},
+    shnoise{0.0},
 {
 }
 
@@ -63,7 +66,10 @@ Individual::Individual(Individual const &other):
     hp{other.hp[0],other.hp[1]},
     hc{other.hc[0],other.hc[1]},
     cue_ad_envt_high{other.cue_ad_envt_high},
-    cue_juv_envt_high{other.cue_juv_envt_high}
+    cue_juv_envt_high{other.cue_juv_envt_high},
+    mnoise{other.mnoise},
+    svnoise{other.svnoise},
+    shnoise{other.shnoise},
 {
 }
 

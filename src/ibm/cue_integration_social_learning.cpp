@@ -1679,11 +1679,15 @@ void create_offspring(Individual &mother
 
     double mnoise = maternal_noise(rng_r);
 
+    offspring.mnoise = mnoise;
+
     // calculate final value of maternal cue
     offspring.xmat = xoff + mnoise;
     offspring.xmat_phen_only = xoff_phen_only + mnoise;
     offspring.xmat_envt_only = xoff_envt_only + mnoise;
     clamp(offspring.xmat, 0.0, 1.0);
+    clamp(offspring.xmat_phen_only, 0.0, 1.0);
+    clamp(offspring.xmat_envt_only, 0.0, 1.0);
 
     // social learning
     offspring.xconformist_vert = xconformist_vert;
@@ -1706,13 +1710,15 @@ void create_offspring(Individual &mother
 
     double socnoise = social_noise(rng_r);
 
+    offspring.svnoise = socnoise;
+
     offspring.xsoc_vert = xsoc_vert + socnoise;
     offspring.xsoc_vert_c = xsoc_vert_c + socnoise;
     offspring.xsoc_vert_p = xsoc_vert_p + socnoise;
 
     clamp(offspring.xsoc_vert, 0.0, 1.0);
-
-
+    clamp(offspring.xsoc_vert_c, 0.0, 1.0);
+    clamp(offspring.xsoc_vert_p, 0.0, 1.0);
 
     // expressing a juvenile phenotype
     offspring.phen_juv = 1.0 / 
