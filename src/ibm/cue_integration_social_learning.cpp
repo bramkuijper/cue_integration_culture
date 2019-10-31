@@ -40,6 +40,7 @@ const int NPatches = 400;
 const int NBreeder = 100;
 
 // number of generations
+//int number_generations = 75000;
 int number_generations = 75000;
 
 // environmental switch rate
@@ -369,6 +370,7 @@ void write_dist(ofstream &DataFile)
 
             g = 0.0;
 
+            // genetic cue
             for (int g_i = 0; g_i < nloci_g; ++g_i)
             {
                 g += 0.5 * (
@@ -382,6 +384,9 @@ void write_dist(ofstream &DataFile)
                 << Pop[patch_i].breeders[breeder_i].cue_ad_envt_high << ";"
                 << Pop[patch_i].breeders[breeder_i].cue_juv_envt_high << ";"
                 << Pop[patch_i].breeders[breeder_i].maternal_cue << ";"
+                << Pop[patch_i].breeders[breeder_i].mnoise << ";"
+                << Pop[patch_i].breeders[breeder_i].svnoise << ";"
+                << Pop[patch_i].breeders[breeder_i].shnoise << ";"
                 << endl;
         } // end for (int breeder_i = 0; breeder_i < NPatches; ++breeder_i)
     } // end for (int patch_i = 0; patch_i < NPatches; ++patch_i)
@@ -421,6 +426,9 @@ void write_data_headers_dist(ofstream &DataFile)
         << "cue_ad_envt_high;" 
         << "cue_juv_envt_high;" 
         << "maternal_cue;" 
+        << "mnoise;" 
+        << "svnoise;" 
+        << "shnoise;" 
         << endl; 
 }
 
@@ -1679,12 +1687,14 @@ void create_offspring(Individual &mother
 
     double mnoise = maternal_noise(rng_r);
 
+    // store the noise deviate for stats purposes
     offspring.mnoise = mnoise;
 
     // calculate final value of maternal cue
     offspring.xmat = xoff + mnoise;
     offspring.xmat_phen_only = xoff_phen_only + mnoise;
     offspring.xmat_envt_only = xoff_envt_only + mnoise;
+
     clamp(offspring.xmat, 0.0, 1.0);
     clamp(offspring.xmat_phen_only, 0.0, 1.0);
     clamp(offspring.xmat_envt_only, 0.0, 1.0);
@@ -1710,6 +1720,7 @@ void create_offspring(Individual &mother
 
     double socnoise = social_noise(rng_r);
 
+    // store the noise deviate for stats
     offspring.svnoise = socnoise;
 
     offspring.xsoc_vert = xsoc_vert + socnoise;
@@ -1895,6 +1906,11 @@ void social_learning(
 } // end void social_learning
  
 
+
+// births of new offspring
+// juvenile cue integration
+// juvenile selection
+// adult cue integration (aka horizontal social learning)
 void replace()
 {
     // randomly chosen remote patch to obtain
@@ -1988,7 +2004,7 @@ void replace()
     bool cue_ad_envt_high;
 
     // auxiliary variables for horizontal social learning
-    double hp, hc, asoc_horiz, xsoc_horiz;
+    double hp, hc, asoc_horiz, xsoc_horiz, noise;
 
     // random number for errors in horizontal social learning
     normal_distribution<> social_noise(0.0, sdsoc_horiz);
@@ -2047,13 +2063,17 @@ void replace()
 
             Pop[patch_i].breeders[breeder_i].xconformist_horiz = xconformist;
             Pop[patch_i].breeders[breeder_i].phen_prestige_horiz = prestige_phen;
+            noise = social_noise(rng_r);
 
             // generate the horizontally learnt cue and add error
             xsoc_horiz = 1.0 /
                 (1.0 + exp(
                            -hp * (prestige_phen - 0.5)
                            -hc * xconformist)
-                ) + social_noise(rng_r);
+                ) + noise;
+
+            // store noise for stats purposes
+            Pop[patch_i].breeders[breeder_i].shnoise = noise;
 
             clamp(xsoc_horiz, 0.0, 1.0);
 
