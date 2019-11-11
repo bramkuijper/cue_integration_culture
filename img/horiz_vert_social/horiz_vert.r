@@ -4,8 +4,9 @@
 library("ggplot2")
 library("reshape")
 
+
 # read in the data
-the.data <- read.table("../../data/summary_horiz_vert.csv",sep=";",header=T)
+the.data <- read.table("../../data/summary_cue_int_big.csv",sep=";",header=T)
 
 ylim <- c(-0.5,7)
 
