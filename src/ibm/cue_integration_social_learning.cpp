@@ -233,9 +233,6 @@ void init_arguments(int argc, char **argv)
     npv = atoi(argv[48]);
     ncv = atoi(argv[49]);
     juvenile_survival = atoi(argv[50]);
-
-    cout << atoi(argv[50]) << endl;
-    exit(1);
 }
 
 // write down all parameters to the file DataFile
@@ -2038,10 +2035,8 @@ void replace()
 
             ++n_recruited_breeders;
 
-            assert(n_recruited_breeders < NBreeder);
+            assert(n_recruited_breeders <= NBreeder);
 
-            cout << juvenile_survival << " " << n_recruited_breeders << endl;
-                
         } // for (int offspring_i = 0; offspring_i < NBreeder; ++offspring_i)
     } // end for (int patch_i = 0
 
