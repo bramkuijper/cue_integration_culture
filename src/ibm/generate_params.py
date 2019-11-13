@@ -28,7 +28,7 @@ exe = "./xcue_integration"
 
 laplace = 1
 
-nrep = 5
+nrep = 4
 
 # for now we just need 12 zeros, which covers all the traits
 initvals = " ".join([str(0.0) for x in range(0,12)])
