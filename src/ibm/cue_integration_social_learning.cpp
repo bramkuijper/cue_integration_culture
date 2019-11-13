@@ -117,6 +117,9 @@ double sdmu_a = 0.0;
 double sdmu_b = 0.0;
 double sdmu_g = 0.0;
 
+bool juvenile_survival = false;
+
+
 // number of individuals to sample
 // in case of horizontal social learning
 int nph = 0; // performance bias
@@ -138,6 +141,7 @@ int data_nth_generation = 50;
 // function and then use in the write_data() function
 double mean_survival[2] = {0.0,0.0};
 double var_survival[2] = {0.0,0.0};
+
 
 // the patch with its breeders
 struct Patch
@@ -228,6 +232,7 @@ void init_arguments(int argc, char **argv)
     nch = atoi(argv[47]);
     npv = atoi(argv[48]);
     ncv = atoi(argv[49]);
+    juvenile_survival = atoi(argv[50]);
 }
 
 // write down all parameters to the file DataFile
@@ -267,6 +272,7 @@ void write_parameters(ofstream &DataFile)
         << "mu_ajuv;" << mu_ajuv << ";"<< endl
         << "mu_agen;" << mu_agen << ";"<< endl
         << "mu_asoc_horiz;" << mu_asoc_horiz << ";"<< endl
+        << "juvenile_survival;" << juvenile_survival << ";"<< endl
         << "mu_asoc_vert;" << mu_asoc_vert << ";"<< endl
         << "mu_bmat_phen;" << mu_bmat_phen << ";"<< endl
         << "mu_bmat_envt;" << mu_bmat_envt << ";"<< endl
@@ -1808,7 +1814,6 @@ void adult_survival()
                 --Pop[patch_i].n_breeders;
             }
         } // end for (int breeder_i
-
     } // end for int patch_i
 
     // finalize survival statistics
@@ -1928,9 +1933,21 @@ void replace()
             0,
             NPatches - 1);
 
+
+    // count juveniles that have survived
+    // and hence are recruited as local breeder
+    int n_recruited_breeders;
+
+    // auxiliary variable to keep track 
+    // of the survival probability
+    double surv;
+
     for (int patch_i = 0; patch_i < NPatches; ++patch_i)
     {
-        for (int breeder_i = 0; breeder_i < NBreeder; ++breeder_i)
+        n_recruited_breeders = 0;
+
+        // now make NBreeder offspring and have them survive
+        for (int offspring_i = 0; offspring_i < NBreeder; ++offspring_i)
         {
             Individual Kid;
 
@@ -1991,14 +2008,36 @@ void replace()
                         ,prestige_phen
                         ,xconformist
                 );
-            
             }
 
-            Pop[patch_i].breeders_t1[breeder_i] = Kid;
-                
-            assert((int)Pop[patch_i].breeders_t1[breeder_i].g[0].size() == nloci_g);
+            // in case juvenile selection acts,
+            // and offspring dies, just continue on the next
+            // iteration of this loop without adding the offspring
+            // to the breeder population
+            if (juvenile_survival)
+            {
+                surv = survival_probability(
+                            Kid.phen_juv
+                            ,Pop[patch_i].envt_high);
 
-        } // for (int breeder_i = 0; breeder_i < NBreeder; ++breeder_i)
+                cout << "sodeju" << endl;
+
+                // offspring dies 
+                if (uniform(rng_r) > surv)
+                {
+                    continue;
+                }
+            }
+
+            // offspring survives
+            Pop[patch_i].breeders_t1[n_recruited_breeders] = Kid;
+            assert((int)Pop[patch_i].breeders_t1[n_recruited_breeders].g[0].size() == nloci_g);
+
+            ++n_recruited_breeders;
+
+            assert(n_recruited_breeders <= NBreeder);
+
+        } // for (int offspring_i = 0; offspring_i < NBreeder; ++offspring_i)
     } // end for (int patch_i = 0
 
     bool cue_ad_envt_high;
