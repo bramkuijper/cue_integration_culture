@@ -102,6 +102,9 @@ class Individual
         // juvenile cue
         bool cue_juv_envt_high;
 
+        double mnoise;
+        double svnoise;
+        double shnoise;
         // default constructor
         Individual();
 

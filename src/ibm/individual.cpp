@@ -7,8 +7,8 @@ Individual::Individual():
     phen_prestige_horiz{0.0},
     phen_prestige_vert{0.0},
     xmat{0.0},
-    xmat_phen_only{0.0},
     xmat_envt_only{0.0},
+    xmat_phen_only{0.0},
     xsoc_horiz{0.0},
     xsoc_horiz_c{0.0},
     xsoc_horiz_p{0.0},
@@ -29,7 +29,10 @@ Individual::Individual():
     hp{0.0,0.0},
     hc{0.0,0.0},
     cue_ad_envt_high{false},
-    cue_juv_envt_high{false}
+    cue_juv_envt_high{false},
+    mnoise{0.0},
+    svnoise{0.0},
+    shnoise{0.0}
 {
 }
 
@@ -41,8 +44,8 @@ Individual::Individual(Individual const &other):
     phen_prestige_vert{other.phen_prestige_vert},
     g{other.g[0],other.g[1]},
     xmat{other.xmat},
-    xmat_phen_only{other.xmat_phen_only},
     xmat_envt_only{other.xmat_envt_only},
+    xmat_phen_only{other.xmat_phen_only},
     xsoc_horiz{other.xsoc_horiz},
     xsoc_horiz_c{other.xsoc_horiz_c},
     xsoc_horiz_p{other.xsoc_horiz_p},
@@ -63,7 +66,10 @@ Individual::Individual(Individual const &other):
     hp{other.hp[0],other.hp[1]},
     hc{other.hc[0],other.hc[1]},
     cue_ad_envt_high{other.cue_ad_envt_high},
-    cue_juv_envt_high{other.cue_juv_envt_high}
+    cue_juv_envt_high{other.cue_juv_envt_high},
+    mnoise{other.mnoise},
+    svnoise{other.svnoise},
+    shnoise{other.shnoise}
 {
 }
 
@@ -76,8 +82,8 @@ void Individual::operator=(Individual const &other)
     phen_prestige_horiz = other.phen_prestige_horiz;
     phen_prestige_vert = other.phen_prestige_vert;
     xmat = other.xmat;
-    xmat_phen_only = other.xmat_phen_only;
     xmat_envt_only = other.xmat_envt_only;
+    xmat_phen_only = other.xmat_phen_only;
     xconformist_horiz = other.xconformist_horiz;
     xconformist_vert = other.xconformist_vert;
     xsoc_horiz = other.xsoc_horiz;
@@ -126,4 +132,7 @@ void Individual::operator=(Individual const &other)
     g[0] = other.g[0];
     g[1] = other.g[1];
 
+    mnoise = other.mnoise;
+    svnoise = other.svnoise;
+    shnoise = other.shnoise;
 } // end void Individual::operator=()
