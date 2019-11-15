@@ -63,7 +63,7 @@ ctr = 1
 # whether jobs should be run in the background
 run_in_background = False
 
-juvenile_survival = [ 0 ]
+juvenile_survival = [ 1 ]
 
 # never run background jobs on cluster
 hostname = socket.gethostname()
