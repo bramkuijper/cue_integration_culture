@@ -2156,7 +2156,6 @@ int main(int argc, char **argv)
 
     for (generation = 0; generation < number_generations; ++generation)
     {
-        cout << generation << endl;
         // survival of adult breeders followed by reproduction
         adult_survival();
 
