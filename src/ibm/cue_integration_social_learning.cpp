@@ -1767,29 +1767,24 @@ void adult_survival()
     mean_survival[1] = 0.0;
     var_survival[1] = 0.0;
 
-    // keep track of the number of breeders
-    // in high patches to calculate survival stats
-    int n_high_patches = 0;
-
     double surv = 0.0;
-    
-    int n_total_individuals = 0;
+   
+    // remember total number of breeders
+    // in low and high patches
+    // to calc averages of survival probabilities
+    int n_total_individuals[2] = {0,0};
 
     for (int patch_i = 0; patch_i < NPatches; ++patch_i)
     {
-        // keep track of the number of breeders in a
-        // high envt
-        if (Pop[patch_i].envt_high)
-        {
-            n_high_patches += Pop[patch_i].n_breeders;
-        }
+        // update counts of breeders in this enviroment
+        n_total_individuals[Pop[patch_i].envt_high] += 
+            Pop[patch_i].n_breeders;
 
         // breeders endure survival selection
         for (int breeder_i = 0; breeder_i < Pop[patch_i].n_breeders; ++breeder_i)
         {
             // check whether adult phenotypes indeed exist
             assert(abs(::isnormal(Pop[patch_i].breeders[breeder_i].phen_ad)) > 0);
-
 
             // calculate survival probability
             surv = survival_probability(
@@ -1820,17 +1815,14 @@ void adult_survival()
     } // end for int patch_i
 
     // finalize survival statistics
-    mean_survival[0] /= NPatches * Pop[patch_i].n_breeders - n_high_patches;
-    mean_survival[1] /= n_high_patches;
+    for (int envt_i = 0; envt_i < 2; ++envt_i)
+    {
+        mean_survival[envt_i] /= n_total_individuals[envt_i];
 
-    // var = E[xx] - E[x]E[x]
-    var_survival[0] = var_survival[0] / (NPatches * Pop[patch_i].n_breeders - n_high_patches)
-        - mean_survival[0] * mean_survival[0];
-    
-    var_survival[1] = var_survival[1] / n_high_patches
-        - mean_survival[1] * mean_survival[1];
-
-    // finalize statistics
+        var_survival[envt_i] = 
+            var_survival[envt_i] / n_total_individuals[envt_i]
+            - mean_survival[envt_i] * mean_survival[envt_i];
+    }
 } // end survive_reproduce()
 
 void social_learning(
@@ -2063,8 +2055,6 @@ void replace()
 
             assert((int)Pop[patch_i].breeders[breeder_i].g[0].size() == nloci_g);
             
-            Pop[patch_i].n_breeders = NBreeder;
-        
             // give breeder an environmental cue as adult
             Pop[patch_i].breeders[breeder_i].cue_ad_envt_high = 
                 cue_ad_envt_high;
