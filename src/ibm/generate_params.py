@@ -19,8 +19,8 @@ p = list(np.linspace(0,1,11))
 survival_scalar_sig = [-2.5,3.5]
 survival_scalar_quad = [0.8,0.0]
 
-qmat = list(np.linspace(0.5,1.0,6))
-qjuv = [ ]
+qmat = [0.5, 0.75, 1.0]
+qjuv = [0.5, 0.75, 1.0]
 
 nloci_g = [ 3 ]
 
@@ -37,15 +37,17 @@ aminmax = "0.0 8.0"
 gminmax = "-1.0 1.0"
 bminmax = "-10.0 10.0"
 
-sdmat = [ 0.05 ]
-sdsoc_horiz = [ 1.0 ]
-sdsoc_vert = [ 1.0 ]
+sdmat = [ 0.05, 1.0 ]
+sdsoc_horiz = [ 0.05, 1.0 ]
+sdsoc_vert = [ 0.05, 1.0 ]
+
+
 #m = list(np.linspace(0, 1.0, 11))
-m = [ 0.1, 0.9 ]  
+m = [0.1]
 
 # mu_g, mu_amat, mu_ajuv, mu_agen, mu_asoc_horiz, mu_asoc_vert, mu_bmat_phen, mu_bmat_envt, mu_hp, mu_hc, mu_vp, mu_vc
+#mu_combis = [[ 0.01, 0.01, 0.01, 0.01, 0, 0, 0.01, 0.01, 0, 0, 0, 0 ]]#[ [ 0.01 for x in range(0,12) ]]
 mu_combis = [ [ 0.01 for x in range(0,12) ]]
-#mu_combis = [ [ 0.01 for x in range(0,12) ]]
 
 #mu_combis = [[ 0.0001, 0.0001, 0.0001, 0.0001, 0.0001, 0.0001 ]]
 sdmu = "0.02 0.25 0.25"
@@ -59,7 +61,9 @@ nx = [[5,5,5,5]]
 ctr = 1
 
 # whether jobs should be run in the background
-run_in_background = True
+run_in_background = False
+
+juvenile_survival = [ 1 ]
 
 # never run background jobs on cluster
 hostname = socket.gethostname()
@@ -83,9 +87,6 @@ for rep_i in range(0,nrep):
         for p_i in p:
             p_i = round(p_i,3)
             for qmat_i in qmat:
-                
-                qjuv = [ 1.5 - qmat_i ]
-                
                 for qjuv_i in qjuv:
                     for nloci_g_i in nloci_g:
                         for sdmat_i in sdmat:
@@ -99,33 +100,37 @@ for rep_i in range(0,nrep):
                                                     str(x) for x in mu_combi_i)
 
                                             for nx_i in nx:
-
+                                                
                                                 nxstr = " ".join(
                                                         str(x) for x in nx_i)
 
                                                 print("echo " + str(ctr))
 
-                                                ctr += 1
 
-                                                print(exe + " "
-                                                        + str(sigmoidal_survival_i) + " "
-                                                        + str(laplace) + " "
-                                                        + str(p_i) + " "
-                                                        + survival_scalar_i_str + " "
-                                                        + str(qmat_i) + " "
-                                                        + str(qjuv_i) + " "
-                                                        + str(nloci_g_i) + " "
-                                                        + initvals + " "
-                                                        + gminmax + " "
-                                                        + aminmax + " "
-                                                        + bminmax + " "
-                                                        + str(sdmat_i) + " "
-                                                        + str(sdsoc_vert_i) + " "
-                                                        + str(sdsoc_horiz_i) + " "
-                                                        + mu_combi_i_str + " "
-                                                        + sdmu + " " 
-                                                        + str(m_i) + " "
-                                                        + str(m_i) + " "
-                                                        + str(nxstr) + " "
-                                                        + bg
-                                                        )
+                                                for juvenile_survival_i in juvenile_survival:
+
+                                                    ctr += 1
+
+
+                                                    print(exe + " \t"
+                                                            + str(sigmoidal_survival_i) + " \t"
+                                                            + str(laplace) + " "
+                                                            + str(p_i) + " \t"
+                                                            + survival_scalar_i_str + " \t"
+                                                            + str(qmat_i) + " "
+                                                            + str(qjuv_i) + " "
+                                                            + str(nloci_g_i) + " \t"
+                                                            + initvals + " \t"
+                                                            + gminmax + " "
+                                                            + aminmax + " "
+                                                            + bminmax + " \t"
+                                                            + str(sdmat_i) + " "
+                                                            + str(sdsoc_vert_i) + " "
+                                                            + str(sdsoc_horiz_i) + " \t"
+                                                            + mu_combi_i_str + " "
+                                                            + sdmu + " \t" 
+                                                            + str(m_i) + " "
+                                                            + str(nxstr) + " "
+                                                            + str(juvenile_survival_i) + " "
+                                                            + bg
+                                                            )

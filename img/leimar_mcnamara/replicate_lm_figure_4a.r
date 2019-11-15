@@ -4,7 +4,8 @@ library("magrittr")
 # replicate Leimar & McNamara's Figure 4a
 
 # read in the data
-the.data <- read.table("../../data/summary_vary_qmat_vs_qjuv_variances.csv"
+#the.data <- read.table("../../data/summary_vary_qmat_vs_qjuv_variances.csv"
+the.data <- read.table("../../src/ibm/summary.csv"
                        ,sep=";"
                        ,header=T)
 
@@ -19,7 +20,7 @@ the.data[,"maternal_variance"] <- with(the.data, maternal_variance/total_varianc
 the.data[,"maternal_envtal_variance"] <- with(the.data, maternal_envtal_variance/total_variance)
 the.data[,"juvenile_variance"] <- with(the.data, 1.0 - maternal_variance)
 
-the.data.m01 <- the.data %>% subset(m == 0.1) 
+the.data.m01 <- the.data %>% subset(m == 0.2) 
 
 # calculate maternal variance component at the logit scale
 # which, accordingly to Leimar is given by the maternal variance
@@ -46,7 +47,7 @@ geom_point(aes(y = cov_amat_phen_ajuv, colour="Cov(Juvenile cue, mat phen)")) +
 geom_point(aes(y = cov_amat_phen_ajuv, colour="Cov(Juvenile cue, mat phen)")) +
 geom_point(aes(y = cov_amat_phen_amat_envt, colour="Cov(mat envt, mat phen)")) +
 xlab("Accuracy of maternal cue") +
-ylab("Absolute covariance") +
+ylab("Covariance") +
 theme_classic()
 ggsave("maternal_covariance_vs_juvenile_variance.pdf")
 
