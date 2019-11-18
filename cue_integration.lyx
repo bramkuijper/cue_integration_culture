@@ -343,7 +343,7 @@ Upon birth, an individual's phenotype
  We have
 \begin_inset Formula 
 \begin{align}
-u & =\frac{1}{1+\exp\left(-a_{\mathrm{juv}}x_{\mathrm{juv}}-a_{\mathrm{gen}}x_{\mathrm{gen}}-a_{\mathrm{mat}}x_{\mathrm{mat}}-a_{\mathrm{soc,vert}}x_{\mathrm{soc,vert}}-a_{\mathrm{soc,hor}}x_{\mathrm{soc,hor}}\right)},\label{eq:liability}
+u & =\frac{1}{1+\exp\left(-a_{\mathrm{gen}}x_{\mathrm{gen}}-a_{\mathrm{envt}}x_{\mathrm{envt}}-a_{\mathrm{mat}}x_{\mathrm{mat}}-a_{\mathrm{soc,vert}}x_{\mathrm{soc,vert}}-a_{\mathrm{soc,hor}}x_{\mathrm{soc,hor}}\right)},\label{eq:liability}
 \end{align}
 
 \end_inset

@@ -13,14 +13,15 @@ import socket
 sigmoidal_survival = [ 0 ]
 
 # frequency of the high environment
-p = list(np.linspace(0,1,11))
+#p = list(np.linspace(0,1,11))
 #p = [ 0.05, 0.1,0.25, 0.5, 0.75, 0.9, 0.95, 0.99 ]
-#p = [ 0.9 ]
+p = [ 0.1, 0.9 ]
+
 survival_scalar_sig = [-2.5,3.5]
 survival_scalar_quad = [0.8,0.0]
 
-qmat = [0.5, 0.75, 1.0]
-qjuv = [0.5, 0.75, 1.0]
+qmat = [1.0]
+qjuv = [1.0]
 
 nloci_g = [ 3 ]
 
@@ -37,13 +38,12 @@ aminmax = "0.0 8.0"
 gminmax = "-1.0 1.0"
 bminmax = "-10.0 10.0"
 
-sdmat = [ 0.05, 1.0 ]
-sdsoc_horiz = [ 0.05, 1.0 ]
-sdsoc_vert = [ 0.05, 1.0 ]
+sdmat = [ 0.05 ]
+sdsoc_horiz = [ 0.05 ]
+sdsoc_vert = [ 0.05 ]
 
-
-#m = list(np.linspace(0, 1.0, 11))
-m = [0.1]
+m = list(np.linspace(0, 1.0, 20))
+#m = [0.1]
 
 # mu_g, mu_amat, mu_ajuv, mu_agen, mu_asoc_horiz, mu_asoc_vert, mu_bmat_phen, mu_bmat_envt, mu_hp, mu_hc, mu_vp, mu_vc
 #mu_combis = [[ 0.01, 0.01, 0.01, 0.01, 0, 0, 0.01, 0.01, 0, 0, 0, 0 ]]#[ [ 0.01 for x in range(0,12) ]]
@@ -63,7 +63,7 @@ ctr = 1
 # whether jobs should be run in the background
 run_in_background = False
 
-juvenile_survival = [ 1 ]
+juvenile_survival = [ 0, 1 ]
 
 # never run background jobs on cluster
 hostname = socket.gethostname()
