@@ -529,6 +529,12 @@ void write_data_headers(ofstream &DataFile)
         << "cov_agen_asoc_horiz;"
         << "cov_agen_asoc_horiz_c;"
         << "cov_agen_asoc_horiz_p;"
+        
+        << "cov_asoc_horiz_vert;"
+        << "cov_asoc_horiz_vert_c;"
+        << "cov_asoc_horiz_vert_p;"
+        << "cov_asoc_horiz_c_vert;"
+        << "cov_asoc_horiz_p_vert;"
 
         << "cov_agen_ajuv;"
         << endl; 
@@ -667,6 +673,12 @@ void write_stats(ofstream &DataFile, int generation, int timestep)
     double ss2_cov_agen_asoc_horiz = 0.0;
     double ss2_cov_agen_asoc_horiz_c = 0.0;
     double ss2_cov_agen_asoc_horiz_p = 0.0;
+
+    double ss2_cov_asoc_horiz_vert = 0.0;
+    double ss2_cov_asoc_horiz_vert_c = 0.0;
+    double ss2_cov_asoc_horiz_vert_p = 0.0;
+    double ss2_cov_asoc_horiz_c_vert = 0.0;
+    double ss2_cov_asoc_horiz_p_vert = 0.0;
 
     // auxiliary variables to calculate an individual's phenotype
     double g, z, agen, amat, ajuv, xmat_envt, xmat, xmat_phen, xsoc_vert, xsoc_vert_p, xsoc_vert_c, asoc_horiz, asoc_vert, cue_ad, xsoc_horiz_p, xsoc_horiz_c, xsoc_horiz;
@@ -825,7 +837,7 @@ void write_stats(ofstream &DataFile, int generation, int timestep)
             ss2_cov_amat_asoc_vert_c += amat * xmat * asoc_vert * xsoc_vert_c;
             ss2_cov_amat_asoc_vert_p += amat * xmat * asoc_vert * xsoc_vert_p;
 
-            // covariance between maternal environment and vertically learnt components
+            // covariance between maternal environmental cue and vertically learnt components
             ss2_cov_amat_envt_asoc_vert += amat * xmat_envt * asoc_vert * xsoc_vert;
             ss2_cov_amat_envt_asoc_vert_c += amat * xmat_envt * asoc_vert * xsoc_vert_c;
             ss2_cov_amat_envt_asoc_vert_p += amat * xmat_envt * asoc_vert * xsoc_vert_p;
@@ -868,22 +880,22 @@ void write_stats(ofstream &DataFile, int generation, int timestep)
             ss1_asoc_horiz_p_component += asoc_horiz * xsoc_horiz_p;
             ss2_asoc_horiz_p_component += asoc_horiz * asoc_horiz * xsoc_horiz_p * xsoc_horiz_p;
 
-            // covariance between maternal and vertically learnt components
+            // covariance between maternal and horizontally learnt components
             ss2_cov_amat_asoc_horiz += amat * xmat * asoc_horiz * xsoc_horiz;
             ss2_cov_amat_asoc_horiz_c += amat * xmat * asoc_horiz * xsoc_horiz_c;
             ss2_cov_amat_asoc_horiz_p += amat * xmat * asoc_horiz * xsoc_horiz_p;
             
-            // covariance between maternal environmental cue and vertically learnt components
+            // covariance between maternal environmental cue and horizontally learnt components
             ss2_cov_amat_envt_asoc_horiz += amat * xmat_envt * asoc_horiz * xsoc_horiz;
             ss2_cov_amat_envt_asoc_horiz_c += amat * xmat_envt * asoc_horiz * xsoc_horiz_c;
             ss2_cov_amat_envt_asoc_horiz_p += amat * xmat_envt * asoc_horiz * xsoc_horiz_p;
             
-            // covariance between maternal phenotypic cue and vertically learnt components
+            // covariance between maternal phenotypic cue and horizontally learnt components
             ss2_cov_amat_phen_asoc_horiz += amat * xmat_phen * asoc_horiz * xsoc_horiz;
             ss2_cov_amat_phen_asoc_horiz_c += amat * xmat_phen * asoc_horiz * xsoc_horiz_c;
             ss2_cov_amat_phen_asoc_horiz_p += amat * xmat_phen * asoc_horiz * xsoc_horiz_p;
             
-            // covariance between juvenile cue and horizically learnt components
+            // covariance between juvenile cue and horizontally learnt components
             ss2_cov_ajuv_asoc_horiz += ajuv * cue_ad * asoc_horiz * xsoc_horiz;
             ss2_cov_ajuv_asoc_horiz_c += ajuv * cue_ad * asoc_horiz * xsoc_horiz_c;
             ss2_cov_ajuv_asoc_horiz_p += ajuv * cue_ad * asoc_horiz * xsoc_horiz_p;
@@ -892,6 +904,13 @@ void write_stats(ofstream &DataFile, int generation, int timestep)
             ss2_cov_agen_asoc_horiz += agen * g * asoc_horiz * xsoc_horiz;
             ss2_cov_agen_asoc_horiz_c += agen * g * asoc_horiz * xsoc_horiz_c;
             ss2_cov_agen_asoc_horiz_p += agen * g * asoc_horiz * xsoc_horiz_p;
+
+            // covariance between vertically and horizontally learnt components
+            ss2_cov_asoc_horiz_vert += asoc_horiz * xsoc_horiz * asoc_vert * xsoc_vert;
+            ss2_cov_asoc_horiz_vert_c += asoc_horiz * xsoc_horiz * asoc_vert * xsoc_vert_c;
+            ss2_cov_asoc_horiz_vert_p += asoc_horiz * xsoc_horiz * asoc_vert * xsoc_vert_p;
+            ss2_cov_asoc_horiz_c_vert += asoc_horiz * xsoc_horiz_c * asoc_vert * xsoc_vert;
+            ss2_cov_asoc_horiz_p_vert += asoc_horiz * xsoc_horiz_p * asoc_vert * xsoc_vert;
             
             // maternal sensitivity to phenotypic cues
             z = 0.5 * (
@@ -1175,6 +1194,22 @@ void write_stats(ofstream &DataFile, int generation, int timestep)
     // covariance between genetic cue and juvenile cue 
     double cov_agen_ajuv = ss2_cov_agen_ajuv / total_individuals -
         ss1_gen_component / total_individuals * ss1_ajuv_component / total_individuals;
+    
+    // covariances 
+    double cov_asoc_horiz_vert = ss2_cov_asoc_horiz_vert / total_individuals
+        - ss1_asoc_horiz_component / total_individuals * ss1_asoc_vert_component / total_individuals;
+
+    double cov_asoc_horiz_vert_c = ss2_cov_asoc_horiz_vert_c / total_individuals
+        - ss1_asoc_horiz_component / total_individuals * ss1_asoc_vert_c_component / total_individuals;
+
+    double cov_asoc_horiz_vert_p = ss2_cov_asoc_horiz_vert_p / total_individuals
+        - ss1_asoc_horiz_component / total_individuals * ss1_asoc_vert_p_component / total_individuals;
+
+    double cov_asoc_horiz_c_vert = ss2_cov_asoc_horiz_c_vert / total_individuals
+        - ss1_asoc_horiz_c_component / total_individuals * ss1_asoc_vert_component / total_individuals;
+
+    double cov_asoc_horiz_p_vert = ss2_cov_asoc_horiz_p_vert / total_individuals
+        - ss1_asoc_horiz_p_component / total_individuals * ss1_asoc_vert_component / total_individuals;
 
     freq_high /= NPatches;
 
@@ -1276,6 +1311,12 @@ void write_stats(ofstream &DataFile, int generation, int timestep)
         << cov_agen_asoc_horiz_c << ";"
         << cov_agen_asoc_horiz_p << ";"
 
+        << cov_asoc_horiz_vert << ";"
+        << cov_asoc_horiz_vert_c << ";"
+        << cov_asoc_horiz_vert_p << ";"
+        << cov_asoc_horiz_c_vert << ";"
+        << cov_asoc_horiz_p_vert << ";"
+
         << cov_agen_ajuv << ";"
         << endl;
 }
@@ -1292,7 +1333,7 @@ void init_population()
     for (int patch_i = 0; patch_i < NPatches; ++patch_i)
     {
         // patch in a high state or not
-        Pop[patch_i].envt_high = uniform(rng_r) < p;
+        Pop[patch_i].envt_high = uniform(rng_r) < 0.5;
        
         // cue given to adults
         cue_ad_envt_high = uniform(rng_r) < qmat ?
@@ -1712,7 +1753,6 @@ void create_offspring(Individual &mother
     offspring.xconformist_vert = xconformist_vert;
     offspring.phen_prestige_vert = phen_prestige_vert;
 
-
     // generate vertical socially learnt cue
     double xsoc_vert = 1.0 / (1.0 + exp(
                 - vp_phen * (offspring.phen_prestige_vert - 0.5)
@@ -1812,6 +1852,14 @@ void adult_survival()
                 --Pop[patch_i].n_breeders;
             }
         } // end for (int breeder_i
+        
+        
+        // envtal change after breeder establishment
+        if (uniform(rng_r) < 1.0 - p)
+        {
+            Pop[patch_i].envt_high = !Pop[patch_i].envt_high;
+        }
+
     } // end for int patch_i
 
     // finalize survival statistics
@@ -1953,7 +2001,8 @@ void replace()
                         0,
                         Pop[patch_i].n_breeders - 1);
 
-                // prepare cues in local patch from social learning
+                // prepare cues in local patch from 
+                // vertical social learning (i.e., from parents)
                 social_learning(
                         patch_i
                         ,false
@@ -1984,7 +2033,7 @@ void replace()
                 Pop[random_remote_patch].n_breeders - 1);
                
                 // prepare cues in remote patch (where parents are breeding)
-                // from social learning
+                // from vertical social learning
                 social_learning(
                         random_remote_patch
                         ,false
@@ -2068,6 +2117,7 @@ void replace()
             // ad_phen should be NaN as it is yet to be set
             assert(abs(::isnan(Pop[patch_i].breeders[breeder_i].phen_ad)) > 0);
 
+            // horizontal social learning takes place
             social_learning(
                     patch_i
                     ,true
@@ -2088,7 +2138,7 @@ void replace()
                     Pop[patch_i].breeders[breeder_i].asoc_horiz[0]
                     + 
                     Pop[patch_i].breeders[breeder_i].asoc_horiz[1]);
-
+            
             Pop[patch_i].breeders[breeder_i].xconformist_horiz = xconformist;
             Pop[patch_i].breeders[breeder_i].phen_prestige_horiz = prestige_phen;
             noise = social_noise(rng_r);
@@ -2099,28 +2149,36 @@ void replace()
                            -hp * (prestige_phen - 0.5)
                            -hc * xconformist)
                 ) + noise;
+            
+            double xsoc_horiz_c = 1.0 /
+                (1.0 + exp(
+                           -hc * xconformist)
+                ) + noise;
+
+            double xsoc_horiz_p = 1.0 /
+                (1.0 + exp(
+                           -hp * (prestige_phen - 0.5)
+                          )
+                ) + noise;
 
             // store noise for stats purposes
             Pop[patch_i].breeders[breeder_i].shnoise = noise;
 
             clamp(xsoc_horiz, 0.0, 1.0);
+            clamp(xsoc_horiz_c, 0.0, 1.0);
+            clamp(xsoc_horiz_p, 0.0, 1.0);
 
             // assign the horizontal social learnt 
             // conformism bias cue to the breeding individual
-            Pop[patch_i].breeders[breeder_i].xsoc_horiz = 
-                xsoc_horiz;
+            Pop[patch_i].breeders[breeder_i].xsoc_horiz = xsoc_horiz;
+            Pop[patch_i].breeders[breeder_i].xsoc_horiz_c = xsoc_horiz_c;
+            Pop[patch_i].breeders[breeder_i].xsoc_horiz_p = xsoc_horiz_p;
 
             // add social learning to the adult phenotype
             Pop[patch_i].breeders[breeder_i].phen_ad = 1.0 / 
                 (1.0 + exp(
                             log(1.0 / Pop[patch_i].breeders[breeder_i].phen_juv - 1.0) 
                             -asoc_horiz * xsoc_horiz));
-        }
-
-        // envtal change after breeder establishment
-        if (uniform(rng_r) < 1.0 - p)
-        {
-            Pop[patch_i].envt_high = !Pop[patch_i].envt_high;
         }
 
     } // end for (int patch_i = 0

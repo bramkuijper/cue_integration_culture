@@ -6,12 +6,15 @@ library("reshape")
 
 
 # read in the data
-the.data <- read.table("../../data/summary_cue_int_big.csv",sep=";",header=T)
+the.data.1 <- read.table("../../data/summary_cue_int_big.csv",sep=";",header=T)
+the.data.2 <- read.table("../../data/summary_cue_int_big_surv1.csv",sep=";",header=T)
+
+the.data <- rbind(the.data.1,the.data.2)
 
 ylim <- c(-0.5,7)
 
 pdf("overview_horiz_vert_a_weightings.pdf")
-print(xyplot(mean_ajuv + mean_asoc_horiz + mean_asoc_vert ~ (1.0 - p) | qjuv * sdmat * sdsoc_horiz * sdsoc_vert
+print(xyplot(mean_ajuv + mean_asoc_horiz + mean_asoc_vert ~ (1.0 - p) | qjuv * sdmat * sdsoc_horiz * sdsoc_vert * juvenile_survival
                 ,data=the.data
                 ,xlab="Probability environment changes, 1 - p"
                 ,ylim=ylim
@@ -22,7 +25,7 @@ print(xyplot(mean_ajuv + mean_asoc_horiz + mean_asoc_vert ~ (1.0 - p) | qjuv * s
 dev.off()
 
 dat.long <- melt(the.data
-        ,id.vars=c("p","qjuv","sdsoc_horiz","sdsoc_vert", "sdmat")
+        ,id.vars=c("p","qjuv","sdsoc_horiz","sdsoc_vert", "sdmat","juvenile_survival")
         ,measure=c("mean_ajuv","mean_asoc_horiz","mean_asoc_vert","mean_agen","mean_amat"))
 
 str(dat.long)
@@ -35,9 +38,9 @@ the.plot <- ggplot(dat.long
 ) + geom_point() + labs(x = "Rate of environmental change"
                             ,y="Cue weighting")
 
-the.plot + facet_wrap(vars(qjuv,sdmat,sdsoc_horiz,sdsoc_vert), labeller=label_both)
+the.plot + facet_wrap(vars(qjuv,sdmat,sdsoc_horiz,sdsoc_vert,juvenile_survival), labeller=label_both)
 
-ggsave(filename="overview_horiz_vert_a_weightings_ggplot.pdf", width=40, height=40, units="cm")
+ggsave(filename="overview_horiz_vert_a_weightings_ggplot.pdf", width=60, height=60, units="cm")
 
 
 pdf("overview_horiz_vert_a_weightings2.pdf")
