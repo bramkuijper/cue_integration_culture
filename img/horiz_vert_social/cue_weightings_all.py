@@ -289,7 +289,7 @@ the_fig.end_block(
         ,yticks=True
         ,title=""
         ,ylabel="Proportion of phenotypic variance"
-        ,xlabel=r"Rate of environmental change"
+        ,xlabel=r"Rate of environmental change $1 - p$"
         ,loc_title=False
         )
 
