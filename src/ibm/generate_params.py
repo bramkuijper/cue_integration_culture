@@ -20,8 +20,8 @@ p = list(np.linspace(0,1,30))
 survival_scalar_sig = [-2.5,3.5]
 survival_scalar_quad = [0.8,0.0]
 
-qmat = [1.0]
-qjuv = [1.0]
+qmat = [0.9, 1.0]
+qjuv = [0.5]
 
 nloci_g = [ 3 ]
 
@@ -55,13 +55,13 @@ sdmu = "0.02 0.25 0.25"
 # sampling sizes for social learning
 # nph, nch (performance and conformity for horizontal)
 # npv, ncv (performance and conformity for vertical)
-nx = [[5,5,5,5]]
+nx = [[0,0,0,0]]
 
 # counter for the number of jobs
 ctr = 1
 
 # whether jobs should be run in the background
-run_in_background = False
+run_in_background = True
 
 juvenile_survival = [ 0, 1 ]
 
@@ -104,12 +104,10 @@ for rep_i in range(0,nrep):
                                                 nxstr = " ".join(
                                                         str(x) for x in nx_i)
 
-
-
                                                 for juvenile_survival_i in juvenile_survival:
 
-                                                    ctr += 1
                                                     print("echo " + str(ctr))
+                                                    ctr += 1
 
 
                                                     print(exe + " \t"

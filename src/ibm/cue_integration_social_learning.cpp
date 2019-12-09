@@ -1852,7 +1852,6 @@ void adult_survival()
                 --Pop[patch_i].n_breeders;
             }
         } // end for (int breeder_i
-        
     } // end for int patch_i
 
     // finalize survival statistics
