@@ -1852,13 +1852,6 @@ void adult_survival()
                 --Pop[patch_i].n_breeders;
             }
         } // end for (int breeder_i
-        
-        // envtal change after breeder survival
-        if (uniform(rng_r) < 1.0 - p)
-        {
-            Pop[patch_i].envt_high = !Pop[patch_i].envt_high;
-        }
-
     } // end for int patch_i
 
     // finalize survival statistics
@@ -2178,6 +2171,12 @@ void replace()
                 (1.0 + exp(
                             log(1.0 / Pop[patch_i].breeders[breeder_i].phen_juv - 1.0) 
                             -asoc_horiz * xsoc_horiz));
+        }
+        
+        // envtal change after breeder establishment
+        if (uniform(rng_r) < 1.0 - p)
+        {
+            Pop[patch_i].envt_high = !Pop[patch_i].envt_high;
         }
 
     } // end for (int patch_i = 0
