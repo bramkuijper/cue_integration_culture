@@ -44,12 +44,16 @@ mpl.rcParams["svg.fonttype"] = "none"
 
 
 ##### get the data  #####
-data = pd.read_csv("../../data/summary_cue_int_finegrained_p.csv"
+
+data_file_name = "../../data/summary_cue_int_finegrained_p.csv"
+#data_file_name = "../../data/summary_cue_int_finegrained_p_mateffect_only.csv"
+
+data = pd.read_csv(data_file_name
         ,sep=";")
 
 ##### data selection #####
 subset = data.query(
-        "p > 0 & p < 1.0 & qjuv == 1.0 & qmat == 1 & sdmat == 0.05 & sdsoc_horiz == 0.05" +
+        "qjuv == 1.0 & qmat == 1 & sdmat == 0.05 & sdsoc_horiz == 0.05" +
         " & sdsoc_vert == 0.05 & juvenile_survival == 0").copy(deep=True)
 
 ######## make the plot ########
@@ -269,7 +273,7 @@ for i, trait_i in enumerate(selected_traits):
                     ,markeredgecolor=current_color
                     ,label=list(traits_n_labels.values())[i])
 the_axis.legend()
-xlim = [ 0, 1.0 ]
+xlim = [ -0.05, 1.05 ]
 ylim = [ -0.1, 1.0 ]
 
 # end the figure
