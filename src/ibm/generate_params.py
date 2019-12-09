@@ -42,12 +42,12 @@ sdmat = [ 0.05 ]
 sdsoc_horiz = [ 0.05 ]
 sdsoc_vert = [ 0.05 ]
 
-m = list(np.linspace(0, 1.0, 20))
-#m = [0.1]
+#m = list(np.linspace(0, 1.0, 20))
+m = [0.1]
 
 # mu_g, mu_amat, mu_ajuv, mu_agen, mu_asoc_horiz, mu_asoc_vert, mu_bmat_phen, mu_bmat_envt, mu_hp, mu_hc, mu_vp, mu_vc
-#mu_combis = [[ 0.01, 0.01, 0.01, 0.01, 0, 0, 0.01, 0.01, 0, 0, 0, 0 ]]#[ [ 0.01 for x in range(0,12) ]]
-mu_combis = [ [ 0.01 for x in range(0,12) ]]
+mu_combis = [[ 0.01, 0.01, 0.01, 0.01, 0, 0, 0.01, 0.01, 0, 0, 0, 0 ]]#[ [ 0.01 for x in range(0,12) ]]
+#mu_combis = [ [ 0.01 for x in range(0,12) ]]
 
 #mu_combis = [[ 0.0001, 0.0001, 0.0001, 0.0001, 0.0001, 0.0001 ]]
 sdmu = "0.02 0.25 0.25"
@@ -55,13 +55,13 @@ sdmu = "0.02 0.25 0.25"
 # sampling sizes for social learning
 # nph, nch (performance and conformity for horizontal)
 # npv, ncv (performance and conformity for vertical)
-nx = [[5,5,5,5]]
+nx = [[0,0,0,0]]
 
 # counter for the number of jobs
 ctr = 1
 
 # whether jobs should be run in the background
-run_in_background = False
+run_in_background = True
 
 juvenile_survival = [ 0, 1 ]
 
@@ -104,11 +104,10 @@ for rep_i in range(0,nrep):
                                                 nxstr = " ".join(
                                                         str(x) for x in nx_i)
 
-                                                print("echo " + str(ctr))
-
 
                                                 for juvenile_survival_i in juvenile_survival:
 
+                                                    print("echo " + str(ctr))
                                                     ctr += 1
 
 
