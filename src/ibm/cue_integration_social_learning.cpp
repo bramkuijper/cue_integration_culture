@@ -1853,8 +1853,7 @@ void adult_survival()
             }
         } // end for (int breeder_i
         
-        
-        // envtal change after breeder establishment
+        // envtal change after breeder survival
         if (uniform(rng_r) < 1.0 - p)
         {
             Pop[patch_i].envt_high = !Pop[patch_i].envt_high;
