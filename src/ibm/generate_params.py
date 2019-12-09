@@ -13,9 +13,9 @@ import socket
 sigmoidal_survival = [ 0 ]
 
 # frequency of the high environment
-#p = list(np.linspace(0,1,11))
+p = list(np.linspace(0,1,30))
 #p = [ 0.05, 0.1,0.25, 0.5, 0.75, 0.9, 0.95, 0.99 ]
-p = [ 0.1, 0.9 ]
+#p = [ 0.1, 0.9 ]
 
 survival_scalar_sig = [-2.5,3.5]
 survival_scalar_quad = [0.8,0.0]
