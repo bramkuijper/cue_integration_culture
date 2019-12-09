@@ -13,13 +13,25 @@ pgf_with_custom_preamble = {
     "text.usetex": True,    # use inline math for ticks
     "pgf.rcfonts": False,   # don't setup fonts from rc parameters
     "pgf.preamble": [
-         r"\usepackage{units}",         # load additional packages
-         r"\usepackage{mathspec}",         # load additional packages
-         r"\setmainfont{[MyriadPro-Regular.otf]}",         # load additional packages
-         r"\setmathsfont(Digits,Greek)[Uppercase=Italic,Lowercase=Italic]{[MyriadPro-Regular.otf]}",
-         r"\setmathsfont(Latin)[Uppercase=Italic,Lowercase=Italic]{[MyriadPro-It.otf]}",
-         r"\setmathrm{[MyriadPro-Regular.otf]}",
-#         r"\setmainfont{DejaVu Serif}", # serif font via preamble
+        r"\usepackage{units}",         # load additional packages
+        r"\usepackage{mathspec}",         # load additional packages
+        r"\setmainfont[Path = /usr/share/fonts/personal/ ," +\
+            "UprightFont = *-Regular ," +\
+            "ItalicFont = *-It ," +\
+            "BoldFont = *-Bold ," +\
+            "Extension = .otf]{MyriadPro}",
+        r"\setmathsfont(Digits,Latin,Greek)[" +\
+            "Path = /usr/share/fonts/personal/ ," +\
+                        "UprightFont = *-Regular ," +\
+                        "ItalicFont = *-It," +\
+                        "BoldFont = *-Bold," +\
+                        "Extension = .otf]{MyriadPro}",
+        r"\setmathrm[" +\
+            "Path = /usr/share/fonts/personal/ ," +\
+                        "UprightFont = *-Regular ," +\
+                        "ItalicFont = *-It," +\
+                        "BoldFont = *-Bold," +\
+                        "Extension = .otf]{MyriadPro}"
          ]
 }
 mpl.rcParams.update(pgf_with_custom_preamble)
@@ -32,13 +44,8 @@ mpl.rcParams["svg.fonttype"] = "none"
 
 
 ##### get the data  #####
-data = pd.read_csv("../../data/summary_cue_int_big.csv", sep=";")
-data_juv_surv = pd.read_csv("../../data/summary_cue_int_big_surv1.csv", sep=";")
-data = data.append(data_juv_surv)
-
-#data = pd.read_csv("variance_components.csv",sep=";")
-data = pd.read_csv("../../data/summary_cue_after_breeder_survival.csv",sep=";")
-
+data = pd.read_csv("../../data/summary_cue_int_finegrained_p.csv"
+        ,sep=";")
 
 ##### data selection #####
 subset = data.query(
