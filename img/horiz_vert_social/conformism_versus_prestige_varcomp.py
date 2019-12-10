@@ -88,6 +88,13 @@ subset = data.query(query_str).copy(deep=True)
 
 assert(subset.shape[0] > 0)
 
+# calculate variance components as proportions of total
+def calc_proportional_var_components(row):
+
+    var_component_horiz_c =\
+            row["var_component_asoc_horiz_c"] +\
+            row["var_componenet
+
 # get a list of traits
 traits_n_labels = {
         "mean_hp":r"$h_{\mathrm{prestige}}$",

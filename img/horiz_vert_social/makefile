@@ -1,7 +1,7 @@
 # makefile to plot figures containing relative variance components
 #
 # python script for variance components plotting
-VARCOMPPY=./cue_weightings_all.py
+VARCOMPPY=./varcomps_general.py
 # python script for plotting the a coefficients
 ACOEFFPY=./mean_a_plot.py
 
@@ -27,7 +27,7 @@ all : $(VARCOMPONENT_GRAPHS) $(MEANA_GRAPHS) conformism_vs_prestige_plot_full.$(
 conformism_vs_prestige_plot_full.$(EXT) : $(HVCOEFFPY) $(DATAVARCOMP)
 	$(HVCOEFFPY) -o conformism_vs_prestige_plot_full.$(EXT) -i $(DATAVARCOMP) --qjuv 1.0 --qmat 1.0 --juvsurv 0
 
-# make the a coefficient plots 
+# make the a coefficient plots without and with juvenile survival
 mean_a_plot_full.$(EXT) : $(ACOEFFPY) $(DATAVARCOMP)
 	$(ACOEFFPY) -o mean_a_plot_full.$(EXT) -i $(DATAVARCOMP) --qjuv 1.0 --qmat 1.0 --juvsurv 0
 
