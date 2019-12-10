@@ -3,6 +3,7 @@ import multipanel
 import itertools
 import pandas as pd
 import sys
+import argparse
 from matplotlib import cm
 import matplotlib.patches as mpatches
 
@@ -42,15 +43,47 @@ mpl.rcParams["xtick.labelsize"] = 16
 mpl.rcParams["axes.labelpad"] = 16
 mpl.rcParams["svg.fonttype"] = "none"
 
+# set up argument parsing
+parser = argparse.ArgumentParser()
+
+# specify input data file name
+parser.add_argument('-i', default="../../data/summary_cue_int_finegrained_p.csv")
+# specify output file name
+parser.add_argument('-o', default="output_graph_var_components.pdf")
+
+# specify juvenile cue fidelity
+parser.add_argument('--qjuv', type=float, default=0.5)
+
+# specify maternal cue fidelity
+parser.add_argument('--qmat', type=float, default=1.0)
+
+# specify juvenile survival
+parser.add_argument('--juvsurv', type=int, default=0)
+args = vars(parser.parse_args())
+
 
 ##### get the data  #####
-data = pd.read_csv("../../data/summary_cue_int_finegrained_p.csv"
+
+# the data file is obtained from the command line arguments
+data_file_name = args["i"]
+
+# read in the data
+data = pd.read_csv(data_file_name
         ,sep=";")
 
 ##### data selection #####
-subset = data.query(
-        "p > 0 & p < 1.0 & qjuv == 1.0 & qmat == 1 & sdmat == 0.05 & sdsoc_horiz == 0.05" +
-        " & sdsoc_vert == 0.05 & juvenile_survival == 0").copy(deep=True)
+
+# generate the query string dependent on command line args and other things
+query_str = "qjuv == " + str(args["qjuv"]) +\
+        " & qmat == " + str(args["qmat"]) +\
+        " & juvenile_survival == " + str(args["juvsurv"]) +\
+        " & sdmat == 0.05 " +\
+        " & sdsoc_horiz == 0.05" +\
+        " & sdsoc_vert == 0.05"
+
+subset = data.query(query_str).copy(deep=True)
+
+assert(subset.shape[0] > 0)
 
 ######## make the plot ########
 
@@ -180,8 +213,8 @@ subset[["var_component_gen_total",
 
 
 traits_n_labels = {
-        "var_component_gen_prop":r"$a_{\text{gen}}$",
-        "var_component_ajuv_prop":r"$a_{\mathrm{juv}}$",
+        "var_component_gen_prop":r"$\mathrm{var}\left(a_{\text{gen}}\right)$",
+        "var_component_ajuv_prop":r"$\mathrm{var}\left(a_{\mathrm{juv}}\right)$",
         "var_component_amat_prop":r"$a_{\mathrm{mat}}$",
         "var_component_ahoriz_prop":r"$a_{\mathrm{horizontal}}$",
         "var_component_avert_prop":r"$a_{\mathrm{vertical}}$"
@@ -204,10 +237,11 @@ selected_traits_name = "_".join(selected_traits)
 
 the_color_map = cm.get_cmap("tab10")
 
+# start the figure
 the_fig = multipanel.MultiPanel(
         panel_widths=[1]
         ,panel_heights=[1]
-        ,filename="cue_strength_with_p" + selected_traits_name + ".svg"
+        ,filename=args["o"]
         ,width=10
         ,height=5
         )
@@ -269,7 +303,7 @@ for i, trait_i in enumerate(selected_traits):
                     ,markeredgecolor=current_color
                     ,label=list(traits_n_labels.values())[i])
 the_axis.legend()
-xlim = [ 0, 1.0 ]
+xlim = [ -0.05, 1.05 ]
 ylim = [ -0.1, 1.0 ]
 
 # end the figure
@@ -285,9 +319,10 @@ the_fig.end_block(
         ,yticks=True
         ,title=""
         ,ylabel="Proportion of phenotypic variance"
-        ,xlabel=r"Rate of environmental change"
+        ,xlabel=r"Rate of environmental change $1 - p$"
         ,loc_title=False
         )
 
 
 the_fig.close(tight=True)
+
