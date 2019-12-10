@@ -162,6 +162,15 @@ status open
 \begin_layout Plain Layout
 Placate Franjo by Franjo's nature reply, Jordi & Franjo's paper, Botero
  stuff.
+ Read stuff by Magnus enquist, e.g., 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "Enquist2011"
+literal "false"
+
+\end_inset
+
+
 \end_layout
 
 \end_inset
@@ -909,10 +918,6 @@ Individual learning over time rather than phenotypic plasticity in response
 
 \begin_layout Section
 Results
-\end_layout
-
-\begin_layout Standard
-
 \end_layout
 
 \begin_layout Standard

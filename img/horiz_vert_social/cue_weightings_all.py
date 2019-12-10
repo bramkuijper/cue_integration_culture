@@ -3,6 +3,7 @@ import multipanel
 import itertools
 import pandas as pd
 import sys
+import argparse
 from matplotlib import cm
 import matplotlib.patches as mpatches
 
@@ -42,19 +43,38 @@ mpl.rcParams["xtick.labelsize"] = 16
 mpl.rcParams["axes.labelpad"] = 16
 mpl.rcParams["svg.fonttype"] = "none"
 
+# set up argument parsing
+parser = argparse.ArgumentParser()
+
+# specify output file name
+parser.add_argument('-i', default="../../data/summary_cue_int_finegrained_p.csv")
+parser.add_argument('-o', default="output_graph_var_components.pdf")
+parser.add_argument('--qjuv', type=float, default=0.5)
+parser.add_argument('--qmat', type=float, default=1.0)
+parser.add_argument('--juvsurv', type=int, default=0)
+args = vars(parser.parse_args())
+
 
 ##### get the data  #####
 
-#data_file_name = "../../data/summary_cue_int_finegrained_p.csv"
-data_file_name = "../../data/summary_cue_int_finegrained_p_mateffect_only.csv"
+# the data file is obtained from the command line arguments
+data_file_name = args["i"]
 
+# read in the data
 data = pd.read_csv(data_file_name
         ,sep=";")
 
 ##### data selection #####
-subset = data.query(
-        "qjuv == 0.5 & qmat == .5 & sdmat == 0.05 & sdsoc_horiz == 0.05" +
-        " & sdsoc_vert == 0.05 & juvenile_survival == 0").copy(deep=True)
+
+# generate the query string dependent on command line args and other things
+query_str = "qjuv == " + str(args["qjuv"]) +\
+        " & qmat == " + str(args["qmat"]) +\
+        " & juvenile_survival == " + str(args["juvsurv"]) +\
+        " & sdmat == 0.05 " +\
+        " & sdsoc_horiz == 0.05" +\
+        " & sdsoc_vert == 0.05"
+
+subset = data.query(query_str).copy(deep=True)
 
 assert(subset.shape[0] > 0)
 
@@ -213,7 +233,7 @@ the_color_map = cm.get_cmap("tab10")
 the_fig = multipanel.MultiPanel(
         panel_widths=[1]
         ,panel_heights=[1]
-        ,filename="cue_strength_with_p" + selected_traits_name + ".svg"
+        ,filename=args["o"]
         ,width=10
         ,height=5
         )
