@@ -13,15 +13,15 @@ import socket
 sigmoidal_survival = [ 0 ]
 
 # frequency of the high environment
-#p = list(np.linspace(0,1,30))
+p = list(np.linspace(0,1,30))
 #p = [ 0.05, 0.1,0.25, 0.5, 0.75, 0.9, 0.95, 0.99 ]
-p = [ 0.96 ]
+#p = [ 0.96 ]
 
 survival_scalar_sig = [-2.5,3.5]
 survival_scalar_quad = [0.8,0.0]
 
-qmat = [0.6]
-qjuv = [0.6]
+qmat = [0.5,1.0]
+qjuv = [0.5,1.0]
 
 nloci_g = [ 3 ]
 
@@ -34,16 +34,16 @@ nrep = 5
 # for now we just need 12 zeros, which covers all the traits
 initvals = " ".join([str(0.0) for x in range(0,12)])
 
-aminmax = "0.0 8.0"
+aminmax = "-8.0 8.0"
 gminmax = "-1.0 1.0"
 bminmax = "-10.0 10.0"
 
-sdmat = [ 0.25 ]
+sdmat = [ 0.05 ]
 sdsoc_horiz = [ 0.05 ]
 sdsoc_vert = [ 0.05 ]
 
 #m = list(np.linspace(0, 1.0, 20))
-m = [0.05]
+m = [0.1]
 
 # mu_g, mu_amat, mu_ajuv, mu_agen, mu_asoc_horiz, mu_asoc_vert, mu_bmat_phen, mu_bmat_envt, mu_hp, mu_hc, mu_vp, mu_vc
 mu_combis = [[ 0.01, 0.01, 0.01, 0.01, 0, 0, 0.01, 0.01, 0, 0, 0, 0 ]]#[ [ 0.01 for x in range(0,12) ]]
