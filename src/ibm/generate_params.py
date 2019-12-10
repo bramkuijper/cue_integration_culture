@@ -15,13 +15,13 @@ sigmoidal_survival = [ 0 ]
 # frequency of the high environment
 p = list(np.linspace(0,1,30))
 #p = [ 0.05, 0.1,0.25, 0.5, 0.75, 0.9, 0.95, 0.99 ]
-#p = [ 0.1, 0.9 ]
+#p = [ 0.1, 0.5, 0.9 ]
 
 survival_scalar_sig = [-2.5,3.5]
 survival_scalar_quad = [0.8,0.0]
 
-qmat = [0.9, 1.0]
-qjuv = [0.5]
+qmat = [0.5]
+qjuv = [1.0]
 
 nloci_g = [ 3 ]
 
@@ -56,6 +56,19 @@ sdmu = "0.02 0.25 0.25"
 # nph, nch (performance and conformity for horizontal)
 # npv, ncv (performance and conformity for vertical)
 nx = [[0,0,0,0]]
+
+#nx = []
+#nc_max = 5
+#
+## vary number of conformist models versus prestige models
+#for nc_i in range(1,nc_max + 1):
+#
+#    np_i = nc_max + 1 - nc_i 
+#    nx += [[np_i, nc_i, np_i, nc_i]]
+#
+## vary overall numbers of models
+#for n_i in range(1, nc_max + 1):
+#    nx += [[n_i, n_i, n_i, n_i ]]
 
 # counter for the number of jobs
 ctr = 1
