@@ -3,8 +3,7 @@
 
 SIMFILE_FIG2 = sim_cue_integration_9_12_2019_181703_1298713285
 SIMFILE_FIG3 = sim_cue_integration_9_12_2019_201701_846428936
-SIMFILE_FIG5 = sim_cue_integration_10_12_2019_095031_1217402017
-
+SIMFILE_FIG5 = sim_cue_integration_10_12_2019_134422_1803540613
 
 all : fig2.pdf fig3.pdf fig5.pdf
 
