@@ -45,16 +45,18 @@ mpl.rcParams["svg.fonttype"] = "none"
 
 ##### get the data  #####
 
-data_file_name = "../../data/summary_cue_int_finegrained_p.csv"
-#data_file_name = "../../data/summary_cue_int_finegrained_p_mateffect_only.csv"
+#data_file_name = "../../data/summary_cue_int_finegrained_p.csv"
+data_file_name = "../../data/summary_cue_int_finegrained_p_mateffect_only.csv"
 
 data = pd.read_csv(data_file_name
         ,sep=";")
 
 ##### data selection #####
 subset = data.query(
-        "qjuv == 1.0 & qmat == 1 & sdmat == 0.05 & sdsoc_horiz == 0.05" +
+        "qjuv == 0.5 & qmat == .5 & sdmat == 0.05 & sdsoc_horiz == 0.05" +
         " & sdsoc_vert == 0.05 & juvenile_survival == 0").copy(deep=True)
+
+assert(subset.shape[0] > 0)
 
 ######## make the plot ########
 
@@ -184,8 +186,8 @@ subset[["var_component_gen_total",
 
 
 traits_n_labels = {
-        "var_component_gen_prop":r"$a_{\text{gen}}$",
-        "var_component_ajuv_prop":r"$a_{\mathrm{juv}}$",
+        "var_component_gen_prop":r"$\mathrm{var}\left(a_{\text{gen}}\right)$",
+        "var_component_ajuv_prop":r"$\mathrm{var}\left(a_{\mathrm{juv}}\right)$",
         "var_component_amat_prop":r"$a_{\mathrm{mat}}$",
         "var_component_ahoriz_prop":r"$a_{\mathrm{horizontal}}$",
         "var_component_avert_prop":r"$a_{\mathrm{vertical}}$"
@@ -295,3 +297,4 @@ the_fig.end_block(
 
 
 the_fig.close(tight=True)
+
