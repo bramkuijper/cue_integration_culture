@@ -46,8 +46,8 @@ sdsoc_vert = [ 0.05 ]
 m = [0.05]
 
 # mu_g, mu_amat, mu_ajuv, mu_agen, mu_asoc_horiz, mu_asoc_vert, mu_bmat_phen, mu_bmat_envt, mu_hp, mu_hc, mu_vp, mu_vc
-#mu_combis = [[ 0.01, 0.01, 0.01, 0.01, 0, 0, 0.01, 0.01, 0, 0, 0, 0 ]]#[ [ 0.01 for x in range(0,12) ]]
-mu_combis = [ [ 0.01 for x in range(0,12) ]]
+mu_combis = [[ 0.01, 0.01, 0.01, 0.01, 0, 0, 0.01, 0.01, 0, 0, 0, 0 ]]#[ [ 0.01 for x in range(0,12) ]]
+#mu_combis = [ [ 0.01 for x in range(0,12) ]]
 
 #mu_combis = [[ 0.0001, 0.0001, 0.0001, 0.0001, 0.0001, 0.0001 ]]
 sdmu = "0.02 0.25 0.25"
