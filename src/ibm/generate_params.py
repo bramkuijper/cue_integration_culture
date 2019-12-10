@@ -38,7 +38,7 @@ aminmax = "0.0 8.0"
 gminmax = "-1.0 1.0"
 bminmax = "-10.0 10.0"
 
-sdmat = [ 0.225 ]
+sdmat = [ 0.25 ]
 sdsoc_horiz = [ 0.05 ]
 sdsoc_vert = [ 0.05 ]
 
@@ -63,7 +63,7 @@ ctr = 1
 # whether jobs should be run in the background
 run_in_background = True
 
-juvenile_survival = [ 1 ]
+juvenile_survival = [ 0 ]
 
 # never run background jobs on cluster
 hostname = socket.gethostname()

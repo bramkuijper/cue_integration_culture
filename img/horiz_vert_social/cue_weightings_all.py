@@ -46,11 +46,18 @@ mpl.rcParams["svg.fonttype"] = "none"
 # set up argument parsing
 parser = argparse.ArgumentParser()
 
-# specify output file name
+# specify input data file name
 parser.add_argument('-i', default="../../data/summary_cue_int_finegrained_p.csv")
+# specify output file name
 parser.add_argument('-o', default="output_graph_var_components.pdf")
+
+# specify juvenile cue fidelity
 parser.add_argument('--qjuv', type=float, default=0.5)
+
+# specify maternal cue fidelity
 parser.add_argument('--qmat', type=float, default=1.0)
+
+# specify juvenile survival
 parser.add_argument('--juvsurv', type=int, default=0)
 args = vars(parser.parse_args())
 
@@ -230,6 +237,7 @@ selected_traits_name = "_".join(selected_traits)
 
 the_color_map = cm.get_cmap("tab10")
 
+# start the figure
 the_fig = multipanel.MultiPanel(
         panel_widths=[1]
         ,panel_heights=[1]

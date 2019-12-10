@@ -41,7 +41,7 @@ const int NBreeder = 100;
 
 // number of generations
 //int number_generations = 75000;
-int number_generations = 150000;
+int number_generations = 75000;
 
 // environmental switch rate
 //
