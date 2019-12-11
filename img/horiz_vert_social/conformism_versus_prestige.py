@@ -116,7 +116,7 @@ if not args["horiz"]:
     trait_selection = [ 2, 3]
 
 if not args["vert"]:
-    trait_selection = [ 0, 1]
+    trait_selection = [ 0, 1 ]
 
 selected_traits = [ list(traits_n_labels.keys())[i] for i in trait_selection]
 
