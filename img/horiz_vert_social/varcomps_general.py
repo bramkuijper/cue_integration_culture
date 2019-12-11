@@ -85,7 +85,20 @@ subset = data.query(query_str).copy(deep=True)
 
 assert(subset.shape[0] > 0)
 
+print("CLAMP values on variance components: do something about it!!!")
 ######## make the plot ########
+
+def clamp(val, min, max):
+
+    if val < min:
+        return(min)
+
+    if val > max:
+        return(max)
+
+    return(val)
+
+        
 
 # calculate variance components as proportions of total
 def calc_proportional_var_components(row):
@@ -167,11 +180,11 @@ def calc_proportional_var_components(row):
             row["var_component_asoc_vert"] + \
             row["var_component_asoc_horiz"]
 
-    var_component_gen_prop = var_component_gen_total / var_component_total
-    var_component_ajuv_prop = var_component_ajuv_total / var_component_total
-    var_component_ahoriz_prop = var_component_asoc_horiz_total / var_component_total
-    var_component_avert_prop = var_component_asoc_vert_total / var_component_total
-    var_component_amat_prop = var_component_amat_total / var_component_total
+    var_component_gen_prop = clamp(var_component_gen_total / var_component_total,0,1)
+    var_component_ajuv_prop = clamp(var_component_ajuv_total / var_component_total,0,1)
+    var_component_ahoriz_prop = clamp(var_component_asoc_horiz_total / var_component_total,0,1)
+    var_component_avert_prop = clamp(var_component_asoc_vert_total / var_component_total,0,1)
+    var_component_amat_prop = clamp(var_component_amat_total / var_component_total,0,1)
 
     return(pd.Series(
         {
@@ -215,9 +228,9 @@ subset[["var_component_gen_total",
 traits_n_labels = {
         "var_component_gen_prop":r"$\mathrm{var}\left(a_{\text{gen}}\right)$",
         "var_component_ajuv_prop":r"$\mathrm{var}\left(a_{\mathrm{juv}}\right)$",
-        "var_component_amat_prop":r"$a_{\mathrm{mat}}$",
-        "var_component_ahoriz_prop":r"$a_{\mathrm{horizontal}}$",
-        "var_component_avert_prop":r"$a_{\mathrm{vertical}}$"
+        "var_component_amat_prop":r"$\mathrm{var}\left(a_{\mathrm{mat}}\right)$",
+        "var_component_ahoriz_prop":r"$\mathrm{var}\left(a_{\mathrm{horiz}}\right)$",
+        "var_component_avert_prop":r"$\mathrm{var}\left(a_{\mathrm{vert}}\right)$"
         }
 
 missing_keys = []

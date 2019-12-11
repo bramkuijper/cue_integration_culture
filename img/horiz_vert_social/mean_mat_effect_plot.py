@@ -52,7 +52,6 @@ parser.add_argument('-o', default="output_graph_var_components.pdf")
 parser.add_argument('--qjuv', type=float, default=0.5)
 parser.add_argument('--qmat', type=float, default=1.0)
 parser.add_argument('--juvsurv', type=int, default=0)
-parser.add_argument('--abs', type=bool, default=False)
 args = vars(parser.parse_args())
 
 
@@ -129,8 +128,6 @@ xval = "p"
 x_u = list(subset[xval].unique())
 x_u.sort()
 
-if args["abs"]:
-    subset[selected_traits] = subset[selected_traits].abs()
 
 # calculate means and sd for each level of p
 aggregate = subset.groupby(xval)[selected_traits].agg(
@@ -177,9 +174,6 @@ for i, trait_i in enumerate(selected_traits):
 the_axis.legend()
 xlim = [ -0.05, 1.05 ]
 ylim = [ -7, 7 ]
-
-if args["abs"]:
-    ylim = [ 0, 7]
 
 # end the figure
 the_fig.end_block(

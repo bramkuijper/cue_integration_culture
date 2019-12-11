@@ -13,10 +13,10 @@ import socket
 sigmoidal_survival = [ 0 ]
 
 # frequency of the high environment
-#p = list(np.linspace(0,1,30))
+p = list(np.linspace(0,1,26))
 #p = [ 0.05, 0.1,0.25, 0.5, 0.75, 0.9, 0.95, 0.99 ]
 
-p = [ 0.1, 0.9 ]
+#p = [ 0.1, 0.9 ]
 
 survival_scalar_sig = [-2.5,3.5]
 survival_scalar_quad = [0.8,0.0]
@@ -30,7 +30,7 @@ exe = "./xcue_integration"
 
 laplace = 1
 
-nrep = 2
+nrep = 1
 
 # for now we just need 12 zeros, which covers all the traits
 initvals = " ".join([str(0.0) for x in range(0,12)])
@@ -47,8 +47,8 @@ sdsoc_vert = [ 0.05 ]
 m = [0.1]
 
 # mu_g, mu_amat, mu_ajuv, mu_agen, mu_asoc_horiz, mu_asoc_vert, mu_bmat_phen, mu_bmat_envt, mu_hp, mu_hc, mu_vp, mu_vc
-mu_combis = [[ 0.01, 0.01, 0.01, 0.01, 0, 0, 0.01, 0.01, 0, 0, 0, 0 ]]#[ [ 0.01 for x in range(0,12) ]]
-#mu_combis = [ [ 0.01 for x in range(0,12) ]]
+#mu_combis = [[ 0.01, 0.01, 0.01, 0.01, 0, 0, 0.01, 0.01, 0, 0, 0, 0 ]]#[ [ 0.01 for x in range(0,12) ]]
+mu_combis = [ [ 0.01 for x in range(0,12) ]]
 
 #mu_combis = [[ 0.0001, 0.0001, 0.0001, 0.0001, 0.0001, 0.0001 ]]
 sdmu = "0.02 0.25 0.25"
@@ -56,7 +56,7 @@ sdmu = "0.02 0.25 0.25"
 # sampling sizes for social learning
 # nph, nch (performance and conformity for horizontal)
 # npv, ncv (performance and conformity for vertical)
-nx = [[0,0,0,0]]
+nx = [[5,5,5,5]]
 
 #nx = []
 #nc_max = 5
