@@ -3,6 +3,8 @@
 // Bram Kuijper 
 // 2019
 //
+#define DEBUG
+
 #include <iostream>
 #include <cstdlib>
 #include <fstream>
@@ -14,17 +16,9 @@
 #include <random>
 
 
-// various functions, such as unique filename creation
-#include "auxiliary.hpp"
-
 // the individual class, which defines properties of each
 // individual used here
 #include "individual.hpp"
-
-#define DEBUG
-
-// standard namespace
-using namespace std;
 
 // C++ random number generation
 unsigned int seed = get_nanoseconds();
@@ -191,49 +185,50 @@ void init_arguments(int argc, char **argv)
     qjuv = atof(argv[7]);
     nloci_g = atoi(argv[8]);
     init_g = atof(argv[9]);
-    init_amat = atof(argv[10]);
-    init_ajuv = atof(argv[11]);
-    init_agen = atof(argv[12]);
-    init_asoc_horiz = atof(argv[13]);
-    init_asoc_vert = atof(argv[14]);
-    init_bmat_phen = atof(argv[15]);
-    init_bmat_envt = atof(argv[16]);
-    init_hp = atof(argv[17]);
-    init_hc = atof(argv[18]);
-    init_vp = atof(argv[19]);
-    init_vc = atof(argv[20]);
+    init_aintercept = atof(argv[10]);
+    init_amat = atof(argv[11]);
+    init_ajuv = atof(argv[12]);
+    init_agen = atof(argv[13]);
+    init_asoc_horiz = atof(argv[14]);
+    init_asoc_vert = atof(argv[15]);
+    init_bmat_phen = atof(argv[16]);
+    init_bmat_envt = atof(argv[17]);
+    init_hp = atof(argv[18]);
+    init_hc = atof(argv[19]);
+    init_vp = atof(argv[20]);
+    init_vc = atof(argv[21]);
 
-    gmin = atof(argv[21]);
-    gmax = atof(argv[22]);
-    amin = atof(argv[23]);
-    amax = atof(argv[24]);
-    bmin = atof(argv[25]);
-    bmax = atof(argv[26]);
-    sdmat = atof(argv[27]);
-    sdsoc_vert = atof(argv[28]);
-    sdsoc_horiz = atof(argv[29]);
+    gmin = atof(argv[22]);
+    gmax = atof(argv[23]);
+    amin = atof(argv[24]);
+    amax = atof(argv[25]);
+    bmin = atof(argv[26]);
+    bmax = atof(argv[27]);
+    sdmat = atof(argv[28]);
+    sdsoc_vert = atof(argv[29]);
+    sdsoc_horiz = atof(argv[30]);
 
-    mu_g = atof(argv[30]);
-    mu_amat = atof(argv[31]);
-    mu_ajuv = atof(argv[32]);
-    mu_agen = atof(argv[33]);
-    mu_asoc_horiz = atof(argv[34]);
-    mu_asoc_vert = atof(argv[35]);
-    mu_bmat_phen = atof(argv[36]);
-    mu_bmat_envt = atof(argv[37]);
-    mu_hp = atof(argv[38]);
-    mu_hc = atof(argv[39]);
-    mu_vp = atof(argv[40]);
-    mu_vc = atof(argv[41]);
-    sdmu_a = atof(argv[42]);
-    sdmu_b = atof(argv[43]);
-    sdmu_g = atof(argv[44]);
-    m = atof(argv[45]);
-    nph = atoi(argv[46]);
-    nch = atoi(argv[47]);
-    npv = atoi(argv[48]);
-    ncv = atoi(argv[49]);
-    juvenile_survival = atoi(argv[50]);
+    mu_g = atof(argv[31]);
+    mu_amat = atof(argv[32]);
+    mu_ajuv = atof(argv[33]);
+    mu_agen = atof(argv[34]);
+    mu_asoc_horiz = atof(argv[35]);
+    mu_asoc_vert = atof(argv[36]);
+    mu_bmat_phen = atof(argv[37]);
+    mu_bmat_envt = atof(argv[38]);
+    mu_hp = atof(argv[39]);
+    mu_hc = atof(argv[40]);
+    mu_vp = atof(argv[41]);
+    mu_vc = atof(argv[42]);
+    sdmu_a = atof(argv[43]);
+    sdmu_b = atof(argv[44]);
+    sdmu_g = atof(argv[45]);
+    m = atof(argv[46]);
+    nph = atoi(argv[47]);
+    nch = atoi(argv[48]);
+    npv = atoi(argv[49]);
+    ncv = atoi(argv[50]);
+    juvenile_survival = atoi(argv[51]);
 }
 
 // write down all parameters to the file DataFile
@@ -247,6 +242,7 @@ void write_parameters(ofstream &DataFile)
         << "qjuv;" << qjuv << ";"<< endl
         << "nloci_g;" << nloci_g << ";"<< endl
         << "init_g;" << init_g << ";"<< endl
+        << "init_aintercept;" << init_aintercept << ";"<< endl
         << "init_amat;" << init_amat << ";"<< endl
         << "init_ajuv;" << init_ajuv << ";"<< endl
         << "init_agen;" << init_agen << ";"<< endl
@@ -318,6 +314,11 @@ void write_dist(ofstream &DataFile)
                 << Pop[patch_i].breeders[breeder_i].xsoc_horiz << ";"
                 << Pop[patch_i].breeders[breeder_i].xconformist_vert << ";"
                 << Pop[patch_i].breeders[breeder_i].xconformist_horiz << ";"
+                
+                // the intercept locus
+                << 0.5 * (Pop[patch_i].breeders[breeder_i].aintercept[0]
+                    +
+                    Pop[patch_i].breeders[breeder_i].aintercept[1]) << ";"
 
                 // agen
                 << 0.5 * (Pop[patch_i].breeders[breeder_i].agen[0]
@@ -416,6 +417,7 @@ void write_data_headers_dist(ofstream &DataFile)
         << "xsoc_horiz;" 
         << "xconformist_vert;" 
         << "xconformist_horiz;" 
+        << "aintercept;" 
         << "agen;" 
         << "ajuv;" 
         << "amat;" 
@@ -447,6 +449,7 @@ void write_data_headers(ofstream &DataFile)
         << "mean_phen_juv;" 
         << "mean_phen_prestige_vert;" 
         << "mean_phen_prestige_horiz;" 
+        << "mean_aintercept;" 
         << "mean_agen;" 
         << "mean_ajuv;" 
         << "mean_amat;" 
@@ -555,6 +558,9 @@ void write_stats(ofstream &DataFile, int generation, int timestep)
     
     double mean_phen_prestige_horiz = 0.0;
     double ss_phen_prestige_horiz = 0.0;
+    
+    double mean_aintercept = 0.0;
+    double ss_aintercept = 0.0;
    
     double mean_agen = 0.0;
     double ss_agen = 0.0;

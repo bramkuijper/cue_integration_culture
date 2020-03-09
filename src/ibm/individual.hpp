@@ -18,7 +18,6 @@ class Individual
         
         // the maternal phenotype (stats purposes)
         double phen_mat;
-
         
         // phenotypic cue from horizontally learnt prestige bias
         double phen_prestige_horiz;
@@ -50,6 +49,10 @@ class Individual
         
         // vertical socially learnt conformism-based cue 
         double xconformist_vert;
+
+        // basic intercept locus against which 
+        // other cues are interpreted
+        double aintercept[2];
 
         // evolving strategy locus for the genetic cue
         double agen[2];
