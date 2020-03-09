@@ -466,6 +466,7 @@ void write_data_headers(ofstream &DataFile)
         << "var_phen_juv;" 
         << "var_phen_prestige_vert;" 
         << "var_phen_prestige_horiz;" 
+        << "var_aintercept;" 
         << "var_agen;" 
         << "var_ajuv;" 
         << "var_amat;" 
@@ -734,6 +735,15 @@ void write_stats(ofstream &DataFile, int generation, int timestep)
             mean_phen_prestige_horiz += z;
             ss_phen_prestige_horiz += z * z;
 
+            aintercept = 0.5 * (
+                    Pop[patch_i].breeders[breeder_i].aintercept[0] 
+                    +
+                    Pop[patch_i].breeders[breeder_i].aintercept[1] 
+                    );
+
+            mean_aintercept += aintercept;
+            ss_aintercept += aintercept * aintercept;
+
             // sensitivity to genetic cues
             agen = 0.5 * (
                     Pop[patch_i].breeders[breeder_i].agen[0] 
@@ -1001,6 +1011,10 @@ void write_stats(ofstream &DataFile, int generation, int timestep)
     double var_phen_prestige_horiz = ss_phen_prestige_horiz / total_individuals 
         - mean_phen_prestige_horiz * mean_phen_prestige_horiz;
 
+
+    mean_aintercept /= total_individuals;
+    double var_aintercept = ss_aintercept / total_individuals - mean_aintercept * mean_aintercept;
+
     mean_agen /= total_individuals;
     double var_agen = ss_agen / total_individuals - mean_agen * mean_agen;
    
@@ -1224,6 +1238,7 @@ void write_stats(ofstream &DataFile, int generation, int timestep)
         << mean_phen_juv << ";"
         << mean_phen_prestige_vert << ";"
         << mean_phen_prestige_horiz << ";"
+        << mean_aintercept << ";"
         << mean_agen << ";"
         << mean_ajuv << ";"
         << mean_amat << ";"
@@ -1240,6 +1255,7 @@ void write_stats(ofstream &DataFile, int generation, int timestep)
         << var_phen_juv << ";"
         << var_phen_prestige_vert << ";"
         << var_phen_prestige_horiz << ";"
+        << var_aintercept << ";"
         << var_agen << ";"
         << var_ajuv << ";"
         << var_amat << ";"
