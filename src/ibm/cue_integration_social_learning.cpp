@@ -1372,6 +1372,9 @@ void init_population()
                     // genetic cue values
                     Pop[patch_i].breeders[breeder_i].g[allele_i].push_back(init_g);
                 }
+                
+                // maternal cue weighting
+                Pop[patch_i].breeders[breeder_i].aintercept[allele_i] = init_aintercept;
 
                 // maternal cue weighting
                 Pop[patch_i].breeders[breeder_i].amat[allele_i] = init_amat;
@@ -1520,6 +1523,22 @@ void create_offspring(Individual &mother
     }
     
     assert((int)offspring.g[0].size() == nloci_g);
+    
+    // inheritance of intercept values 
+    offspring.ainheritance[0] = mutation(
+            mother.ainheritance[allele_sample(rng_r)],
+            mu_ainheritance,
+            sdmu_a);
+
+    clamp(offspring.ainheritance[0], amin, amax);
+
+    offspring.ainheritance[1] = mutation(
+            father.ainheritance[allele_sample(rng_r)],
+            mu_ainheritance,
+            sdmu_a);
+
+    clamp(offspring.ainheritance[1], amin, amax);
+
 
     // inheritance of maternal cue values 
     offspring.amat[0] = mutation(
