@@ -3,10 +3,8 @@
 Individual::Individual():
     phen_juv{0.0},
     phen_ad{0.0},
-    phen_mat{0.0},
     phen_prestige_horiz{0.0},
     phen_prestige_vert{0.0},
-    xmat{0.0},
     xmat_envt_only{0.0},
     xmat_phen_only{0.0},
     xsoc_horiz{0.0},

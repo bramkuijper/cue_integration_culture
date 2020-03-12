@@ -30,7 +30,7 @@ laplace = 1
 nrep = 5
 
 # for now we just need 12 zeros, which covers all the traits
-initvals = " ".join([str(0.0) for x in range(0,12)])
+initvals = " ".join([str(0.0) for x in range(0,10)])
 
 aminmax = "-8.0 8.0"
 gminmax = "-1.0 1.0"
@@ -43,9 +43,8 @@ sdsoc_vert = [ 0.05 ]
 #m = list(np.linspace(0, 1.0, 20))
 m = [0.1]
 
-# mu_g, mu_amat, mu_ajuv, mu_agen, mu_asoc_horiz, mu_asoc_vert, mu_bmat_phen, mu_bmat_envt, mu_hp, mu_hc, mu_vp, mu_vc
-#mu_combis = [[ 0.01, 0.01, 0.01, 0.01, 0, 0, 0.01, 0.01, 0, 0, 0, 0 ]]#[ [ 0.01 for x in range(0,12) ]]
-mu_combis = [ [ 0.01 for x in range(0,12) ]]
+mu_g, mu_aintercept, mu_ajuv, mu_agen, mu_bmat_phen, mu_bmat_envt, mu_hp, mu_hc, mu_vp, mu_vc
+mu_combis = [[ 0.01 for x in range(0,10) ]]
 
 #mu_combis = [[ 0.0001, 0.0001, 0.0001, 0.0001, 0.0001, 0.0001 ]]
 sdmu = "0.02 0.25 0.25"
@@ -128,14 +127,17 @@ for rep_i in range(0,nrep):
                                                             + survival_scalar_i_str + " \t"
                                                             + str(qmat_i) + " "
                                                             + str(qjuv_i) + " "
+                                                            + str(max_error_conform_horiz) + " "
+                                                            + str(max_error_prestige_horiz) + " "
+                                                            + str(max_error_conform_vert) + " "
+                                                            + str(max_error_prestige_vert) + " "
+                                                            + str(max_error_mat_phen) + " "
+                                                            + str(max_error_mat_envt) + " "
                                                             + str(nloci_g_i) + " \t"
                                                             + initvals + " \t"
                                                             + gminmax + " "
                                                             + aminmax + " "
                                                             + bminmax + " \t"
-                                                            + str(sdmat_i) + " "
-                                                            + str(sdsoc_vert_i) + " "
-                                                            + str(sdsoc_horiz_i) + " \t"
                                                             + mu_combi_i_str + " "
                                                             + sdmu + " \t" 
                                                             + str(m_i) + " "

@@ -53,13 +53,13 @@ double qjuv = 0.5;
 // quality (beyond 0.5 error rate) of maternal cue
 double qmat = 0.5;
 
-// noise in maternal cue 
-double sdmat = 0.0;
+double max_error_conform_horiz = 0;
+double max_error_prestige_horiz = 0;
+double max_error_conform_vert = 0;
+double max_error_prestige_vert = 0;
 
-// noise in social cue which is obtained 
-// vertically and/or horizontally
-double sdsoc_vert = 0.0;
-double sdsoc_horiz = 0.0;
+double max_error_mat_phen = 0;
+double max_error_mat_envt = 0;
 
 // whether survival selection has a sigmoidal or a quadratic function
 bool sigmoidal_survival = true;
@@ -92,6 +92,7 @@ double bmax = 0.0;
 
 // mutation rates
 double mu_g = 0.0;
+double mu_aintercept = 0.0;
 double mu_ajuv = 0.0;
 double mu_agen = 0.0;
 double mu_bmat_phen = 0.0;
@@ -177,98 +178,103 @@ void init_arguments(int argc, char **argv)
     survival_scalar[1] = atof(argv[5]);
     qmat = atof(argv[6]);
     qjuv = atof(argv[7]);
-    nloci_g = atoi(argv[8]);
-    init_g = atof(argv[9]);
-    init_aintercept = atof(argv[10]);
-    init_ajuv = atof(argv[12]);
-    init_agen = atof(argv[13]);
-    init_bmat_phen = atof(argv[16]);
-    init_bmat_envt = atof(argv[17]);
-    init_hp = atof(argv[18]);
-    init_hc = atof(argv[19]);
-    init_vp = atof(argv[20]);
-    init_vc = atof(argv[21]);
+    max_error_conform_horiz = atof(argv[8]);
+    max_error_prestige_horiz = atof(argv[9]);
+    max_error_conform_vert = atof(argv[10]);
+    max_error_prestige_vert = atof(argv[11]);
+    max_error_mat_phen = atof(argv[12]);
+    max_error_mat_envt = atof(argv[13]);
+    nloci_g = atoi(argv[14]);
+    
+    init_g = atof(argv[15]);
+    init_aintercept = atof(argv[16]);
+    init_ajuv = atof(argv[17]);
 
-    gmin = atof(argv[22]);
-    gmax = atof(argv[23]);
-    amin = atof(argv[24]);
-    amax = atof(argv[25]);
-    bmin = atof(argv[26]);
-    bmax = atof(argv[27]);
-    sdmat = atof(argv[28]);
-    sdsoc_vert = atof(argv[29]);
-    sdsoc_horiz = atof(argv[30]);
+    init_agen = atof(argv[18]);
+    init_bmat_phen = atof(argv[19]);
+    init_bmat_envt = atof(argv[20]);
+
+    init_hp = atof(argv[21]);
+    init_hc = atof(argv[22]);
+    init_vp = atof(argv[23]);
+
+    init_vc = atof(argv[24]);
+
+    gmin = atof(argv[25]);
+    gmax = atof(argv[26]);
+    amin = atof(argv[27]);
+    amax = atof(argv[28]);
+    bmin = atof(argv[29]);
+    bmax = atof(argv[30]);
 
     mu_g = atof(argv[31]);
+    mu_aintercept = atof(argv[32]);
     mu_ajuv = atof(argv[33]);
     mu_agen = atof(argv[34]);
-    mu_bmat_phen = atof(argv[37]);
-    mu_bmat_envt = atof(argv[38]);
-    mu_hp = atof(argv[39]);
-    mu_hc = atof(argv[40]);
-    mu_vp = atof(argv[41]);
-    mu_vc = atof(argv[42]);
-    sdmu_a = atof(argv[43]);
-    sdmu_b = atof(argv[44]);
-    sdmu_g = atof(argv[45]);
-    m = atof(argv[46]);
-    nph = atoi(argv[47]);
-    nch = atoi(argv[48]);
-    npv = atoi(argv[49]);
-    ncv = atoi(argv[50]);
-    juvenile_survival = atoi(argv[51]);
+    mu_bmat_phen = atof(argv[35]);
+    mu_bmat_envt = atof(argv[36]);
+    mu_hp = atof(argv[37]);
+    mu_hc = atof(argv[38]);
+    mu_vp = atof(argv[39]);
+    mu_vc = atof(argv[40]);
+    sdmu_a = atof(argv[41]);
+    sdmu_b = atof(argv[42]);
+    sdmu_g = atof(argv[43]);
+    m = atof(argv[44]);
+    nph = atoi(argv[45]);
+    nch = atoi(argv[46]);
+    npv = atoi(argv[47]);
+    ncv = atoi(argv[48]);
+    juvenile_survival = atoi(argv[49]);
 }
 
 // write down all parameters to the file DataFile
 void write_parameters(ofstream &DataFile)
 {
-    DataFile << endl << endl
-        << "sigmoidal_survival;" << sigmoidal_survival << ";"<< endl
-        << "laplace;" << laplace << ";"<< endl
-        << "p;" << p << ";"<< endl
-        << "qmat;" << qmat << ";"<< endl
-        << "qjuv;" << qjuv << ";"<< endl
-        << "nloci_g;" << nloci_g << ";"<< endl
-        << "init_g;" << init_g << ";"<< endl
-        << "init_aintercept;" << init_aintercept << ";"<< endl
-        << "init_ajuv;" << init_ajuv << ";"<< endl
-        << "init_agen;" << init_agen << ";"<< endl
-        << "init_bmat_phen;" << init_bmat_phen << ";"<< endl
-        << "init_bmat_envt;" << init_bmat_envt << ";"<< endl
-        << "init_hp;" << init_hp << ";"<< endl
-        << "init_hc;" << init_hc << ";"<< endl
-        << "init_vp;" << init_vp << ";"<< endl
-        << "init_vc;" << init_vc << ";"<< endl
-        << "gmin;" << gmin << ";"<< endl
-        << "gmax;" << gmax << ";"<< endl
-        << "amin;" << amin << ";"<< endl
-        << "amax;" << amax << ";"<< endl
-        << "bmin;" << bmin << ";"<< endl
-        << "bmax;" << bmax << ";"<< endl
-        << "sdmat;" << sdmat << ";"<< endl
-        << "sdsoc_vert;" << sdsoc_vert << ";"<< endl
-        << "sdsoc_horiz;" << sdsoc_horiz << ";"<< endl
-        << "mu_g;" << mu_g << ";"<< endl
-        << "sdmu_g;" << sdmu_g << ";"<< endl
-        << "mu_ajuv;" << mu_ajuv << ";"<< endl
-        << "mu_agen;" << mu_agen << ";"<< endl
-        << "juvenile_survival;" << juvenile_survival << ";"<< endl
-        << "mu_bmat_phen;" << mu_bmat_phen << ";"<< endl
-        << "mu_bmat_envt;" << mu_bmat_envt << ";"<< endl
-        << "mu_vc;" << mu_vc << ";"<< endl
-        << "mu_vp;" << mu_vp << ";"<< endl
-        << "mu_hc;" << mu_hc << ";"<< endl
-        << "mu_hp;" << mu_hp << ";"<< endl
-        << "sdmu_a;" << sdmu_a << ";"<< endl
-        << "sdmu_b;" << sdmu_b << ";"<< endl
-        << "m;" << m << ";"<< endl
-        << "nph;" << nph << ";"<< endl
-        << "nch;" << nch << ";"<< endl
-        << "npv;" << npv << ";"<< endl
-        << "ncv;" << ncv << ";"<< endl
-        << "survival_scalar0;" << survival_scalar[0] << ";"<< endl
-        << "survival_scalar1;" << survival_scalar[1] << ";"<< endl
-        << "seed;" << seed << ";" << endl;
+    DataFile << std::endl << std::endl
+        << "sigmoidal_survival;" << sigmoidal_survival << ";"<< std::endl
+        << "laplace;" << laplace << ";"<< std::endl
+        << "p;" << p << ";"<< std::endl
+        << "qmat;" << qmat << ";"<< std::endl
+        << "qjuv;" << qjuv << ";"<< std::endl
+        << "nloci_g;" << nloci_g << ";"<< std::endl
+        << "init_g;" << init_g << ";"<< std::endl
+        << "init_aintercept;" << init_aintercept << ";"<< std::endl
+        << "init_ajuv;" << init_ajuv << ";"<< std::endl
+        << "init_agen;" << init_agen << ";"<< std::endl
+        << "init_bmat_phen;" << init_bmat_phen << ";"<< std::endl
+        << "init_bmat_envt;" << init_bmat_envt << ";"<< std::endl
+        << "init_hp;" << init_hp << ";"<< std::endl
+        << "init_hc;" << init_hc << ";"<< std::endl
+        << "init_vp;" << init_vp << ";"<< std::endl
+        << "init_vc;" << init_vc << ";"<< std::endl
+        << "gmin;" << gmin << ";"<< std::endl
+        << "gmax;" << gmax << ";"<< std::endl
+        << "amin;" << amin << ";"<< std::endl
+        << "amax;" << amax << ";"<< std::endl
+        << "bmin;" << bmin << ";"<< std::endl
+        << "bmax;" << bmax << ";"<< std::endl
+        << "mu_g;" << mu_g << ";"<< std::endl
+        << "sdmu_g;" << sdmu_g << ";"<< std::endl
+        << "mu_ajuv;" << mu_ajuv << ";"<< std::endl
+        << "mu_agen;" << mu_agen << ";"<< std::endl
+        << "juvenile_survival;" << juvenile_survival << ";"<< std::endl
+        << "mu_bmat_phen;" << mu_bmat_phen << ";"<< std::endl
+        << "mu_bmat_envt;" << mu_bmat_envt << ";"<< std::endl
+        << "mu_vc;" << mu_vc << ";"<< std::endl
+        << "mu_vp;" << mu_vp << ";"<< std::endl
+        << "mu_hc;" << mu_hc << ";"<< std::endl
+        << "mu_hp;" << mu_hp << ";"<< std::endl
+        << "sdmu_a;" << sdmu_a << ";"<< std::endl
+        << "sdmu_b;" << sdmu_b << ";"<< std::endl
+        << "m;" << m << ";"<< std::endl
+        << "nph;" << nph << ";"<< std::endl
+        << "nch;" << nch << ";"<< std::endl
+        << "npv;" << npv << ";"<< std::endl
+        << "ncv;" << ncv << ";"<< std::endl
+        << "survival_scalar0;" << survival_scalar[0] << ";"<< std::endl
+        << "survival_scalar1;" << survival_scalar[1] << ";"<< std::endl
+        << "seed;" << seed << ";" << std::endl;
 
 } // void write_parameters(ofstream &DataFile)
 
@@ -288,10 +294,8 @@ void write_dist(ofstream &DataFile)
             DataFile << patch_i << ";" 
                 << breeder_i << ";"
                 << Pop[patch_i].breeders[breeder_i].phen_ad << ";"
-                << Pop[patch_i].breeders[breeder_i].phen_mat << ";"
                 << Pop[patch_i].breeders[breeder_i].phen_prestige_vert << ";"
                 << Pop[patch_i].breeders[breeder_i].phen_prestige_horiz << ";"
-                << Pop[patch_i].breeders[breeder_i].xmat << ";"
                 << Pop[patch_i].breeders[breeder_i].xsoc_vert << ";"
                 << Pop[patch_i].breeders[breeder_i].xsoc_horiz << ";"
                 << Pop[patch_i].breeders[breeder_i].xconformist_vert << ";"
@@ -361,7 +365,7 @@ void write_dist(ofstream &DataFile)
                 << Pop[patch_i].breeders[breeder_i].mnoise << ";"
                 << Pop[patch_i].breeders[breeder_i].svnoise << ";"
                 << Pop[patch_i].breeders[breeder_i].shnoise << ";"
-                << endl;
+                << std::endl;
         } // end for (int breeder_i = 0; breeder_i < NPatches; ++breeder_i)
     } // end for (int patch_i = 0; patch_i < NPatches; ++patch_i)
 } // end  void write_dist(ofstream &DataFile)
@@ -376,7 +380,6 @@ void write_data_headers_dist(ofstream &DataFile)
         << "patch_id;" 
         << "id;" 
         << "phen_ad;" 
-        << "phen_mat;" 
         << "phen_prestige_vert;" 
         << "phen_prestige_horiz;" 
         << "xmat;" 
@@ -403,7 +406,7 @@ void write_data_headers_dist(ofstream &DataFile)
         << "mnoise;" 
         << "svnoise;" 
         << "shnoise;" 
-        << endl; 
+        << std::endl; 
 }
 
 // list of the data headers at the start of the file
@@ -505,7 +508,7 @@ void write_data_headers(ofstream &DataFile)
         << "cov_asoc_horiz_p_vert;"
 
         << "cov_agen_ajuv;"
-        << endl; 
+        << std::endl; 
 }
 
 // write data both for winter and summer populations
@@ -726,17 +729,8 @@ void write_stats(
     mean_agen /= total_individuals;
     double var_agen = ss_agen / total_individuals - mean_agen * mean_agen;
    
-    mean_amat /= total_individuals;
-    double var_amat = total_individuals - mean_amat * mean_amat;
-    
     mean_ajuv /= total_individuals;
     double var_ajuv = ss_ajuv / total_individuals -  mean_ajuv * mean_ajuv;
-    
-    mean_asoc_vert /= total_individuals;
-    double var_asoc_vert = ss_asoc_vert / total_individuals - mean_asoc_vert * mean_asoc_vert;
-    
-    mean_asoc_horiz /= total_individuals;
-    double var_asoc_horiz = ss_asoc_horiz / total_individuals - mean_asoc_horiz * mean_asoc_horiz;
     
     mean_bmat_phen /= total_individuals;
     double var_bmat_phen = ss_bmat_phen / total_individuals - mean_bmat_phen * mean_bmat_phen;
@@ -794,7 +788,7 @@ void write_stats(
         << mean_survival[0] << ";" 
         << mean_survival[1] << ";" 
         << var_survival[0] << ";" 
-        << var_survival[1] << ";" << endl;
+        << var_survival[1] << ";" << std::endl;
 }
 
 // initialize the population at the start of the simulation
@@ -1190,10 +1184,13 @@ void create_offspring(Individual &mother
     offspring.xconformist_vert_error = xconformist_vert + 
         rng_uniform(rng_r) * max_error_conform_vert;
 
+    clamp(offspring.xconformist_vert_error, 0.0, 1.0);
 
     offspring.phen_prestige_vert = phen_prestige_vert;
     offspring.phen_prestige_vert_error = phen_prestige_vert +
         rng_uniform(rng_r) * max_error_prestige_vert;
+    
+    clamp(offspring.phen_prestige_vert_error, 0.0, 1.0);
 //
 //    // generate vertical socially learnt cue
 //    double xsoc_vert = 1.0 / (1.0 + exp(
@@ -1210,7 +1207,6 @@ void create_offspring(Individual &mother
 
 //
 //
-//    normal_distribution<> social_noise(0.0, sdsoc_vert);
 //
 //    double socnoise = social_noise(rng_r);
 //
@@ -1236,7 +1232,7 @@ void create_offspring(Individual &mother
                     -aintercept_phen
                     -b_phen * (offspring.maternal_phen_cue_error - 0.5)
                     -b_envt * (offspring.maternal_envt_cue_error - 0.5)
-                    -agen_phen * sum_genes +
+                    -agen_phen * sum_genes 
                     -ajuv_phen * (offspring.cue_juv_envt_high - 0.5)
                     -vc_phen * (offspring.xconformist_vert_error - 0.5)
                     -vp_phen * (offspring.phen_prestige_vert_error - 0.5)
@@ -1388,14 +1384,14 @@ void social_learning(
         {
             ++nhi;
         }
-        else if (phen < 0.5)
+        else if (phen <= 0.5)
         {
             ++nlo;
         }
     }
 
-    // give conformist cue which is -1, 0 or 1
-    xconformist = nhi > nlo ? 1 : nlo == nhi ? 0 : -1;
+    // give conformist cue which is between 0 and 1
+    xconformist = nhi/(nhi + nlo);
 } // end void social_learning
  
 
@@ -1579,12 +1575,9 @@ void replace()
                     + 
                     Pop[patch_i].breeders[breeder_i].hc[1]);
 
-            assert(
-
             Pop[patch_i].breeders[breeder_i].xconformist_horiz = xconformist;
-            Pop[patch_i].breeders[breeder_i].xconformist_horiz_error = xconformist +
-
-            // TODO
+            Pop[patch_i].breeders[breeder_i].xconformist_horiz_error = xconformist + 
+                rng_uniform(rng_r) * max_error_conform_horiz;
 
             clamp(Pop[patch_i].breeders[breeder_i].xconformist_horiz_error, 0.0, 1.0);
 
@@ -1598,8 +1591,8 @@ void replace()
             Pop[patch_i].breeders[breeder_i].phen_ad = 1.0 / 
                 (1.0 + exp(
                             log(1.0 / Pop[patch_i].breeders[breeder_i].phen_juv - 1.0) 
-                            -hp * (prestige_phen
-                            -hc * xconformist
+                            -hp * (Pop[patch_i].breeders[breeder_i].phen_prestige_horiz_error - 0.5)
+                            -hc * (Pop[patch_i].breeders[breeder_i].xconformist_horiz_error - 0.5)
                             ));
         } // for (int breeder_i = 0; breeder_i < Pop[patch_i].n_breeders; ++breeder_i)
         
