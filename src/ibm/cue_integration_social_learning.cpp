@@ -20,11 +20,14 @@
 // individual used here
 #include "individual.hpp"
 
-// C++ random number generation
-unsigned int seed = get_nanoseconds();
-mt19937 rng_r{seed};
-uniform_real_distribution<> uniform(0.0,1.0);
+// C++ random number generation unsigned int seed = get_nanoseconds();
+std::random_device rd;
+unsigned seed = rd();
+std::mt19937 rng_r{seed};
+std::uniform_real_distribution<> uniform(0.0,1.0);
 
+// file base name
+std::string base_name;
 // parameters & variables:
 // a lot of the parameters declared here will be overridden
 // in the init_arguments function which reads parameters from the command line
@@ -73,6 +76,7 @@ int nloci_g = 3;
 // these will be overridden when the function
 // init_arguments is called
 double init_g = 0.0;
+double init_aintercept = 0.0;
 double init_ajuv = 0.0;
 double init_agen = 0.0;
 double init_bmat_phen = 0.0;
@@ -229,7 +233,7 @@ void init_arguments(int argc, char **argv)
 }
 
 // write down all parameters to the file DataFile
-void write_parameters(ofstream &DataFile)
+void write_parameters(std::ofstream &DataFile)
 {
     DataFile << std::endl << std::endl
         << "sigmoidal_survival;" << sigmoidal_survival << ";"<< std::endl
@@ -276,13 +280,13 @@ void write_parameters(ofstream &DataFile)
         << "survival_scalar1;" << survival_scalar[1] << ";"<< std::endl
         << "seed;" << seed << ";" << std::endl;
 
-} // void write_parameters(ofstream &DataFile)
+} // void write_parameters(std::ofstream &DataFile)
 
 
 // write all properties of all individuals
 // to the file DataFile (to obtain information about
 // the distribution of traits)
-void write_dist(ofstream &DataFile)
+void write_dist(std::ofstream &DataFile)
 {
     double g; // auxiliary variable to temporarily 
                 // store trait expression
@@ -296,8 +300,6 @@ void write_dist(ofstream &DataFile)
                 << Pop[patch_i].breeders[breeder_i].phen_ad << ";"
                 << Pop[patch_i].breeders[breeder_i].phen_prestige_vert << ";"
                 << Pop[patch_i].breeders[breeder_i].phen_prestige_horiz << ";"
-                << Pop[patch_i].breeders[breeder_i].xsoc_vert << ";"
-                << Pop[patch_i].breeders[breeder_i].xsoc_horiz << ";"
                 << Pop[patch_i].breeders[breeder_i].xconformist_vert << ";"
                 << Pop[patch_i].breeders[breeder_i].xconformist_horiz << ";"
                 
@@ -361,36 +363,32 @@ void write_dist(ofstream &DataFile)
                 << Pop[patch_i].envt_high << ";"
                 << Pop[patch_i].breeders[breeder_i].cue_ad_envt_high << ";"
                 << Pop[patch_i].breeders[breeder_i].cue_juv_envt_high << ";"
-                << Pop[patch_i].breeders[breeder_i].maternal_cue << ";"
-                << Pop[patch_i].breeders[breeder_i].mnoise << ";"
-                << Pop[patch_i].breeders[breeder_i].svnoise << ";"
-                << Pop[patch_i].breeders[breeder_i].shnoise << ";"
                 << std::endl;
         } // end for (int breeder_i = 0; breeder_i < NPatches; ++breeder_i)
     } // end for (int patch_i = 0; patch_i < NPatches; ++patch_i)
-} // end  void write_dist(ofstream &DataFile)
+} // end  void write_dist(std::ofstream &DataFile)
 
 
 // list of the data headers at the start of the file
 // in which the distribution of evolved trait values
 // and states is written at the end of the file
-void write_data_headers_dist(ofstream &DataFile)
+void write_data_headers_dist(std::ofstream &DataFile)
 {
     DataFile 
         << "patch_id;" 
         << "id;" 
         << "phen_ad;" 
+        << "phen_juv;" 
+        << "phen_mat;" 
         << "phen_prestige_vert;" 
+        << "phen_prestige_vert_error;" 
         << "phen_prestige_horiz;" 
-        << "xmat;" 
-        << "xsoc_vert;" 
-        << "xsoc_horiz;" 
+        << "phen_prestige_horiz_error;" 
         << "xconformist_vert;" 
         << "xconformist_horiz;" 
         << "aintercept;" 
         << "agen;" 
         << "ajuv;" 
-        << "amat;" 
         << "asoc_horiz;" 
         << "bmat_phen;" 
         << "bmat_envt;" 
@@ -402,15 +400,11 @@ void write_data_headers_dist(ofstream &DataFile)
         << "envt;" 
         << "cue_ad_envt_high;" 
         << "cue_juv_envt_high;" 
-        << "maternal_cue;" 
-        << "mnoise;" 
-        << "svnoise;" 
-        << "shnoise;" 
         << std::endl; 
 }
 
 // list of the data headers at the start of the file
-void write_data_headers(ofstream &DataFile)
+void write_data_headers(std::ofstream &DataFile)
 {
     DataFile 
         << "generation;" 
@@ -421,7 +415,6 @@ void write_data_headers(ofstream &DataFile)
         << "mean_aintercept;" 
         << "mean_agen;" 
         << "mean_ajuv;" 
-        << "mean_amat;" 
         << "mean_bmat_phen;" 
         << "mean_bmat_envt;" 
         << "mean_hc;" 
@@ -436,9 +429,6 @@ void write_data_headers(ofstream &DataFile)
         << "var_aintercept;" 
         << "var_agen;" 
         << "var_ajuv;" 
-        << "var_amat;" 
-        << "var_asoc_vert;" 
-        << "var_asoc_horiz;" 
         << "var_bmat_phen;" 
         << "var_bmat_envt;" 
         << "var_hc;" 
@@ -450,70 +440,12 @@ void write_data_headers(ofstream &DataFile)
         << "mean_surv0;" 
         << "mean_surv1;" 
         << "var_surv0;" 
-        << "var_surv1;" 
-        << "var_component_gen;"
-        << "var_component_ajuv;"
-        << "var_component_amat;"
-        << "var_component_amat_envt;"
-        << "var_component_amat_phen;"
-        << "cov_amat_phen_amat_envt;"
-        << "cov_amat_ajuv;"
-        << "cov_amat_envt_ajuv;"
-        << "cov_amat_phen_ajuv;"
-        << "var_component_asoc_vert;"
-        << "var_component_asoc_vert_p;"
-        << "var_component_asoc_vert_c;"
-        << "var_component_asoc_horiz;"
-        << "var_component_asoc_horiz_p;"
-        << "var_component_asoc_horiz_c;"
-        << "cov_amat_asoc_vert;"
-        << "cov_amat_asoc_vert_c;"
-        << "cov_amat_asoc_vert_p;"
-        << "cov_amat_asoc_horiz;"
-        << "cov_amat_asoc_horiz_c;"
-        << "cov_amat_asoc_horiz_p;"
-        << "cov_amat_envt_asoc_vert;"
-        << "cov_amat_envt_asoc_vert_c;"
-        << "cov_amat_envt_asoc_vert_p;"
-        << "cov_amat_envt_asoc_horiz;"
-        << "cov_amat_envt_asoc_horiz_c;"
-        << "cov_amat_envt_asoc_horiz_p;"
-        << "cov_amat_phen_asoc_vert;"
-        << "cov_amat_phen_asoc_vert_c;"
-        << "cov_amat_phen_asoc_vert_p;"
-        << "cov_amat_phen_asoc_horiz;"
-        << "cov_amat_phen_asoc_horiz_c;"
-        << "cov_amat_phen_asoc_horiz_p;"
-
-        << "cov_ajuv_asoc_vert;"
-        << "cov_ajuv_asoc_vert_c;"
-        << "cov_ajuv_asoc_vert_p;"
-        
-        << "cov_ajuv_asoc_horiz;"
-        << "cov_ajuv_asoc_horiz_c;"
-        << "cov_ajuv_asoc_horiz_p;"
-
-        << "cov_agen_asoc_vert;"
-        << "cov_agen_asoc_vert_c;"
-        << "cov_agen_asoc_vert_p;"
-
-        << "cov_agen_asoc_horiz;"
-        << "cov_agen_asoc_horiz_c;"
-        << "cov_agen_asoc_horiz_p;"
-        
-        << "cov_asoc_horiz_vert;"
-        << "cov_asoc_horiz_vert_c;"
-        << "cov_asoc_horiz_vert_p;"
-        << "cov_asoc_horiz_c_vert;"
-        << "cov_asoc_horiz_p_vert;"
-
-        << "cov_agen_ajuv;"
-        << std::endl; 
+        << "var_surv1;" << std::endl;
 }
 
 // write data both for winter and summer populations
 void write_stats(
-        ofstream &DataFile, 
+        std::ofstream &DataFile, 
         int generation, 
         int timestep)
 {
@@ -883,7 +815,7 @@ double mutation(double val, double mu, double sdmu)
         {
             // using a uniform dist to draw numbers from a Laplace dist
             // see https://en.wikipedia.org/wiki/Laplace_distribution 
-            uniform_real_distribution<> mutational_effect(-0.5 + 0.0000001, 0.5);
+            std::uniform_real_distribution<> mutational_effect(-0.5 + 0.0000001, 0.5);
             double U = mutational_effect(rng_r);
 
             double sgnU = U < 0.0 ? -1.0 : U > 0.0 ? 1.0 : 0.0;
@@ -895,7 +827,7 @@ double mutation(double val, double mu, double sdmu)
         }
         else
         {
-            normal_distribution<> mutational_effect(0.0, sdmu);
+            std::normal_distribution<> mutational_effect(0.0, sdmu);
             val += mutational_effect(rng_r);
         }
     }
@@ -921,7 +853,7 @@ void create_offspring(Individual &mother
     // set up a bernoulli distribution that returns 0s or 1s
     // at equal probability to sample alleles from the first or
     // second set of chromosomes of diploid individuals
-    bernoulli_distribution allele_sample(0.5);
+    std::bernoulli_distribution allele_sample(0.5);
 
     assert((int)mother.g[0].size() == nloci_g);
     
@@ -967,19 +899,22 @@ void create_offspring(Individual &mother
     assert((int)offspring.g[0].size() == nloci_g);
     
     // inheritance of intercept values 
-    offspring.ainheritance[0] = mutation(
-            mother.ainheritance[allele_sample(rng_r)],
-            mu_ainheritance,
+    offspring.aintercept[0] = mutation(
+            mother.aintercept[allele_sample(rng_r)],
+            mu_aintercept,
             sdmu_a);
 
-    clamp(offspring.ainheritance[0], amin, amax);
+    clamp(offspring.aintercept[0], amin, amax);
 
-    offspring.ainheritance[1] = mutation(
-            father.ainheritance[allele_sample(rng_r)],
-            mu_ainheritance,
+    offspring.aintercept[1] = mutation(
+            father.aintercept[allele_sample(rng_r)],
+            mu_aintercept,
             sdmu_a);
 
-    clamp(offspring.ainheritance[1], amin, amax);
+    clamp(offspring.aintercept[1], amin, amax);
+
+    double aintercept_phen = 0.5 * 
+        (offspring.aintercept[0] + offspring.aintercept[1]);
 
     // inheritance of juvenile cue values 
     offspring.ajuv[0] = mutation(
@@ -1123,22 +1058,19 @@ void create_offspring(Individual &mother
         offspring_envt_high : !offspring_envt_high;
 
     // get a cue of the maternal phenotype
-    offspring.maternal_phen_cue = mother.phen_ad;
+    offspring.phen_mat = mother.phen_ad;
 
     // add noise to the maternal phenotypic cue
-    offspring.maternal_phen_cue_error = offspring.maternal_phen_cue 
+    offspring.phen_mat_error = offspring.phen_mat 
         + uniform(rng_r) * max_error_mat_phen;
 
-    clamp(offspring.maternal_phen_cue_error, 0, 1.0);
+    clamp(offspring.phen_mat_error, 0, 1.0);
 
     // get a cue of the maternal environment
     offspring.maternal_envt_cue = mother.cue_ad_envt_high;
     
     // add noise to the maternal phenotypic cue
-    offspring.maternal_envt_cue_error = offspring.maternal_envt_cue + 
-        uniform(rng_r) * max_error_mat_envt;
-    
-    clamp(offspring.maternal_envt_cue_error, 0, 1.0);
+    offspring.maternal_envt_cue_error = offspring.maternal_envt_cue;
 
     // express sensitivity to maternal phenotype
     double b_phen = 0.5 * (offspring.bmat_phen[0] + offspring.bmat_phen[1]);
@@ -1170,67 +1102,24 @@ void create_offspring(Individual &mother
 //    double xoff_envt_only = 1.0 /
 //        (1.0 + exp(dmat_weighting * b_envt));
 
-//    // calculate final value of maternal cue
-//    offspring.xmat = xoff + mnoise;
-//    offspring.xmat_phen_only = xoff_phen_only + mnoise;
-//    offspring.xmat_envt_only = xoff_envt_only + mnoise;
-
-//    clamp(offspring.xmat, 0.0, 1.0);
-//    clamp(offspring.xmat_phen_only, 0.0, 1.0);
-//    clamp(offspring.xmat_envt_only, 0.0, 1.0);
-
 //    // social learning
     offspring.xconformist_vert = xconformist_vert;
     offspring.xconformist_vert_error = xconformist_vert + 
-        rng_uniform(rng_r) * max_error_conform_vert;
+        uniform(rng_r) * max_error_conform_vert;
 
     clamp(offspring.xconformist_vert_error, 0.0, 1.0);
 
     offspring.phen_prestige_vert = phen_prestige_vert;
     offspring.phen_prestige_vert_error = phen_prestige_vert +
-        rng_uniform(rng_r) * max_error_prestige_vert;
+        uniform(rng_r) * max_error_prestige_vert;
     
     clamp(offspring.phen_prestige_vert_error, 0.0, 1.0);
 //
-//    // generate vertical socially learnt cue
-//    double xsoc_vert = 1.0 / (1.0 + exp(
-//                - vp_phen * (offspring.phen_prestige_vert - 0.5)
-//                - vc_phen * offspring.xconformist_vert));
-//
-//    // also calculate vertical social cues for prestige only
-//    double xsoc_vert_c = 1.0 / (1.0 + exp(
-//                - vc_phen * offspring.xconformist_vert));
-//
-//    double xsoc_vert_p = 1.0 / (1.0 + exp(
-//                - vp_phen * (offspring.phen_prestige_vert - 0.5)));
-//
-
-//
-//
-//
-//    double socnoise = social_noise(rng_r);
-//
-//    // store the noise deviate for stats
-//    offspring.svnoise = socnoise;
-//
-//    offspring.xsoc_vert = xsoc_vert + socnoise;
-//    offspring.xsoc_vert_c = xsoc_vert_c + socnoise;
-//    offspring.xsoc_vert_p = xsoc_vert_p + socnoise;
-//
-//    clamp(offspring.xsoc_vert, 0.0, 1.0);
-//    clamp(offspring.xsoc_vert_c, 0.0, 1.0);
-//    clamp(offspring.xsoc_vert_p, 0.0, 1.0);
-
-
-
-
-
-
     // expressing a juvenile phenotype
     offspring.phen_juv = 1.0 / 
         (1.0 + exp(
                     -aintercept_phen
-                    -b_phen * (offspring.maternal_phen_cue_error - 0.5)
+                    -b_phen * (offspring.phen_mat_error - 0.5)
                     -b_envt * (offspring.maternal_envt_cue_error - 0.5)
                     -agen_phen * sum_genes 
                     -ajuv_phen * (offspring.cue_juv_envt_high - 0.5)
@@ -1245,7 +1134,7 @@ void adult_survival()
 {
     // set up a random number generator to 
     // sample from the remaining breeders
-    uniform_int_distribution<> random_patch(
+    std::uniform_int_distribution<> random_patch(
             0,
             NPatches - 1);
 
@@ -1273,7 +1162,7 @@ void adult_survival()
         for (int breeder_i = 0; breeder_i < Pop[patch_i].n_breeders; ++breeder_i)
         {
             // check whether adult phenotypes indeed exist
-            assert(abs(::isnormal(Pop[patch_i].breeders[breeder_i].phen_ad)) > 0);
+            assert(abs(std::isnormal(Pop[patch_i].breeders[breeder_i].phen_ad)) > 0);
 
             // calculate survival probability
             surv = survival_probability(
@@ -1330,7 +1219,7 @@ void social_learning(
     // set up a random number generator to 
     // sample and socially learn from 
     // the surviving breeders
-    uniform_int_distribution<> random_local_breeder(
+    std::uniform_int_distribution<> random_local_breeder(
             0,
             Pop[patch_i].n_breeders - 1);
 
@@ -1413,7 +1302,7 @@ void replace()
 
     // set up a random number generator to 
     // sample remote patches
-    uniform_int_distribution<> patch_sampler(
+    std::uniform_int_distribution<> patch_sampler(
             0,
             NPatches - 1);
 
@@ -1438,7 +1327,7 @@ void replace()
             {
                 // set up a random number generator to 
                 // sample from the remaining breeders
-                uniform_int_distribution<> random_local_breeder(
+                std::uniform_int_distribution<> random_local_breeder(
                         0,
                         Pop[patch_i].n_breeders - 1);
 
@@ -1469,7 +1358,7 @@ void replace()
                 }
                 while(Pop[random_remote_patch].n_breeders < 1);
         
-                uniform_int_distribution<> random_remote_breeder(
+                std::uniform_int_distribution<> random_remote_breeder(
                 0,
                 Pop[random_remote_patch].n_breeders - 1);
                
@@ -1522,10 +1411,7 @@ void replace()
     bool cue_ad_envt_high;
 
     // auxiliary variables for horizontal social learning
-    double hp, hc, asoc_horiz, xsoc_horiz, noise;
-
-    // random number for errors in horizontal social learning
-    normal_distribution<> social_noise(0.0, sdsoc_horiz);
+    double hp, hc;
 
     // all new breeders born etc, copy them over
     // and perform horiz social learning
@@ -1577,13 +1463,13 @@ void replace()
 
             Pop[patch_i].breeders[breeder_i].xconformist_horiz = xconformist;
             Pop[patch_i].breeders[breeder_i].xconformist_horiz_error = xconformist + 
-                rng_uniform(rng_r) * max_error_conform_horiz;
+                uniform(rng_r) * max_error_conform_horiz;
 
             clamp(Pop[patch_i].breeders[breeder_i].xconformist_horiz_error, 0.0, 1.0);
 
             Pop[patch_i].breeders[breeder_i].phen_prestige_horiz = prestige_phen;
             Pop[patch_i].breeders[breeder_i].phen_prestige_horiz_error = prestige_phen +
-                rng_uniform(rng_r) * max_error_prestige_horiz;
+                uniform(rng_r) * max_error_prestige_horiz;
 
             clamp(Pop[patch_i].breeders[breeder_i].phen_prestige_horiz_error, 0.0, 1.0);
 
@@ -1609,18 +1495,17 @@ void replace()
 // accepting command line arguments
 int main(int argc, char **argv)
 {
-    string filename = "sim_cue_integration";
-    create_filename(filename);
-    ofstream DataFile(filename.c_str());  // output file 
+    // get command line arguments
+    init_arguments(argc, argv);
+
+    std::string filename_stats = base_name + ".csv";
+    std::ofstream DataFile(filename_stats.c_str());  // output file 
 
     // output file to write out the complete 
     // trait and state distribution of individuals
     // in the last generation
-    string filename_final_dist = filename + "_dist";
-    ofstream DataFileDist(filename_final_dist.c_str());  
-
-    // get command line arguments
-    init_arguments(argc, argv);
+    std::string filename_dist = base_name + "_dist.csv";
+    std::ofstream DataFileDist(filename_dist.c_str());  
 
     // write headers to the datafile
     write_data_headers(DataFile);
