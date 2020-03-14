@@ -7,13 +7,15 @@
 
 import numpy as np
 import socket
+import datetime
 
 # whether the survival curvive is 
 # sigmoidal or not
 sigmoidal_survival = [ 0 ]
 
 # frequency of the high environment
-p = list(np.linspace(0,1,30))
+#p = list(np.linspace(0,1,30))
+p = [0.1]
 
 survival_scalar_sig = [-2.5,3.5]
 survival_scalar_quad = [0.8,0.0]
@@ -29,7 +31,18 @@ laplace = 1
 
 nrep = 5
 
-# for now we just need 12 zeros, which covers all the traits
+# for now we just need 10 zeros, which covers all the traits
+#
+#1.  g 
+#2.  intercept 
+#3.  ajuv 
+#4.  agen 
+#5.  bmat_phen
+#6.  bmat_envt
+#7.  hp
+#8.  hc
+#9.  vp
+#10. vc
 initvals = " ".join([str(0.0) for x in range(0,10)])
 
 aminmax = "-8.0 8.0"
@@ -43,8 +56,15 @@ sdsoc_vert = [ 0.05 ]
 #m = list(np.linspace(0, 1.0, 20))
 m = [0.1]
 
-mu_g, mu_aintercept, mu_ajuv, mu_agen, mu_bmat_phen, mu_bmat_envt, mu_hp, mu_hc, mu_vp, mu_vc
+#mu_g, mu_aintercept, mu_ajuv, mu_agen, mu_bmat_phen, mu_bmat_envt, mu_hp, mu_hc, mu_vp, mu_vc
 mu_combis = [[ 0.01 for x in range(0,10) ]]
+                        
+max_error_conform_horiz = [ 0.0 ]
+max_error_prestige_horiz = [ 0.0 ]
+max_error_conform_vert = [ 0.0 ]
+max_error_prestige_vert = [ 0.0 ]
+max_error_mat_phen = [ 0.0 ]
+max_error_mat_envt = [ 0.0 ]
 
 #mu_combis = [[ 0.0001, 0.0001, 0.0001, 0.0001, 0.0001, 0.0001 ]]
 sdmu = "0.02 0.25 0.25"
@@ -71,7 +91,7 @@ nx = [[5,5,5,5]]
 ctr = 1
 
 # whether jobs should be run in the background
-run_in_background = True
+run_in_background = False
 
 juvenile_survival = [ 0 ]
 
@@ -83,6 +103,10 @@ if "carson" in hostname:
 # add ampersand to each job command if job needs
 # to be run in background
 bg = "&" if run_in_background else ""
+
+date = datetime.datetime.now()
+base_name = "sim_cue_integration_" +\
+        f"{date:%d}_{date:%m}_{date:%Y}_{date:%H}{date:%M}{date:%S}"
 
 for rep_i in range(0,nrep):
     for sigmoidal_survival_i in sigmoidal_survival:
@@ -99,49 +123,56 @@ for rep_i in range(0,nrep):
             for qmat_i in qmat:
                 for qjuv_i in qjuv:
                     for nloci_g_i in nloci_g:
-                        for sdmat_i in sdmat:
-                            for sdsoc_vert_i in sdsoc_vert:
-                                for sdsoc_horiz_i in sdsoc_horiz:
-                                    for m_i in m:
-                                        m_i = round(m_i,3)
-                                        for mu_combi_i in mu_combis:
-                                            
-                                            mu_combi_i_str = " ".join(
-                                                    str(x) for x in mu_combi_i)
+                        for max_error_conform_horiz_i in max_error_conform_horiz:
+                            for max_error_prestige_horiz_i in max_error_prestige_horiz:
+                                for max_error_conform_vert_i in max_error_conform_vert:
+                                    for max_error_prestige_vert_i in max_error_prestige_vert:
+                                        for max_error_mat_phen_i in max_error_mat_phen:
+                                            for max_error_mat_envt_i in max_error_mat_envt:
+                                                for m_i in m:
+                                                    m_i = round(m_i,3)
+                                                    for mu_combi_i in mu_combis:
+                                                        
+                                                        mu_combi_i_str = " ".join(
+                                                                str(x) for x in mu_combi_i)
 
-                                            for nx_i in nx:
-                                                
-                                                nxstr = " ".join(
-                                                        str(x) for x in nx_i)
+                                                        for nx_i in nx:
+                                                            
+                                                            nxstr = " ".join(
+                                                                    str(x) for x in nx_i)
 
-                                                for juvenile_survival_i in juvenile_survival:
+                                                            for juvenile_survival_i in juvenile_survival:
 
-                                                    print("echo " + str(ctr))
-                                                    ctr += 1
+                                                                print("echo " + str(ctr))
+                                                                ctr += 1
 
 
-                                                    print(exe + " \t"
-                                                            + str(sigmoidal_survival_i) + " \t"
-                                                            + str(laplace) + " "
-                                                            + str(p_i) + " \t"
-                                                            + survival_scalar_i_str + " \t"
-                                                            + str(qmat_i) + " "
-                                                            + str(qjuv_i) + " "
-                                                            + str(max_error_conform_horiz) + " "
-                                                            + str(max_error_prestige_horiz) + " "
-                                                            + str(max_error_conform_vert) + " "
-                                                            + str(max_error_prestige_vert) + " "
-                                                            + str(max_error_mat_phen) + " "
-                                                            + str(max_error_mat_envt) + " "
-                                                            + str(nloci_g_i) + " \t"
-                                                            + initvals + " \t"
-                                                            + gminmax + " "
-                                                            + aminmax + " "
-                                                            + bminmax + " \t"
-                                                            + mu_combi_i_str + " "
-                                                            + sdmu + " \t" 
-                                                            + str(m_i) + " "
-                                                            + str(nxstr) + " "
-                                                            + str(juvenile_survival_i) + " "
-                                                            + bg
-                                                            )
+                                                                base_name_i = base_name + "_" + str(ctr)
+
+
+                                                                print(exe + " \t"
+                                                                        + str(sigmoidal_survival_i) + " \t"
+                                                                        + str(laplace) + " "
+                                                                        + str(p_i) + " \t"
+                                                                        + survival_scalar_i_str + " \t"
+                                                                        + str(qmat_i) + " "
+                                                                        + str(qjuv_i) + " "
+                                                                        + str(max_error_conform_horiz_i) + " "
+                                                                        + str(max_error_prestige_horiz_i) + " "
+                                                                        + str(max_error_conform_vert_i) + " "
+                                                                        + str(max_error_prestige_vert_i) + " "
+                                                                        + str(max_error_mat_phen_i) + " "
+                                                                        + str(max_error_mat_envt_i) + " "
+                                                                        + str(nloci_g_i) + " \t"
+                                                                        + initvals + " \t"
+                                                                        + gminmax + " "
+                                                                        + aminmax + " "
+                                                                        + bminmax + " \t"
+                                                                        + mu_combi_i_str + " "
+                                                                        + sdmu + " \t" 
+                                                                        + str(m_i) + " "
+                                                                        + str(nxstr) + " "
+                                                                        + str(juvenile_survival_i) + " "
+                                                                        + base_name_i + " "
+                                                                        + bg
+                                                                        )

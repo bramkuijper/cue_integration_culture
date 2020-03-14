@@ -230,6 +230,7 @@ void init_arguments(int argc, char **argv)
     npv = atoi(argv[47]);
     ncv = atoi(argv[48]);
     juvenile_survival = atoi(argv[49]);
+    base_name = argv[50];
 }
 
 // write down all parameters to the file DataFile
