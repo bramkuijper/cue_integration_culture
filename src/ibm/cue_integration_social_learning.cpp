@@ -37,7 +37,6 @@ const int NPatches = 400;
 const int NBreeder = 100;
 
 // number of generations
-//int number_generations = 75000;
 int number_generations = 75000;
 
 // environmental switch rate
@@ -299,8 +298,12 @@ void write_dist(std::ofstream &DataFile)
             DataFile << patch_i << ";" 
                 << breeder_i << ";"
                 << Pop[patch_i].breeders[breeder_i].phen_ad << ";"
+                << Pop[patch_i].breeders[breeder_i].phen_juv << ";"
+                << Pop[patch_i].breeders[breeder_i].phen_mat << ";"
                 << Pop[patch_i].breeders[breeder_i].phen_prestige_vert << ";"
+                << Pop[patch_i].breeders[breeder_i].phen_prestige_vert_error << ";"
                 << Pop[patch_i].breeders[breeder_i].phen_prestige_horiz << ";"
+                << Pop[patch_i].breeders[breeder_i].phen_prestige_horiz_error << ";"
                 << Pop[patch_i].breeders[breeder_i].xconformist_vert << ";"
                 << Pop[patch_i].breeders[breeder_i].xconformist_horiz << ";"
                 
@@ -390,7 +393,6 @@ void write_data_headers_dist(std::ofstream &DataFile)
         << "aintercept;" 
         << "agen;" 
         << "ajuv;" 
-        << "asoc_horiz;" 
         << "bmat_phen;" 
         << "bmat_envt;" 
         << "hc;" 
@@ -1163,7 +1165,7 @@ void adult_survival()
         for (int breeder_i = 0; breeder_i < Pop[patch_i].n_breeders; ++breeder_i)
         {
             // check whether adult phenotypes indeed exist
-            assert(abs(std::isnormal(Pop[patch_i].breeders[breeder_i].phen_ad)) > 0);
+            assert(std::isnormal(Pop[patch_i].breeders[breeder_i].phen_ad) > 0);
 
             // calculate survival probability
             surv = survival_probability(
@@ -1443,7 +1445,7 @@ void replace()
         for (int breeder_i = 0; breeder_i < Pop[patch_i].n_breeders; ++breeder_i)
         {
             // ad_phen should be NaN as it is yet to be set
-            assert(abs(std::isnan(Pop[patch_i].breeders[breeder_i].phen_ad)) > 0);
+            assert(std::isnan(Pop[patch_i].breeders[breeder_i].phen_ad) > 0);
 
             // horizontal social learning takes place
             social_learning(

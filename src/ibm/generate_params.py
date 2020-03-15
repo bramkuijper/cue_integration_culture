@@ -14,8 +14,8 @@ import datetime
 sigmoidal_survival = [ 0 ]
 
 # frequency of the high environment
-#p = list(np.linspace(0,1,30))
-p = [0.1]
+p = list(np.linspace(0,1,30))
+#p = [0.1]
 
 survival_scalar_sig = [-2.5,3.5]
 survival_scalar_quad = [0.8,0.0]
@@ -57,7 +57,28 @@ sdsoc_vert = [ 0.05 ]
 m = [0.1]
 
 #mu_g, mu_aintercept, mu_ajuv, mu_agen, mu_bmat_phen, mu_bmat_envt, mu_hp, mu_hc, mu_vp, mu_vc
-mu_combis = [[ 0.01 for x in range(0,10) ]]
+#mu_combis = [[ 0.01 for x in range(0,10) ]]
+zeros = [ 0 for i in range(0,10) ]
+
+mu_combis = []
+
+mu_only_g = zeros[:]
+mu_only_g[0] = 0.01
+mu_combis.append(mu_only_g)
+
+mu_only_ai = zeros[:]
+mu_only_ai[1] = 0.01
+mu_combis.append(mu_only_ai)
+
+mu_no_social = [ 0.01 for i in range(0,6)]
+mu_no_social = mu_no_social + [ 0 for i in range(0,4) ]
+
+assert(len(mu_no_social) == 10)
+mu_combis.append(mu_no_social)
+
+mu_all = [ 0.01 for i in range(0,10) ]
+mu_combis.append(mu_all)
+
                         
 max_error_conform_horiz = [ 0.0 ]
 max_error_prestige_horiz = [ 0.0 ]
