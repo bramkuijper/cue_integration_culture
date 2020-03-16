@@ -20,6 +20,9 @@ parser.add_argument("--path"
                     ,help="The path over which to iterate"
                     ,default=".")
 
+parser.add_argument("--ncores"
+                    ,help="Number of cores to run this"
+                    ,default=1)
 
 parser.add_argument("--sep"
                     ,help="Column separator"
@@ -76,6 +79,6 @@ summarizesims.SummarizeSims(
     ,sep=args["sep"]
     ,pattern=args["pattern"]
     ,testing=False
-    ,max_number_files=5
+    ,max_number_files=None
     ,posthoc_function=process_dist
     )

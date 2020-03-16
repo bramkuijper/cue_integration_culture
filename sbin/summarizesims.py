@@ -17,7 +17,7 @@ class SummarizeSims:
                  ,recursive=False
                  ,testing=False
                  ,sep=";"
-                 ,n_process=3
+                 ,n_process=5
                  ,parameters_first=False
                  ,posthoc_function=None
                  ,max_number_files=None
@@ -88,7 +88,11 @@ class SummarizeSims:
         # with all records
         # always leave one cpu process empty
         if self.n_process >= os.cpu_count() - 1:
-            self.n_process = os.cpu_count() - 1
+
+            if os.cpu_count > 1:
+                self.n_process = os.cpu_count() - 1
+            else:
+                self.n_process = 1
 
         # make pool object for multiprocessing
         pool = mp.Pool(processes=self.n_process) 
@@ -245,6 +249,9 @@ class SummarizeSims:
 
         non_data_lines_start = []
         data_start = None
+
+        if self.testing:
+            print(filename, file=sys.stderr)
 
         # open the file
         with open(filename) as infile:
