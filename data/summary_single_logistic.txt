@@ -1,0 +1,9 @@
+This dataset contains simulation results where maternal and social learning cues and phenotypes are all included in one and the same logistic. Moreover, there is now an intercept. 
+
+Key parameters that are varied here:
+- the overall rate of change
+- which sets of traits evolve:
+    - only genetic
+    - only intercept
+    - everything but social learning traits
+    - everything
