@@ -27,6 +27,9 @@ parser.add_argument("--sep"
 
 args = vars(parser.parse_args())
 
+
+# auxiliary function to generate a var-cov matrix of a 
+# trait distribution
 def process_dist(filename):
 
     splitname = os.path.splitext(filename)

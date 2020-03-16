@@ -4,6 +4,7 @@ import os
 import re
 import sys
 import pandas as pd
+import multiprocessing as mp
 
 # class to summarize simulation output
 # where csv files with data + parameters are parsed
@@ -16,6 +17,7 @@ class SummarizeSims:
                  ,recursive=False
                  ,testing=False
                  ,sep=";"
+                 ,n_process=3
                  ,parameters_first=False
                  ,posthoc_function=None
                  ,max_number_files=None
@@ -35,6 +37,8 @@ class SummarizeSims:
             default is False
         sep : str, optional
             The separator used in the file. The default is ";"
+        n_process : int
+            The number of nodes working on this (multiprocessing)
         parameters_first : boolean, optional
             Whether the listing of the parameters occurs 
             at the start of the file
@@ -55,32 +59,46 @@ class SummarizeSims:
         self.recursive = recursive
         self.sep = sep
         self.testing = testing
+        self.n_process = n_process
         
         self.posthoc_function = posthoc_function
         self.full_data = None
+
 
         if self.testing:
             print("traversing path '" + self.path + "'")
 
         file_ctr = 0
+
+        # list of files where work is needed
+        self.file_list = []
         
+        # loop through directory tree to get a list of files 
+        # which match the regex
         for root, dirname, files in os.walk(self.path):
             
             for file in files:
                 if re.search(self.pattern,file) is not None:
+                    self.file_list.append(os.path.join(root, file))
 
-                    if self.testing:
-                        print(os.path.join(root,file))
-                    self.analyze_file(filename=os.path.join(root,file))
+        # truncate if only a number of files needed
+        self.file_list = self.file_list[:max_number_files]
 
-                    file_ctr += 1
+        # now perform multiprocessing to get a dataframe
+        # with all records
+        # always leave one cpu process empty
+        if self.n_process >= os.cpu_count() - 1:
+            self.n_process = os.cpu_count() - 1
 
-                    if max_number_files != None and file_ctr >= max_number_files:
-                        break
-            
-            if max_number_files != None and file_ctr >= max_number_files:
-                break
+        # make pool object for multiprocessing
+        pool = mp.Pool(processes=self.n_process) 
 
+        result = pool.map(
+                self.analyze_file
+                ,self.file_list
+                )
+
+        self.full_data = pd.concat(result)
 
         if self.full_data is not None:
             
@@ -215,7 +233,7 @@ class SummarizeSims:
                 raise ValueError("Cannot find any data in file " + filename)
 
     
-    def analyze_file(self,filename, sep=";"):
+    def analyze_file(self,filename):
 
         # two options (ignoring empty lines)
         # 1. header line, data, then parameters
@@ -308,133 +326,6 @@ class SummarizeSims:
             
         # add current filename
         data_params_combined["file"] = filename
+
+        return(data_params_combined)
         
-        if self.full_data is None:
-            self.full_data = data_params_combined
-        else:
-            self.full_data = self.full_data.append(
-                    other=data_params_combined
-                    ,ignore_index=True
-                    ,sort=False
-                    )
-
-
-#        # indicator variable whether we are at first line
-#        # of the file to be read
-#        firstline = True
-#    
-#        flhead = ""
-#    
-#        lc = 0
-#    
-#        # indicator variable whether we are at the part
-#        # involving parameters
-#        parameter_part = False
-#    
-#        parameter_lines = []
-#    
-#        # the line where the parameter output
-#        # starts
-#        parline = -1
-#    
-#        # store the last line of data
-#        last_data_line = ""
-#    
-#        # store the first line of data
-#        # in case we need initial values too
-#        first_data_line =""
-#    
-#        # the header of the resulting data file
-#        flhead = ""
-#    
-#        # open the file and read the stuff
-#        with open(filename) as infile:
-#            for line in infile:
-#    
-#                # see whether we also have to store the initial values
-#                if self.init:
-#                    if firstline:
-#                        flhead += process_first_line(line, sep=sep)
-#    
-#                # update line count
-#                lc += 1
-#    
-#                # get the first line of data
-#                if lc == 2:
-#                    first_data_line = line.strip()
-#    
-#                # if this is the first line store
-#                # the header
-#                if firstline:
-#                    flhead += line.strip()
-#                    firstline = False
-#    
-#                # if this is any other line starting
-#                # with a numerical value store the line
-#                # as it might be potentially the last one
-#                elif re.match("^\d",line):
-#                    last_data_line = line
-#    
-#                # hold this until we have the parameter file
-#                if not parameter_part:
-#                    if re.match("^\n",line) is not None:
-#                        parline = lc
-#                        parameter_part = True
-#                        parameter_lines += [line.strip()]
-#                elif parameter_part:
-#                    parameter_lines += [line.strip()]
-#    
-#        if parline < 1:
-#            return
-#    
-#        parameters = self.analyze_parameters_new(
-#                linenumber_start=parline
-#                ,filename=filename)
-#    
-#        # prepare the data to be printed
-#        data = ""
-#    
-#        if self.init:
-#    
-#            # do error checking in terms of the csv values
-#            count_semicol = len(re.findall(sep, first_data_line))
-#            count_semicol_data = len(re.findall(sep, last_data_line))
-#    
-#            assert(count_semicol == count_semicol_data)
-#    
-#            data += first_data_line.strip()
-#    
-#        data += last_data_line.strip()
-#    
-#    
-#        if first:
-#    
-#            flhead = flhead.strip()
-#    
-#            # check if flhead has trailing comma
-#            if re.search(sep.encode("unicode-escape").decode() + "$"
-#                    ,flhead) is None:
-#                flhead = flhead + sep
-#    
-#            header_line = sep.join(parameters.keys()) + sep + flhead + "file"
-#    
-#            # count number of occurrences of semicolon for error checking
-#            num_semicol_header = len(re.findall(sep,header_line))
-#    
-#            print(header_line)
-#    
-#            first = False
-#    
-#        # check if data has trailing separator
-#        # if not we'll have to add one
-#        if re.search(sep.encode("unicode-escape").decode() + "$"
-#                ,data) is None:
-#            data = data + sep
-#    
-#        data_line = sep.join(parameters.values()) + sep + data +  filename
-#    
-#        # count number of occurrences of semicolon for error checking
-#        num_semicol_data = len(re.findall(sep,data_line))
-#    
-#        assert(num_semicol_header == num_semicol_data)
-#        print(data_line)

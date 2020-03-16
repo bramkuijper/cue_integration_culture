@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
-
-./analyze_sims.py --path=$1 --pattern="sim.*\d+.csv$"
+DIRNAME=`dirname $0`
+"$DIRNAME/analyze_sims.py" --path=$1 --pattern="sim.*\d+.csv$"
