@@ -14,9 +14,11 @@ class SummarizeSims:
                  ,path="."
                  ,pattern=r"(sim.*\d+$|iter.*\d+)"
                  ,recursive=False
+                 ,testing=False
                  ,sep=";"
                  ,parameters_first=False
                  ,posthoc_function=None
+                 ,max_number_files=None
                  ):
         """
         Initializes the summarize sims class
@@ -52,15 +54,33 @@ class SummarizeSims:
         self.pattern = pattern
         self.recursive = recursive
         self.sep = sep
+        self.testing = testing
         
+        self.posthoc_function = posthoc_function
         self.full_data = None
+
+        if self.testing:
+            print("traversing path '" + self.path + "'")
+
+        file_ctr = 0
         
         for root, dirname, files in os.walk(self.path):
             
             for file in files:
                 if re.search(self.pattern,file) is not None:
-#                    print(os.path.join(root,file))
+
+                    if self.testing:
+                        print(os.path.join(root,file))
                     self.analyze_file(filename=os.path.join(root,file))
+
+                    file_ctr += 1
+
+                    if max_number_files != None and file_ctr >= max_number_files:
+                        break
+            
+            if max_number_files != None and file_ctr >= max_number_files:
+                break
+
 
         if self.full_data is not None:
             
@@ -282,7 +302,7 @@ class SummarizeSims:
         data_params_combined = pd.concat(
                 [parameters.reset_index(drop=True)
                     ,data.reset_index(drop=True)
-                    ,posthoc_data.reset_index(drop=True)
+                    ,data_posthoc.reset_index(drop=True)
                     ]
                 ,axis=1)
             

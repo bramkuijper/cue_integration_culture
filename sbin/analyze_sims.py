@@ -4,6 +4,9 @@
 import summarizesims
 import argparse
 import pandas as pd
+import os.path
+import re
+
 
 
 parser = argparse.ArgumentParser(description="Process simulation files")
@@ -33,27 +36,43 @@ def process_dist(filename):
 
     names = dist_df.columns.values
 
-    names_no_id = set(names) - set(["id","patch_id"])
+    # find whether there are any 'Unnamed...' columns
+    unnamed_cols = [ i for i in names if re.search("Unnamed",i) != None ]
+
+    names_no_id = list(set(names) - set(["id","patch_id"]) - set(unnamed_cols))
 
     # variance covariance matrix
     cov_mat = dist_df[names_no_id].cov()
 
     var_dict = {}
 
-    # now write diagonial to dataframe
-    for names_no_id as name_i:
-        for names_no_id as name_j:
-            if name_i == name_j:
-                var_dict["var_" + name_i + "_" + name_j] = cov_mat.loc[name_i,name_j]
-            else:
-                var_dict["cov_" + name_i + "_" + name_j] = cov_mat.loc[name_i,name_j]
+    dict_cov_names = {}
+
+    # get the column_names for the entries along the 
+    # upper diagonal. To prevent names occurring twice
+    # we first generate the names combs, sort them 
+    # and write them to a dict
+    for name_i in names_no_id:
+        for name_j in names_no_id:
+            comb_list = [name_i,name_j]
+            comb_list.sort()
+
+            dict_cov_names["".join(comb_list)] = comb_list
+
+    for key, value in dict_cov_names.items():
+
+        entry_name = "cov_" + value[0] + "_" + value[1] if value[0] != value[1] else "var_" + value[0]
             
-    return(pd.Dataframe(data=var_dict,index=[1]))
+        var_dict[entry_name] = cov_mat.loc[value[0],value[1]]
+            
+    return(pd.DataFrame(data=var_dict,index=[1]))
 
 
 summarizesims.SummarizeSims(
     path=args["path"]
     ,sep=args["sep"]
     ,pattern=args["pattern"]
+    ,testing=False
+    ,max_number_files=5
     ,posthoc_function=process_dist
     )
