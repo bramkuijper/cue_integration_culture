@@ -300,12 +300,16 @@ void write_dist(std::ofstream &DataFile)
                 << Pop[patch_i].breeders[breeder_i].phen_ad << ";"
                 << Pop[patch_i].breeders[breeder_i].phen_juv << ";"
                 << Pop[patch_i].breeders[breeder_i].phen_mat << ";"
+                << Pop[patch_i].breeders[breeder_i].phen_mat_error << ";"
+                << Pop[patch_i].breeders[breeder_i].maternal_envt_cue_error << ";"
                 << Pop[patch_i].breeders[breeder_i].phen_prestige_vert << ";"
                 << Pop[patch_i].breeders[breeder_i].phen_prestige_vert_error << ";"
                 << Pop[patch_i].breeders[breeder_i].phen_prestige_horiz << ";"
                 << Pop[patch_i].breeders[breeder_i].phen_prestige_horiz_error << ";"
                 << Pop[patch_i].breeders[breeder_i].xconformist_vert << ";"
+                << Pop[patch_i].breeders[breeder_i].xconformist_vert_error << ";"
                 << Pop[patch_i].breeders[breeder_i].xconformist_horiz << ";"
+                << Pop[patch_i].breeders[breeder_i].xconformist_horiz_error << ";"
                 
                 // the intercept locus
                 << 0.5 * (Pop[patch_i].breeders[breeder_i].aintercept[0]
@@ -322,11 +326,11 @@ void write_dist(std::ofstream &DataFile)
                     +
                     Pop[patch_i].breeders[breeder_i].ajuv[1]) << ";"
 
-                // bmat_phen
+                // bmat_phen 
                 << 0.5 * (Pop[patch_i].breeders[breeder_i].bmat_phen[0]
                     +
                     Pop[patch_i].breeders[breeder_i].bmat_phen[1]) << ";"
-
+                
                 // bmat_envt
                 << 0.5 * (Pop[patch_i].breeders[breeder_i].bmat_envt[0]
                     +
@@ -375,6 +379,7 @@ void write_dist(std::ofstream &DataFile)
                 
                 
                 << std::endl;
+
         } // end for (int breeder_i = 0; breeder_i < NPatches; ++breeder_i)
     } // end for (int patch_i = 0; patch_i < NPatches; ++patch_i)
 } // end  void write_dist(std::ofstream &DataFile)
@@ -391,12 +396,16 @@ void write_data_headers_dist(std::ofstream &DataFile)
         << "phen_ad;" 
         << "phen_juv;" 
         << "phen_mat;" 
+        << "phen_mat_error;" 
+        << "maternal_envt_cue_error;" 
         << "phen_prestige_vert;" 
         << "phen_prestige_vert_error;" 
         << "phen_prestige_horiz;" 
         << "phen_prestige_horiz_error;" 
         << "xconformist_vert;" 
+        << "xconformist_vert_error;" 
         << "xconformist_horiz;" 
+        << "xconformist_horiz_error;" 
         << "aintercept;" 
         << "agen;" 
         << "ajuv;" 
@@ -1172,7 +1181,9 @@ void adult_survival()
         for (int breeder_i = 0; breeder_i < Pop[patch_i].n_breeders; ++breeder_i)
         {
             // check whether adult phenotypes indeed exist
-            assert(std::isnormal(Pop[patch_i].breeders[breeder_i].phen_ad) > 0);
+            assert(
+                    std::isnormal(
+                        Pop[patch_i].breeders[breeder_i].phen_ad) > 0);
 
             // calculate survival probability
             surv = survival_probability(
