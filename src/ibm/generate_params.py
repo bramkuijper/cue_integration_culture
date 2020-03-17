@@ -21,7 +21,7 @@ survival_scalar_sig = [-2.5,3.5]
 survival_scalar_quad = [0.8,0.0]
 
 qmat = [1.0]
-qjuv = [0.5, 1.0]
+qjuv = [0.5]
 
 nloci_g = [ 3 ]
 
@@ -79,6 +79,7 @@ mu_combis.append(mu_no_social)
 mu_all = [ 0.01 for i in range(0,10) ]
 mu_combis.append(mu_all)
 
+mu_combis = [ mu_only_ai ]
                         
 max_error_conform_horiz = [ 0.0 ]
 max_error_prestige_horiz = [ 0.0 ]
