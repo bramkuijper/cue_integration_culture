@@ -262,6 +262,7 @@ void write_parameters(std::ofstream &DataFile)
         << "sdmu_g;" << sdmu_g << ";"<< std::endl
         << "mu_ajuv;" << mu_ajuv << ";"<< std::endl
         << "mu_agen;" << mu_agen << ";"<< std::endl
+        << "mu_aintercept;" << mu_aintercept << ";"<< std::endl
         << "juvenile_survival;" << juvenile_survival << ";"<< std::endl
         << "mu_bmat_phen;" << mu_bmat_phen << ";"<< std::endl
         << "mu_bmat_envt;" << mu_bmat_envt << ";"<< std::endl
@@ -298,7 +299,9 @@ void write_dist(std::ofstream &DataFile)
             DataFile << patch_i << ";" 
                 << breeder_i << ";"
                 << Pop[patch_i].breeders[breeder_i].phen_ad << ";"
+                << Pop[patch_i].breeders[breeder_i].phen_ad_logistic << ";"
                 << Pop[patch_i].breeders[breeder_i].phen_juv << ";"
+                << Pop[patch_i].breeders[breeder_i].phen_juv_logistic << ";"
                 << Pop[patch_i].breeders[breeder_i].phen_mat << ";"
                 << Pop[patch_i].breeders[breeder_i].phen_mat_error << ";"
                 << Pop[patch_i].breeders[breeder_i].maternal_envt_cue_error << ";"
@@ -370,14 +373,50 @@ void write_dist(std::ofstream &DataFile)
             DataFile << g << ";"
                 << Pop[patch_i].envt_high << ";"
                 << Pop[patch_i].breeders[breeder_i].cue_ad_envt_high << ";"
-                << Pop[patch_i].breeders[breeder_i].cue_juv_envt_high << ";"
+                << Pop[patch_i].breeders[breeder_i].cue_juv_envt_high << ";";
             
             // now output the whole phenotypic variance stuff
-            // TODO
-            DataFile << 
+            DataFile 
+                // agen X g
+                << 0.5 * (Pop[patch_i].breeders[breeder_i].agen[0]
+                    +
+                    Pop[patch_i].breeders[breeder_i].agen[1]) * g << ";"
                 
+                // bmat_phen X phen_mat_error
+                << 0.5 * (
+                    Pop[patch_i].breeders[breeder_i].bmat_phen[0]
+                    +
+                    Pop[patch_i].breeders[breeder_i].bmat_phen[1]) * Pop[patch_i].breeders[breeder_i].phen_mat_error << ";"
                 
+                // bmat_envt X maternal_envt_cue_error
+                << 0.5 * (Pop[patch_i].breeders[breeder_i].bmat_envt[0]
+                    +
+                    Pop[patch_i].breeders[breeder_i].bmat_envt[1]) * Pop[patch_i].breeders[breeder_i].maternal_envt_cue_error << ";"
+
+                // ajuv X cue_juv_envt_high
+                << 0.5 * (Pop[patch_i].breeders[breeder_i].ajuv[0]
+                    +
+                    Pop[patch_i].breeders[breeder_i].ajuv[1]) * Pop[patch_i].breeders[breeder_i].cue_juv_envt_high << ";"
+               
+                // vp_X_phen_prestige_vert_error
+                << 0.5 * (Pop[patch_i].breeders[breeder_i].vp[0]
+                    +
+                    Pop[patch_i].breeders[breeder_i].vp[1]) * Pop[patch_i].breeders[breeder_i].phen_prestige_vert_error << ";"
+
+                // vc X xconformist_vert_error
+                << 0.5 * (Pop[patch_i].breeders[breeder_i].vc[0]
+                    +
+                    Pop[patch_i].breeders[breeder_i].vc[1]) * Pop[patch_i].breeders[breeder_i].xconformist_vert_error << ";"
                 
+                // hp X phen_prestige_horiz_error
+                << 0.5 * (Pop[patch_i].breeders[breeder_i].hp[0]
+                    +
+                    Pop[patch_i].breeders[breeder_i].hp[1]) * Pop[patch_i].breeders[breeder_i].phen_prestige_horiz_error << ";"
+                
+                // hc X xconformist_horiz_error
+                << 0.5 * (Pop[patch_i].breeders[breeder_i].hc[0]
+                    +
+                    Pop[patch_i].breeders[breeder_i].hc[1]) * Pop[patch_i].breeders[breeder_i].xconformist_horiz_error << ";"
                 << std::endl;
 
         } // end for (int breeder_i = 0; breeder_i < NPatches; ++breeder_i)
@@ -394,7 +433,9 @@ void write_data_headers_dist(std::ofstream &DataFile)
         << "patch_id;" 
         << "id;" 
         << "phen_ad;" 
+        << "phen_ad_logistic;" 
         << "phen_juv;" 
+        << "phen_juv_logistic;" 
         << "phen_mat;" 
         << "phen_mat_error;" 
         << "maternal_envt_cue_error;" 
@@ -419,6 +460,14 @@ void write_data_headers_dist(std::ofstream &DataFile)
         << "envt;" 
         << "cue_ad_envt_high;" 
         << "cue_juv_envt_high;" 
+        << "agen_X_g;" 
+        << "bmat_phen_X_phen_mat_error;" 
+        << "bmat_envt_X_maternal_envt_cue_error;" 
+        << "ajuv_X_cue_juv_envt_high;" 
+        << "vp_X_phen_prestige_vert_error;" 
+        << "vc_X_xconformist_vert_error;"
+        << "hp_X_phen_prestige_horiz_error;"
+        << "hc_X_xconformist_horiz_error;"
         << std::endl; 
 }
 
@@ -811,15 +860,16 @@ void init_population()
                 cue_ad_envt_high;
 
             // give initial cue to individuals
-            double cue_sum = 
-                -init_aintercept
-                -init_agen * init_g
-                -init_ajuv * cue_ad_envt_high;
+            Pop[patch_i].breeders[breeder_i].phen_juv_logistic = 
+                Pop[patch_i].breeders[breeder_i].phen_ad_logistic = 
+                    init_aintercept
+                    + init_agen * init_g
+                    + init_ajuv * cue_ad_envt_high;
 
             // as this is generation t=0, forget about 
             // most cues when determining phenotype
             Pop[patch_i].breeders[breeder_i].phen_ad = 1.0 /
-                (1.0 + exp(cue_sum));
+                (1.0 + exp(-Pop[patch_i].breeders[breeder_i].phen_ad_logistic));
         } // end for breeder_i
     } // end for patch_i
 } // end void init_population()
@@ -1134,18 +1184,18 @@ void create_offspring(Individual &mother
     
     clamp(offspring.phen_prestige_vert_error, 0.0, 1.0);
 //
+    offspring.phen_juv_logistic = 
+                    aintercept_phen
+                    + b_phen * (offspring.phen_mat_error - 0.5)
+                    + b_envt * (offspring.maternal_envt_cue_error - 0.5)
+                    + agen_phen * sum_genes 
+                    + ajuv_phen * (offspring.cue_juv_envt_high - 0.5)
+                    + vc_phen * (offspring.xconformist_vert_error - 0.5)
+                    + vp_phen * (offspring.phen_prestige_vert_error - 0.5);
+    
     // expressing a juvenile phenotype
-    offspring.phen_juv = 1.0 / 
-        (1.0 + exp(
-                    -aintercept_phen
-                    -b_phen * (offspring.phen_mat_error - 0.5)
-                    -b_envt * (offspring.maternal_envt_cue_error - 0.5)
-                    -agen_phen * sum_genes 
-                    -ajuv_phen * (offspring.cue_juv_envt_high - 0.5)
-                    -vc_phen * (offspring.xconformist_vert_error - 0.5)
-                    -vp_phen * (offspring.phen_prestige_vert_error - 0.5)
-                   ));
-    // 
+    offspring.phen_juv = 1.0 / (1.0 + exp( - offspring.phen_juv_logistic ));
+
     offspring.phen_ad = NAN;
 } // end create_offspring()
 
@@ -1498,13 +1548,14 @@ void replace()
 
             clamp(Pop[patch_i].breeders[breeder_i].phen_prestige_horiz_error, 0.0, 1.0);
 
+            Pop[patch_i].breeders[breeder_i].phen_ad_logistic = 
+                Pop[patch_i].breeders[breeder_i].phen_juv_logistic
+                + hp * (Pop[patch_i].breeders[breeder_i].phen_prestige_horiz_error - 0.5)
+                + hc * (Pop[patch_i].breeders[breeder_i].xconformist_horiz_error - 0.5);
+
             // add social learning to the adult phenotype
             Pop[patch_i].breeders[breeder_i].phen_ad = 1.0 / 
-                (1.0 + exp(
-                            log(1.0 / Pop[patch_i].breeders[breeder_i].phen_juv - 1.0) 
-                            -hp * (Pop[patch_i].breeders[breeder_i].phen_prestige_horiz_error - 0.5)
-                            -hc * (Pop[patch_i].breeders[breeder_i].xconformist_horiz_error - 0.5)
-                            ));
+                (1.0 + exp(-Pop[patch_i].breeders[breeder_i].phen_ad_logistic));
         } // for (int breeder_i = 0; breeder_i < Pop[patch_i].n_breeders; ++breeder_i)
         
         // envtal change after breeder establishment

@@ -11,10 +11,12 @@ class Individual
         // which is the adult phenotype prior to 
         // horizontal social learning
         double phen_juv;
+        double phen_juv_logistic;
         
         // the actual phenotype of an individual
         // affecting survival
         double phen_ad;
+        double phen_ad_logistic;
         
         // the maternal phenotype (stats purposes)
         double phen_mat;

@@ -2,7 +2,9 @@
 
 Individual::Individual():
     phen_juv{0.0},
+    phen_juv_logistic{0.0},
     phen_ad{0.0},
+    phen_ad_logistic{0.0},
     phen_mat{0.0},
     phen_mat_error{0.0},
     phen_prestige_horiz{0.0},
@@ -31,7 +33,9 @@ Individual::Individual():
 
 Individual::Individual(Individual const &other):
     phen_juv{other.phen_juv},
+    phen_juv_logistic{other.phen_juv_logistic},
     phen_ad{other.phen_ad},
+    phen_ad_logistic{other.phen_ad_logistic},
     phen_mat{other.phen_mat},
     phen_mat_error{other.phen_mat_error},
     phen_prestige_horiz{other.phen_prestige_horiz},
@@ -63,7 +67,9 @@ Individual::Individual(Individual const &other):
 void Individual::operator=(Individual const &other) 
 {
     phen_juv = other.phen_juv;
+    phen_juv_logistic = other.phen_juv_logistic;
     phen_ad = other.phen_ad;
+    phen_ad_logistic = other.phen_ad_logistic;
     phen_mat = other.phen_mat;
     phen_mat_error = other.phen_mat_error;
 

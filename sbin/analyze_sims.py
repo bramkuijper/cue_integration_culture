@@ -46,7 +46,7 @@ def process_dist(filename):
 
     # add some additional columns
     dist_df["bmat_phen_X_phen_mat_error"] = dist_df["bmat_phen"] * dist_df["phen_mat_error"]
-    dist_df["bmat_envt_X_maternal_envt_cue_erorr"] = \
+    dist_df["bmat_envt_X_maternal_envt_cue_eror"] = \
             dist_df["bmat_envt"] * dist_df["maternal_envt_cue_error"]
 
     dist_df["agen_X_g"] = dist_df["agen"] * dist_df["g"]
