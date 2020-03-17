@@ -42,6 +42,10 @@ def process_dist(filename):
 
     names = dist_df.columns.values
 
+    # add some additional columns
+    dist_df["b_phen_X_phen_mat_error"] = dist_df["bmat_phen"] * dist_df["phen
+
+
     # find whether there are any 'Unnamed...' columns
     unnamed_cols = [ i for i in names if re.search("Unnamed",i) != None ]
 

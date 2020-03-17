@@ -367,6 +367,13 @@ void write_dist(std::ofstream &DataFile)
                 << Pop[patch_i].envt_high << ";"
                 << Pop[patch_i].breeders[breeder_i].cue_ad_envt_high << ";"
                 << Pop[patch_i].breeders[breeder_i].cue_juv_envt_high << ";"
+            
+            // now output the whole phenotypic variance stuff
+            // TODO
+            DataFile << 
+                
+                
+                
                 << std::endl;
         } // end for (int breeder_i = 0; breeder_i < NPatches; ++breeder_i)
     } // end for (int patch_i = 0; patch_i < NPatches; ++patch_i)
