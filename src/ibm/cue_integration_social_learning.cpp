@@ -371,6 +371,13 @@ void write_dist(std::ofstream &DataFile)
                 << Pop[patch_i].envt_high << ";"
                 << Pop[patch_i].breeders[breeder_i].cue_ad_envt_high << ";"
                 << Pop[patch_i].breeders[breeder_i].cue_juv_envt_high << ";"
+            
+            // now output the whole phenotypic variance stuff
+            // TODO
+            DataFile << 
+                
+                
+                
                 << std::endl;
 
         } // end for (int breeder_i = 0; breeder_i < NPatches; ++breeder_i)
@@ -1258,6 +1265,8 @@ void social_learning(
             :
             Pop[patch_i].breeders[random_local_breeder(rng_r)].phen_ad;
 
+        assert(std::isnormal(phen) > 0);
+
         surv = survival_probability(phen,Pop[patch_i].envt_high);
 
         // update prestige bias
@@ -1282,6 +1291,8 @@ void social_learning(
             Pop[patch_i].breeders[random_local_breeder(rng_r)].phen_juv
             :
             Pop[patch_i].breeders[random_local_breeder(rng_r)].phen_ad;
+
+        assert(std::isnormal(phen) > 0);
 
         if (phen > 0.5)
         {
