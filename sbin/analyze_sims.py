@@ -43,7 +43,18 @@ def process_dist(filename):
     names = dist_df.columns.values
 
     # add some additional columns
-    dist_df["b_phen_X_phen_mat_error"] = dist_df["bmat_phen"] * dist_df["phen
+    dist_df["bmat_phen_X_phen_mat_error"] = dist_df["bmat_phen"] * dist_df["phen_mat_error"]
+    dist_df["bmat_envt_X_maternal_envt_cue_erorr"] = \
+            dist_df["bmat_envt"] * dist_df["maternal_envt_cue_error"]
+
+    dist_df["agen_X_g"] = dist_df["agen"] * dist_df["g"]
+    dist_df["ajuv_X_cue_juv_envt_high"] = dist_df["ajuv"] * dist_df["cue_juv_envt_high"]
+
+    dist_df["vc_X_xconformist_vert_error"] = dist_df["vc"] * dist_df["xconformist_vert_error"]
+    dist_df["vp_X_phen_prestige_vert_error"] = dist_df["vp"] * dist_df["phen_prestige_vert_error"]
+
+    dist_df["hp_X_phen_prestige_horiz_error"] = dist_df["hp"] * dist_df["phen_prestige_horiz_error"]
+    dist_df["hc_X_xconformist_horiz_error"] = dist_df["hc"] * dist_df["xconformist_horiz_error"]
 
 
     # find whether there are any 'Unnamed...' columns

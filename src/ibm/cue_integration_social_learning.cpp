@@ -1265,6 +1265,8 @@ void social_learning(
             :
             Pop[patch_i].breeders[random_local_breeder(rng_r)].phen_ad;
 
+        assert(std::isnormal(phen) > 0);
+
         surv = survival_probability(phen,Pop[patch_i].envt_high);
 
         // update prestige bias
@@ -1289,6 +1291,8 @@ void social_learning(
             Pop[patch_i].breeders[random_local_breeder(rng_r)].phen_juv
             :
             Pop[patch_i].breeders[random_local_breeder(rng_r)].phen_ad;
+
+        assert(std::isnormal(phen) > 0);
 
         if (phen > 0.5)
         {
