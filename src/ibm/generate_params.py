@@ -20,12 +20,12 @@ p = list(np.linspace(0,1,30))
 survival_scalar_sig = [-2.5,3.5]
 survival_scalar_quad = [0.8,0.0]
 
-qmat = [1.0]
-qjuv = [0.5]
+qmat = [0.5,1.0]
+qjuv = [0.5,1.0]
 
 nloci_g = [ 3 ]
 
-exe = "./xcue_integration"
+exe = "./xcue_integration.exe"
 
 laplace = 1
 
@@ -62,14 +62,17 @@ zeros = [ 0 for i in range(0,10) ]
 
 mu_combis = []
 
+# mutation rate only genes 
 mu_only_g = zeros[:]
 mu_only_g[0] = 0.01
 mu_combis.append(mu_only_g)
 
+# mutation rate only genes and intercept
 mu_only_ai = zeros[:]
 mu_only_ai[1] = 0.01
 mu_combis.append(mu_only_ai)
 
+# mutation rate for everything except horiz and vert social learning
 mu_no_social = [ 0.01 for i in range(0,6)]
 mu_no_social = mu_no_social + [ 0 for i in range(0,4) ]
 
@@ -79,7 +82,9 @@ mu_combis.append(mu_no_social)
 mu_all = [ 0.01 for i in range(0,10) ]
 mu_combis.append(mu_all)
 
-mu_combis = [ mu_only_ai ]
+
+# choose what consideration you want. For now only ai
+mu_combis = [ mu_no_social, mu_all ]
                         
 max_error_conform_horiz = [ 0.0 ]
 max_error_prestige_horiz = [ 0.0 ]

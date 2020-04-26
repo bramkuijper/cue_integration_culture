@@ -1,8 +1,8 @@
 CXX=g++
 CXXFLAGS=-Wall -O3 -std=c++11 -ggdb
 
-xcue_integration : cue_integration_social_learning.cpp auxiliary.hpp individual.hpp
-	$(CXX) $(CXXFLAGS) -o xcue_integration cue_integration_social_learning.cpp individual.cpp
+xcue_integration.exe : cue_integration_social_learning.cpp auxiliary.hpp individual.hpp
+	$(CXX) $(CXXFLAGS) -o xcue_integration.exe cue_integration_social_learning.cpp individual.cpp
 
 
 clean :

@@ -64,6 +64,8 @@ class SummarizeSims:
         self.posthoc_function = posthoc_function
         self.full_data = None
 
+        if self.path == "":
+            raise Exception("No path provided to SummarizeSims object")
 
         if self.testing:
             print("traversing path '" + self.path + "'")
@@ -72,7 +74,7 @@ class SummarizeSims:
 
         # list of files where work is needed
         self.file_list = []
-        
+
         # loop through directory tree to get a list of files 
         # which match the regex
         for root, dirname, files in os.walk(self.path):
@@ -89,7 +91,7 @@ class SummarizeSims:
         # always leave one cpu process empty
         if self.n_process >= os.cpu_count() - 1:
 
-            if os.cpu_count > 1:
+            if os.cpu_count() > 1:
                 self.n_process = os.cpu_count() - 1
             else:
                 self.n_process = 1
@@ -97,10 +99,16 @@ class SummarizeSims:
         # make pool object for multiprocessing
         pool = mp.Pool(processes=self.n_process) 
 
+        if len(self.file_list) < 1:
+            raise Exception("There are no files to be processed here...")
+
         result = pool.map(
                 self.analyze_file
                 ,self.file_list
                 )
+
+        if result == []:
+            print("analyze_file returns no data...")
 
         self.full_data = pd.concat(result)
 

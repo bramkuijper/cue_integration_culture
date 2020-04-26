@@ -6,6 +6,8 @@ import argparse
 import pandas as pd
 import os.path
 import re
+import statsmodels.api as sm
+from statsmodels.formula.api import ols
 
 
 
@@ -44,51 +46,74 @@ def process_dist(filename):
 
     dist_df = pd.read_csv(dist_filename, sep=";")
 
-    # add some additional columns
-    dist_df["bmat_phen_X_phen_mat_error"] = dist_df["bmat_phen"] * dist_df["phen_mat_error"]
+    # make columns of the relevant variables
+    dist_df["bmat_phen_X_phen_mat_error"] = dist_df["bmat_phen"] * (dist_df["phen_mat_error"] - 0.5)
     dist_df["bmat_envt_X_maternal_envt_cue_eror"] = \
-            dist_df["bmat_envt"] * dist_df["maternal_envt_cue_error"]
+            dist_df["bmat_envt"] * (dist_df["maternal_envt_cue_error"] - 0.5)
 
     dist_df["agen_X_g"] = dist_df["agen"] * dist_df["g"]
-    dist_df["ajuv_X_cue_juv_envt_high"] = dist_df["ajuv"] * dist_df["cue_juv_envt_high"]
+    dist_df["ajuv_X_cue_juv_envt_high"] = dist_df["ajuv"] * (dist_df["cue_juv_envt_high"] - 0.5)
 
-    dist_df["vc_X_xconformist_vert_error"] = dist_df["vc"] * dist_df["xconformist_vert_error"]
-    dist_df["vp_X_phen_prestige_vert_error"] = dist_df["vp"] * dist_df["phen_prestige_vert_error"]
+    dist_df["vc_X_xconformist_vert_error"] = dist_df["vc"] * (dist_df["xconformist_vert_error"] - 0.5)
+    dist_df["vp_X_phen_prestige_vert_error"] = dist_df["vp"] * (dist_df["phen_prestige_vert_error"] - 0.5)
 
-    dist_df["hp_X_phen_prestige_horiz_error"] = dist_df["hp"] * dist_df["phen_prestige_horiz_error"]
-    dist_df["hc_X_xconformist_horiz_error"] = dist_df["hc"] * dist_df["xconformist_horiz_error"]
-
-    names = dist_df.columns.values
-
-    # find whether there are any 'Unnamed...' columns
-    unnamed_cols = [ i for i in names if re.search("Unnamed",i) != None ]
-
-    names_for_cov = [
-
-    # variance covariance matrix
-    cov_mat = dist_df[names_no_id].cov()
-
+    dist_df["hp_X_phen_prestige_horiz_error"] = dist_df["hp"] * (dist_df["phen_prestige_horiz_error"] - 0.5)
+    dist_df["hc_X_xconformist_horiz_error"] = dist_df["hc"] * (dist_df["xconformist_horiz_error"] - 0.5)
+   
+    # make a dictionary for the variances
     var_dict = {}
 
-    dict_cov_names = {}
+    # only want to know variances of the following columns
+    columns_only_var = ["phen_ad_logistic","phen_juv_logistic","phen_ad","phen_juv"]
 
-    # get the column_names for the entries along the 
-    # upper diagonal. To prevent names occurring twice
-    # we first generate the names combs, sort them 
-    # and write them to a dict
-    for name_i in names_no_id:
-        for name_j in names_no_id:
-            comb_list = [name_i,name_j]
-            comb_list.sort()
+    for column_only_var_i in columns_only_var:
+        var_dict["var_" + column_only_var_i] = dist_df[column_only_var_i].var()
 
-            dict_cov_names["".join(comb_list)] = comb_list
+    # all columns for the variance covariance matrix
+    columns_eta = [
+            "aintercept"
+            ,"bmat_phen_X_phen_mat_error"
+            ,"bmat_envt_X_maternal_envt_cue_eror"
+            ,"agen_X_g"
+            ,"ajuv_X_cue_juv_envt_high"
+            ,"vc_X_xconformist_vert_error"
+            ,"vp_X_phen_prestige_vert_error"
+            ,"hp_X_phen_prestige_horiz_error"
+            ,"hc_X_xconformist_horiz_error"]
 
-    for key, value in dict_cov_names.items():
+    formula = "phen_ad_logistic ~ "
 
-        entry_name = "cov_" + value[0] + "_" + value[1] if value[0] != value[1] else "var_" + value[0]
-            
-        var_dict[entry_name] = cov_mat.loc[value[0],value[1]]
-            
+    not_first = False
+
+    for column in columns_eta:
+        if dist_df[column].var() > 0.0:
+
+            if not_first: 
+                formula += " + " + column
+            else:
+                formula += column
+                not_first = True
+
+    # create the linear model
+    lm_model = ols(formula,data=dist_df).fit()
+
+    # get the anova table
+    anova_table = sm.stats.anova_lm(lm_model,typ=2)
+
+    # get the eta squares
+    # this is classical eta^2, not partial eta^2 as it is 
+    # SSR/SST rather than SSR/(SST + SSE)
+    # (i.e., it sums up to 1)
+    eta_sq = anova_table[:-1]["sum_sq"]/sum(anova_table["sum_sq"])
+
+    # make a eta squared dict
+    eta_sq_dict = eta_sq.to_dict()
+
+    # add to var_dict, step-by-step, allowing us to change names
+    for key, value in eta_sq_dict.items():
+        var_dict["eta2_" + key] = value
+
+    # return a data frame
     return(pd.DataFrame(data=var_dict,index=[1]))
 
 
