@@ -173,6 +173,18 @@ literal "false"
 
 \end_layout
 
+\begin_layout Plain Layout
+Relevant literature on vertical vs oblique: 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "Ram2018,Aoki2014"
+literal "false"
+
+\end_inset
+
+
+\end_layout
+
 \end_inset
 
 
@@ -924,7 +936,7 @@ Results
 \begin_inset CommandInset bibtex
 LatexCommand bibtex
 btprint "btPrintCited"
-bibfiles "/home/bram/Projects/databases/transgenerational"
+bibfiles "/Users/bram/Projects/databases/transgenerational"
 options "bram"
 
 \end_inset

@@ -63,7 +63,7 @@ def process_dist(filename):
     # find whether there are any 'Unnamed...' columns
     unnamed_cols = [ i for i in names if re.search("Unnamed",i) != None ]
 
-    names_no_id = list(set(names) - set(["id","patch_id"]) - set(unnamed_cols))
+    names_for_cov = [
 
     # variance covariance matrix
     cov_mat = dist_df[names_no_id].cov()
