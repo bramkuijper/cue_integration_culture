@@ -96,12 +96,22 @@ class SummarizeSims:
             else:
                 self.n_process = 1
 
+        print(self.n_process)
         # make pool object for multiprocessing
         pool = mp.Pool(processes=self.n_process) 
 
         if len(self.file_list) < 1:
             raise Exception("There are no files to be processed here...")
 
+#        for file_i in self.file_list:
+#
+#            result = self.analyze_file(file_i)
+#            
+#            if type(self.full_data) == type(None):
+#                self.full_data = result
+#            else:
+#                self.full_data = self.full_data.append(result,ignore_index=True)
+        
         result = pool.map(
                 self.analyze_file
                 ,self.file_list
@@ -246,6 +256,8 @@ class SummarizeSims:
 
     
     def analyze_file(self,filename):
+
+        print(filename)
 
         # two options (ignoring empty lines)
         # 1. header line, data, then parameters

@@ -93,6 +93,10 @@ def process_dist(filename):
             else:
                 formula += column
                 not_first = True
+        else:
+            # variable excluded from eta calculations
+            # just add a 0 to the var dict
+            var_dict["eta2_" + column] = 0.0
 
     # create the linear model
     lm_model = ols(formula,data=dist_df).fit()
@@ -113,6 +117,14 @@ def process_dist(filename):
     for key, value in eta_sq_dict.items():
         var_dict["eta2_" + key] = value
 
+    # now make sure all keys have the same order between files
+    # as python chokes on this otherwise
+    var_dict_keys = list(var_dict.keys())
+    var_dict_keys.sort()
+
+    for key in var_dict_keys:
+        var_dict[key] = var_dict.pop(key)
+
     # return a data frame
     return(pd.DataFrame(data=var_dict,index=[1]))
 
@@ -124,4 +136,5 @@ summarizesims.SummarizeSims(
     ,testing=False
     ,max_number_files=None if args["max_files"] == None else int(args["max_files"])
     ,posthoc_function=process_dist
+    ,n_process=int(args["ncores"])
     )
