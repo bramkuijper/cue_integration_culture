@@ -97,30 +97,30 @@ class SummarizeSims:
                 self.n_process = 1
 
         print(self.n_process)
-        # make pool object for multiprocessing
-        pool = mp.Pool(processes=self.n_process) 
+#        # make pool object for multiprocessing
+#        pool = mp.Pool(processes=self.n_process) 
 
         if len(self.file_list) < 1:
             raise Exception("There are no files to be processed here...")
 
-#        for file_i in self.file_list:
-#
-#            result = self.analyze_file(file_i)
-#            
-#            if type(self.full_data) == type(None):
-#                self.full_data = result
-#            else:
-#                self.full_data = self.full_data.append(result,ignore_index=True)
+        for file_i in self.file_list:
+
+            result = self.analyze_file(file_i)
+            
+            if type(self.full_data) == type(None):
+                self.full_data = result
+            else:
+                self.full_data = self.full_data.append(result,ignore_index=True)
         
-        result = pool.map(
-                self.analyze_file
-                ,self.file_list
-                )
-
-        if result == []:
-            print("analyze_file returns no data...")
-
-        self.full_data = pd.concat(result)
+#        result = pool.map(
+#                self.analyze_file
+#                ,self.file_list
+#                )
+#
+#        if result == []:
+#            print("analyze_file returns no data...")
+#
+#        self.full_data = pd.concat(result)
 
         if self.full_data is not None:
             
