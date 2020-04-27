@@ -16,23 +16,24 @@ pgf_with_custom_preamble = {
     "pgf.preamble": [
         r"\usepackage{units}",         # load additional packages
         r"\usepackage{mathspec}",         # load additional packages
-        r"\setmainfont[Path = /usr/share/fonts/personal/ ," +\
-            "UprightFont = *-Regular ," +\
-            "ItalicFont = *-It ," +\
-            "BoldFont = *-Bold ," +\
-            "Extension = .otf]{MyriadPro}",
+        r"\setmainfont[" +\
+#            "Path = /usr/share/fonts/personal/ ," +\
+            "UprightFont = * ," +\
+            "ItalicFont = *Italic ," +\
+            "BoldFont = *Bol," +\
+            "Extension = .otf]{STIXGeneral}",
         r"\setmathsfont(Digits,Latin,Greek)[" +\
-            "Path = /usr/share/fonts/personal/ ," +\
-                        "UprightFont = *-Regular ," +\
-                        "ItalicFont = *-It," +\
-                        "BoldFont = *-Bold," +\
-                        "Extension = .otf]{MyriadPro}",
+#            "Path = /usr/share/fonts/personal/ ," +\
+            "UprightFont = * ," +\
+            "ItalicFont = *Italic ," +\
+            "BoldFont = *Bol," +\
+            "Extension = .otf]{STIXGeneral}",
         r"\setmathrm[" +\
-            "Path = /usr/share/fonts/personal/ ," +\
-                        "UprightFont = *-Regular ," +\
-                        "ItalicFont = *-It," +\
-                        "BoldFont = *-Bold," +\
-                        "Extension = .otf]{MyriadPro}"
+#            "Path = /usr/share/fonts/personal/ ," +\
+            "UprightFont = * ," +\
+            "ItalicFont = *Italic ," +\
+            "BoldFont = *Bol," +\
+            "Extension = .otf]{STIXGeneral}",
          ]
 }
 mpl.rcParams.update(pgf_with_custom_preamble)
@@ -43,91 +44,68 @@ mpl.rcParams["xtick.labelsize"] = 16
 mpl.rcParams["axes.labelpad"] = 16
 mpl.rcParams["svg.fonttype"] = "none"
 
-# set up argument parsing
-parser = argparse.ArgumentParser()
 
-# specify output file name
-parser.add_argument('-i', default="../../data/summary_cue_int_finegrained_p.csv")
-parser.add_argument('-o', default="output_graph_var_components.pdf")
-parser.add_argument('--qjuv', type=float, default=0.5)
-parser.add_argument('--qmat', type=float, default=1.0)
-parser.add_argument('--juvsurv', type=int, default=0)
-parser.add_argument('--abs', type=bool, default=False)
-args = vars(parser.parse_args())
+# plot the mean-a values
+def mean_a_plot_panel(
+        row
+        ,col
+        ,dataset
+        ,query_str
+        ):
 
 
-##### get the data  #####
+    # start a panel for this dataset
+    the_axis = the_fig.start_block(
+        row=row
+        ,col=col)
 
-# the data file is obtained from the command line arguments
-data_file_name = args["i"]
+    # generate the query string dependent on command line args and other things
+    subset = data.query(query_str).copy(deep=True)
 
-# read in the data
-data = pd.read_csv(data_file_name
-        ,sep=";")
+    if subset.shape[0] < 1:
+        return
 
-##### data selection #####
+    # list with traits and labels
+    traits_n_labels = {
+            "mean_aintercept":r"$a_{\text{0}}$",
+            "mean_ajuv":r"$a_{\mathrm{juv}}$",
+            "mean_bmat_envt":r"$m_{\mathrm{e}}$",
+            "mean_bmat_phen":r"$m_{\mathrm{m}}$",
+            "mean_agen":r"$a_{\mathrm{g}}$",
+            "mean_vc":r"$v_{\mathrm{c}}$",
+            "mean_vp":r"$v_{\mathrm{p}}$",
+            "mean_hc":r"$h_{\mathrm{c}}$",
+            "mean_hp":r"$h_{\mathrm{p}}$",
+            }
 
-# generate the query string dependent on command line args and other things
-query_str = "qjuv == " + str(args["qjuv"]) +\
-        " & qmat == " + str(args["qmat"]) +\
-        " & juvenile_survival == " + str(args["juvsurv"]) +\
-        " & sdmat == 0.05 " +\
-        " & sdsoc_horiz == 0.05" +\
-        " & sdsoc_vert == 0.05"
+    missing_keys = []
+    for key in list(traits_n_labels.keys()):
+        if key not in subset.columns.values:
+            missing_keys.append(key)
 
-subset = data.query(query_str).copy(deep=True)
+    if len(missing_keys) > 0:
+        print("following required columns are missing from data frame: " + " ".join(missing_keys))
+        sys.exit(1)
 
-if subset.shape[0] < 1:
-    print("no data.")
-    sys.exit(1)
+    # list with traits to select
+    trait_selection = list(range(0,len(traits_n_labels)))
+    selected_traits = [ list(traits_n_labels.keys())[i] for i in trait_selection]
 
-######## make the plot ########
+    selected_traits_name = "_".join(selected_traits)
 
-traits_n_labels = {
-        "mean_agen":r"$a_{\text{gen}}$",
-        "mean_ajuv":r"$a_{\mathrm{juv}}$",
-        "mean_amat":r"$a_{\mathrm{mat}}$",
-        "mean_asoc_horiz":r"$a_{\mathrm{horizontal}}$",
-        "mean_asoc_vert":r"$a_{\mathrm{vertical}}$",
-        }
+    the_color_map = cm.get_cmap("tab10")
+    
+    the_axis = the_fig.start_block(
+        row=0
+        ,col=0)
 
-missing_keys = []
-for key in list(traits_n_labels.keys()):
-    if key not in subset.columns.values:
-        missing_keys.append(key)
+    subset = subset.sort_values(by="p")
 
-if len(missing_keys) > 0:
-    print("following required columns are missing from data frame: " + " ".join(missing_keys))
-    sys.exit(1)
+    # get unique values for the x axis we are considering here
 
-# list with traits to select
-trait_selection = [ 0, 1, 2, 3, 4 ]
-selected_traits = [ list(traits_n_labels.keys())[i] for i in trait_selection]
-
-selected_traits_name = "_".join(selected_traits)
-
-the_color_map = cm.get_cmap("tab10")
-
-# start the figure
-the_fig = multipanel.MultiPanel(
-        panel_widths=[1]
-        ,panel_heights=[1]
-        ,filename=args["o"]
-        ,width=10
-        ,height=5
-        )
-
-the_axis = the_fig.start_block(
-    row=0
-    ,col=0)
-
-subset = subset.sort_values(by="p")
-
-# get unique values for the x axis we are considering here
-
-xval = "p"
-x_u = list(subset[xval].unique())
-x_u.sort()
+    xval = "p"
+    x_u = list(subset[xval].unique())
+    x_u.sort()
 
 if args["abs"]:
     subset[selected_traits] = subset[selected_traits].abs()
@@ -197,6 +175,35 @@ the_fig.end_block(
         ,ylabel=r"Cue weightings, $\bar{a}_{i}$"
         ,loc_title=False
         )
+        
+
+
+
+
+##### get the data  #####
+
+# the data file is obtained from the command line arguments
+data_file_name = "summary_single_logistic.csv"
+
+# read in the data
+data = pd.read_csv(data_file_name
+        ,sep=";")
+
+##### data selection #####
+
+
+######## make the plot ########
+
+
+# start the figure
+the_fig = multipanel.MultiPanel(
+        panel_widths=[1]
+        ,panel_heights=[1]
+        ,filename=args["o"]
+        ,width=10
+        ,height=5
+        )
+
 
 
 the_fig.close(tight=True)

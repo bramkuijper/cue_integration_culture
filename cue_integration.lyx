@@ -156,38 +156,9 @@ Introduction
 \end_layout
 
 \begin_layout Standard
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-Placate Franjo by Franjo's nature reply, Jordi & Franjo's paper, Botero
- stuff.
- Read stuff by Magnus enquist, e.g., 
-\begin_inset CommandInset citation
-LatexCommand citet
-key "Enquist2011"
-literal "false"
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-Relevant literature on vertical vs oblique: 
-\begin_inset CommandInset citation
-LatexCommand citet
-key "Ram2018,Aoki2014"
-literal "false"
-
-\end_inset
-
-
-\end_layout
-
-\end_inset
-
-
+The evolution of social learning is pivotal to cultural evolution.
+ Indeed, massive amounts of theoretical work have been undertaken to assess
+ when and where social learning evolves.
 \end_layout
 
 \begin_layout Section
