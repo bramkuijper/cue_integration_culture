@@ -14,8 +14,12 @@ prepend.eta <- function(x) {
     return(paste("eta2_",x,sep=""))
 }
 
-for (file_i in flist)
+for (i in seq(1,length(flist),1))
 {
+    file_i = flist[[i]]
+
+    print(paste("file ",file_i," which is file ",i," out of ",length(flist),sep=""))
+
     df = read.table(file_i,sep=";",header=T)
 
     df[,"bmat_phen_X_phen_mat_error"] = df[,"bmat_phen"] * (df[,"phen_mat_error"] - 0.5)
@@ -34,7 +38,7 @@ for (file_i in flist)
     columns <- c(
         "aintercept",
         "bmat_phen_X_phen_mat_error",
-        "bmat_envt_X_maternal_envt_cue_eror",
+        "bmat_envt_X_maternal_envt_cue_error",
         "agen_X_g",
         "ajuv_X_cue_juv_envt_high",
         "vc_X_xconformist_vert_error",
@@ -56,6 +60,8 @@ for (file_i in flist)
     }
 
     formula <- paste("phen_ad_logistic ~ ",paste(ind.vars,collapse="+"))
+
+    print(formula)
 
     mod1 <- lm(as.formula(formula)
         ,data=df)
