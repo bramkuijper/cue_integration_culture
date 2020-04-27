@@ -96,7 +96,6 @@ class SummarizeSims:
             else:
                 self.n_process = 1
 
-        print(self.n_process)
 #        # make pool object for multiprocessing
 #        pool = mp.Pool(processes=self.n_process) 
 
@@ -109,9 +108,13 @@ class SummarizeSims:
             
             if type(self.full_data) == type(None):
                 self.full_data = result
+                temp_data = self.output_postprocess(self.full_data)
+                self.output_data(temp_data, firstline=True)
             else:
                 self.full_data = self.full_data.append(result,ignore_index=True)
-        
+                temp_data = self.output_postprocess(self.full_data)
+                self.output_data(temp_data, firstline=False)
+
 #        result = pool.map(
 #                self.analyze_file
 #                ,self.file_list
@@ -122,37 +125,40 @@ class SummarizeSims:
 #
 #        self.full_data = pd.concat(result)
 
-        if self.full_data is not None:
-            
-            self.output_postprocess()
-            self.output_full_data()
+#        if self.full_data is not None:
+#            
+#            self.output_postprocess()
+#            self.output_full_data()
 
-    def output_postprocess(self):
+    def output_postprocess(self,data):
         """
         Post collection data cleaning: e.g., strip whitespace
         from column names
 
         Returns
         -------
-        None.
+        the data frame
 
         """
-        self.full_data.rename(str.strip
+        data.rename(str.strip
                        ,inplace=True
                        ,axis="columns")
-        
-        
 
-    def output_full_data(self):
-        
-        
+        return(data)
 
+    def output_data(self, data, firstline=True):
+
+        subset = data
+        if not firstline:
+            subset = data.iloc[[-1]]
         # write the data to stdout
-        if self.full_data.shape[0] > 0:
-            print(self.full_data.to_csv(
+        if subset.shape[0] > 0:
+            output_str = subset.to_csv(
                     path_or_buf=None
                     ,sep=";"
-                    ,index=False))
+                    ,header=firstline
+                    ,index=False)
+            print(output_str.strip())
 
     # analyze parameters at the end of the file
     def analyze_parameters_old(self, lines):
@@ -256,8 +262,6 @@ class SummarizeSims:
 
     
     def analyze_file(self,filename):
-
-        print(filename)
 
         # two options (ignoring empty lines)
         # 1. header line, data, then parameters
