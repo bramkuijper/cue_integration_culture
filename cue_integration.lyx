@@ -156,9 +156,17 @@ Introduction
 \end_layout
 
 \begin_layout Standard
+Read Aoki and Feldman's review
+\end_layout
+
+\begin_layout Standard
 The evolution of social learning is pivotal to cultural evolution.
  Indeed, massive amounts of theoretical work have been undertaken to assess
  when and where social learning evolves.
+\end_layout
+
+\begin_layout Standard
+Say something about why simulations and not an analytical approach
 \end_layout
 
 \begin_layout Section
@@ -241,17 +249,7 @@ Life cycle
 \end_layout
 
 \begin_layout Standard
-The model assumes a hermaphroditic mating system and social learning, but
- otherwise the life cycle in the model is identical to the one depicted
- in Figure 1D of 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "Leimar2015"
-literal "false"
-
-\end_inset
-
-, where 
+The life cycle in the model is provided in Figure 1, where 
 \begin_inset Formula $K$
 \end_inset
 

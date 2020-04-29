@@ -45,7 +45,7 @@ nrep = 5
 #10. vc
 initvals = " ".join([str(0.0) for x in range(0,10)])
 
-aminmax = "-8.0 8.0"
+aminmax = "-10.0 10.0"
 gminmax = "-1.0 1.0"
 bminmax = "-10.0 10.0"
 
@@ -120,11 +120,11 @@ ctr = 1
 # whether jobs should be run in the background
 run_in_background = False
 
-juvenile_survival = [ 0 ]
+juvenile_survival = [ 0, 1 ]
 
 # never run background jobs on cluster
 hostname = socket.gethostname()
-if "carson" in hostname:
+if "athena" in hostname:
     run_in_background = False
 
 # add ampersand to each job command if job needs
