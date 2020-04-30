@@ -109,7 +109,8 @@ double sdmu_a = 0.0;
 double sdmu_b = 0.0;
 double sdmu_g = 0.0;
 
-bool juvenile_survival = false;
+bool juvenile_survival_on = false;
+bool adult_survival_on = false;
 
 
 // number of individuals to sample
@@ -228,8 +229,9 @@ void init_arguments(int argc, char **argv)
     nch = atoi(argv[46]);
     npv = atoi(argv[47]);
     ncv = atoi(argv[48]);
-    juvenile_survival = atoi(argv[49]);
-    base_name = argv[50];
+    juvenile_survival_on = atoi(argv[49]);
+    adult_survival_on = atoi(argv[50]);
+    base_name = argv[51];
 }
 
 // write down all parameters to the file DataFile
@@ -263,7 +265,8 @@ void write_parameters(std::ofstream &DataFile)
         << "mu_ajuv;" << mu_ajuv << ";"<< std::endl
         << "mu_agen;" << mu_agen << ";"<< std::endl
         << "mu_aintercept;" << mu_aintercept << ";"<< std::endl
-        << "juvenile_survival;" << juvenile_survival << ";"<< std::endl
+        << "juvenile_survival;" << juvenile_survival_on << ";"<< std::endl
+        << "adult_survival;" << adult_survival_on << ";"<< std::endl
         << "mu_bmat_phen;" << mu_bmat_phen << ";"<< std::endl
         << "mu_bmat_envt;" << mu_bmat_envt << ";"<< std::endl
         << "mu_vc;" << mu_vc << ";"<< std::endl
@@ -1235,10 +1238,15 @@ void adult_survival()
                     std::isnormal(
                         Pop[patch_i].breeders[breeder_i].phen_ad) > 0);
 
-            // calculate survival probability
-            surv = survival_probability(
-                        Pop[patch_i].breeders[breeder_i].phen_ad
-                        ,Pop[patch_i].envt_high);
+            surv = 0.5;
+
+            if (adult_survival_on)
+            {
+                // calculate survival probability
+                surv = survival_probability(
+                            Pop[patch_i].breeders[breeder_i].phen_ad
+                            ,Pop[patch_i].envt_high);
+            }
 
             // store the survival value in this envt
             // for sake of statistics
@@ -1295,6 +1303,7 @@ void social_learning(
             Pop[patch_i].n_breeders - 1);
 
     // check whether sampling np is feasible
+    // otherwise take the number of breeders in the local patch
     np_local = np > Pop[patch_i].n_breeders ? Pop[patch_i].n_breeders : np;
 
     // keep track on the current phenotype and survival value
@@ -1459,7 +1468,7 @@ void replace()
             // and offspring dies, just continue on the next
             // iteration of this loop without adding the offspring
             // to the breeder population
-            if (juvenile_survival)
+            if (juvenile_survival_on)
             {
                 surv = survival_probability(
                             Kid.phen_juv

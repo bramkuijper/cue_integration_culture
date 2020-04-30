@@ -121,6 +121,7 @@ ctr = 1
 run_in_background = False
 
 juvenile_survival = [ 0, 1 ]
+adult_survival = [ 0 ]
 
 # never run background jobs on cluster
 hostname = socket.gethostname()
@@ -169,37 +170,39 @@ for rep_i in range(0,nrep):
                                                                     str(x) for x in nx_i)
 
                                                             for juvenile_survival_i in juvenile_survival:
+                                                                for adult_survival_i in adult_survival:
 
-                                                                print("echo " + str(ctr))
-                                                                ctr += 1
-
-
-                                                                base_name_i = base_name + "_" + str(ctr)
+                                                                    print("echo " + str(ctr))
+                                                                    ctr += 1
 
 
-                                                                print(exe + " \t"
-                                                                        + str(sigmoidal_survival_i) + " \t"
-                                                                        + str(laplace) + " "
-                                                                        + str(p_i) + " \t"
-                                                                        + survival_scalar_i_str + " \t"
-                                                                        + str(qmat_i) + " "
-                                                                        + str(qjuv_i) + " "
-                                                                        + str(max_error_conform_horiz_i) + " "
-                                                                        + str(max_error_prestige_horiz_i) + " "
-                                                                        + str(max_error_conform_vert_i) + " "
-                                                                        + str(max_error_prestige_vert_i) + " "
-                                                                        + str(max_error_mat_phen_i) + " "
-                                                                        + str(max_error_mat_envt_i) + " "
-                                                                        + str(nloci_g_i) + " \t"
-                                                                        + initvals + " \t"
-                                                                        + gminmax + " "
-                                                                        + aminmax + " "
-                                                                        + bminmax + " \t"
-                                                                        + mu_combi_i_str + " "
-                                                                        + sdmu + " \t" 
-                                                                        + str(m_i) + " "
-                                                                        + str(nxstr) + " "
-                                                                        + str(juvenile_survival_i) + " "
-                                                                        + base_name_i + " "
-                                                                        + bg
-                                                                        )
+                                                                    base_name_i = base_name + "_" + str(ctr)
+
+
+                                                                    print(exe + " \t"
+                                                                            + str(sigmoidal_survival_i) + " \t"
+                                                                            + str(laplace) + " "
+                                                                            + str(p_i) + " \t"
+                                                                            + survival_scalar_i_str + " \t"
+                                                                            + str(qmat_i) + " "
+                                                                            + str(qjuv_i) + " "
+                                                                            + str(max_error_conform_horiz_i) + " "
+                                                                            + str(max_error_prestige_horiz_i) + " "
+                                                                            + str(max_error_conform_vert_i) + " "
+                                                                            + str(max_error_prestige_vert_i) + " "
+                                                                            + str(max_error_mat_phen_i) + " "
+                                                                            + str(max_error_mat_envt_i) + " "
+                                                                            + str(nloci_g_i) + " \t"
+                                                                            + initvals + " \t"
+                                                                            + gminmax + " "
+                                                                            + aminmax + " "
+                                                                            + bminmax + " \t"
+                                                                            + mu_combi_i_str + " "
+                                                                            + sdmu + " \t" 
+                                                                            + str(m_i) + " "
+                                                                            + str(nxstr) + " "
+                                                                            + str(juvenile_survival_i) + " "
+                                                                            + str(adult_survival_i) + " "
+                                                                            + base_name_i + " "
+                                                                            + bg
+                                                                            )

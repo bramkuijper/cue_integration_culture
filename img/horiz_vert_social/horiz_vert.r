@@ -10,7 +10,6 @@ library("reshape")
 
 
 # read in the data
-# I
 if (!exists("the.data"))
 {
     the.data <- read.table("../../data/summary_single_logistic.csv",sep=";",header=T)
@@ -23,13 +22,13 @@ findcol <- function(pattern)
     return(names(the.data)[grep(pattern, names(the.data))])
 }
 
-names_prop <- findcol("var_prop.*")
+names_prop <- findcol("eta.*")
 
 stopifnot(length(names_prop) > 0)
 
 the.formula = paste(names_prop, collapse=" + ")
 
-the.formula = paste(the.formula, " ~ (1.0 - p) | mu_bmat_envt * mu_hp * qjuv * qmat")
+the.formula = paste(the.formula, " ~ (1.0 - p) | mu_hp * qjuv * qmat * juvenile_survival")
 
 pdf("slopes.pdf")
 print(xyplot(mean_bmat_phen 
@@ -40,7 +39,7 @@ print(xyplot(mean_bmat_phen
                 + mean_vc
                 + mean_vp
                 + mean_hp
-                + mean_hc ~ (1-p) | mu_bmat_envt * mu_hp * qjuv * qmat
+                + mean_hc ~ (1-p) | mu_hp * qjuv * qmat * juvenile_survival
                 ,data=the.data
                 ,xlab="Probability environment changes, 1 - p"
                 ,ylab="Variance components"
@@ -51,12 +50,6 @@ print(xyplot(mean_bmat_phen
         )
 dev.off()
 
-# print a sample file for further inspection
-sample.series <- subset(the.data,qmat == 1.0 & qjuv == 0.5 & mu_hp == 0.01 & mu_bmat_envt == 0.01 & p > 0.05 & p < 0.07)
-
-stopifnot(nrow(sample.series) > 0)
-
-print('pass')
 
 pdf("var_components.pdf")
 print(xyplot(as.formula(the.formula)
