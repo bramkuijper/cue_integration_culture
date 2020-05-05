@@ -43,7 +43,10 @@ nrep = 5
 #8.  hc
 #9.  vp
 #10. vc
-initvals = " ".join([str(0.0) for x in range(0,10)])
+initval_list = [str(0.0) for x in range(0,10)]
+initval_list[2] = str(5.0)
+
+initvals = " ".join(initval_list)
 
 aminmax = "-10.0 10.0"
 gminmax = "-1.0 1.0"
@@ -120,8 +123,8 @@ ctr = 1
 # whether jobs should be run in the background
 run_in_background = False
 
-juvenile_survival = [ 0, 1 ]
-adult_survival = [ 0 ]
+juvenile_survival = [ 0 ]
+adult_survival = [ 1 ]
 
 # never run background jobs on cluster
 hostname = socket.gethostname()
