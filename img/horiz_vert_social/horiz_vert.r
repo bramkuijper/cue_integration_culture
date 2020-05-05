@@ -28,7 +28,7 @@ stopifnot(length(names_prop) > 0)
 
 the.formula = paste(names_prop, collapse=" + ")
 
-the.formula = paste(the.formula, " ~ (1.0 - p) | mu_hp * qjuv * qmat * juvenile_survival")
+the.formula = paste(the.formula, " ~ (1.0 - p) | mu_hp * qjuv * qmat * juvenile_survival * adult_survival")
 
 pdf("slopes.pdf")
 print(xyplot(mean_bmat_phen 
@@ -36,10 +36,10 @@ print(xyplot(mean_bmat_phen
                 + mean_agen
                 + mean_ajuv
                 + mean_aintercept
-                + mean_vc
-                + mean_vp
+                + mean_hc
                 + mean_hp
-                + mean_hc ~ (1-p) | mu_hp * qjuv * qmat * juvenile_survival
+                + mean_vp
+                + mean_vc ~ (1-p) | mu_hp * qjuv * qmat * juvenile_survival * adult_survival
                 ,data=the.data
                 ,xlab="Probability environment changes, 1 - p"
                 ,ylab="Variance components"
@@ -48,8 +48,36 @@ print(xyplot(mean_bmat_phen
                 ,auto.key=T
                 )
         )
-dev.off()
 
+dat.long <- melt(the.data
+        ,id.vars=c("mu_hp","p","qjuv","qmat","juvenile_survival","adult_survival")
+        ,measure=c(
+                "mean_aintercept"
+                ,"mean_bmat_phen"
+                ,"mean_bmat_envt"
+                ,"mean_agen"
+                ,"mean_ajuv"
+                ,"mean_aintercept"
+                ,"mean_vc"
+                ,"mean_vp"
+                ,"mean_hp"
+                ,"mean_hc"
+                ))
+
+the.plot <- ggplot(dat.long
+        ,aes(x=1 - p
+                ,y=value
+                ,colour=variable
+        )
+) + geom_point() + labs(x = "Rate of environmental change"
+                            ,y="Cue weighting")
+
+the.plot + facet_wrap(vars(juvenile_survival, adult_survival, mu_hp, qjuv, qmat), labeller=label_both)
+
+ggsave(filename="overview_horiz_vert_a_weightings_ggplot.pdf", width=60, height=60, units="cm")
+
+
+dev.off()
 
 pdf("var_components.pdf")
 print(xyplot(as.formula(the.formula)
