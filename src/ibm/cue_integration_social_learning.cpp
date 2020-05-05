@@ -1567,7 +1567,7 @@ void replace()
                 (1.0 + exp(-Pop[patch_i].breeders[breeder_i].phen_ad_logistic));
         } // for (int breeder_i = 0; breeder_i < Pop[patch_i].n_breeders; ++breeder_i)
         
-        // envtal change after breeder establishment
+        // envtal change after breeder establishment, but before adult survival
         if (uniform(rng_r) < 1.0 - p)
         {
             Pop[patch_i].envt_high = !Pop[patch_i].envt_high;

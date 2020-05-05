@@ -156,17 +156,18 @@ Introduction
 \end_layout
 
 \begin_layout Standard
-Read Aoki and Feldman's review
-\end_layout
+The ability to acquire information from other individuals is an essential
+ step towards cumulative cultural evolution 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "Mesoudi2016"
+literal "false"
 
-\begin_layout Standard
-The evolution of social learning is pivotal to cultural evolution.
- Indeed, massive amounts of theoretical work have been undertaken to assess
- when and where social learning evolves.
-\end_layout
+\end_inset
 
-\begin_layout Standard
-Say something about why simulations and not an analytical approach
+ (refs).
+ Indeed, a substantial amount of effort has been devoted to delineating
+ the ecological conditions in which 
 \end_layout
 
 \begin_layout Section
@@ -901,6 +902,63 @@ Individual learning over time rather than phenotypic plasticity in response
 Results
 \end_layout
 
+\begin_layout Section
+Discussion
+\end_layout
+
+\begin_layout Section
+Figure captions
+\end_layout
+
+\begin_layout Paragraph
+Figure 1
+\end_layout
+
+\begin_layout Standard
+The life cycle of the model.
+\end_layout
+
+\begin_layout Section
+Figures
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename img/life_cycle/life_cycle.pdf
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Standard
 \begin_inset CommandInset bibtex
 LatexCommand bibtex
@@ -914,8 +972,6 @@ options "bram"
 \end_layout
 
 \begin_layout Standard
-
-\lang british
 \begin_inset ERT
 status open
 
@@ -1073,8 +1129,6 @@ thispagestyle{plain}
 \end_layout
 
 \begin_layout Standard
-
-\lang british
 \begin_inset ERT
 status open
 
@@ -1109,79 +1163,7 @@ clearpage
 
 \end_inset
 
-
-\end_layout
-
-\begin_layout Section
-Recovering previous results
-\end_layout
-
-\begin_layout Standard
-Figures 
-\begin_inset CommandInset ref
-LatexCommand ref
-reference "fig:supplement:LM_fig2"
-plural "false"
-caps "false"
-noprefix "false"
-
-\end_inset
-
- shows that the simulation model recapitulates the previous simulation model
- by 
-\begin_inset CommandInset citation
-LatexCommand citet
-key "Leimar2015"
-literal "false"
-
-\end_inset
-
-.
- 
-\end_layout
-
-\begin_layout Standard
-\begin_inset Float figure
-wide false
-sideways false
-status open
-
-\begin_layout Plain Layout
-\align center
-\begin_inset Graphics
-	filename img/leimar_mcnamara/fig2.pdf
-	scale 50
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-\begin_inset Caption Standard
-
-\begin_layout Plain Layout
-\begin_inset CommandInset label
-LatexCommand label
-name "fig:supplement:LM_fig2"
-
-\end_inset
-
-
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-
-
+lkjklj lkj;lkj 
 \end_layout
 
 \end_body
