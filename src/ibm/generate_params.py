@@ -49,7 +49,6 @@ nrep = 1
 #9.  vp
 #10. vc
 initval_list = [str(0.0) for x in range(0,10)]
-initval_list[2] = str(5.0)
 
 initvals = " ".join(initval_list)
 
