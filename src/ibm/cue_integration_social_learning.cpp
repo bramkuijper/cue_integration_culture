@@ -68,6 +68,8 @@ bool sigmoidal_survival = true;
 
 bool laplace = true;
 
+bool envt_change_at_birth = false;
+
 // number of loci underlying the genetic cue
 int nloci_g = 3;
 
@@ -231,7 +233,8 @@ void init_arguments(int argc, char **argv)
     ncv = atoi(argv[48]);
     juvenile_survival_on = atoi(argv[49]);
     adult_survival_on = atoi(argv[50]);
-    base_name = argv[51];
+    envt_change_at_birth = atoi(argv[51]);
+    base_name = argv[52];
 }
 
 // write down all parameters to the file DataFile
@@ -266,6 +269,7 @@ void write_parameters(std::ofstream &DataFile)
         << "mu_agen;" << mu_agen << ";"<< std::endl
         << "mu_aintercept;" << mu_aintercept << ";"<< std::endl
         << "juvenile_survival;" << juvenile_survival_on << ";"<< std::endl
+        << "envt_change_at_birth;" << envt_change_at_birth << ";"<< std::endl
         << "adult_survival;" << adult_survival_on << ";"<< std::endl
         << "mu_bmat_phen;" << mu_bmat_phen << ";"<< std::endl
         << "mu_bmat_envt;" << mu_bmat_envt << ";"<< std::endl
@@ -1395,6 +1399,17 @@ void replace()
     // of the survival probability
     double surv;
 
+    if (envt_change_at_birth)
+    {
+        for (int patch_i = 0; patch_i < NPatches; ++patch_i)
+        {
+            if (uniform(rng_r) < 1.0 - p)
+            {
+                Pop[patch_i].envt_high = !Pop[patch_i].envt_high;
+            }
+        }
+    }
+
     for (int patch_i = 0; patch_i < NPatches; ++patch_i)
     {
         Pop[patch_i].n_recruits = 0;
@@ -1568,11 +1583,10 @@ void replace()
         } // for (int breeder_i = 0; breeder_i < Pop[patch_i].n_breeders; ++breeder_i)
         
         // envtal change after breeder establishment, but before adult survival
-        if (uniform(rng_r) < 1.0 - p)
+        if (!envt_change_at_birth && uniform(rng_r) < 1.0 - p)
         {
             Pop[patch_i].envt_high = !Pop[patch_i].envt_high;
         }
-
     } // end for (int patch_i = 0
 }
 
