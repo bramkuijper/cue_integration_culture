@@ -13,17 +13,18 @@ import datetime
 # sigmoidal or not
 sigmoidal_survival = [ 0 ]
 
-envt_change_birth = [1]
+envt_change_birth = [0]
 
 # frequency of the high environment
-p = list(np.linspace(0,1,30))
+#p = list(np.linspace(0,1,30))
 #p = [0.1]
+p = [0.9]
 
 survival_scalar_sig = [-2.5,3.5]
 survival_scalar_quad = [0.8,0.0]
 
-qmat = [0.5,1.0]
-qjuv = [0.5,1.0]
+qmat = [0.5]
+qjuv = [1.0]
 
 # we go from qmat = 1.0 to 0.5
 # while qjuv goes from 0.5 to 1.0
@@ -92,7 +93,7 @@ mu_combis.append(mu_all)
 
 
 # choose what consideration you want. For now only ai
-mu_combis = [ mu_no_social, mu_all ]
+mu_combis = [ mu_all ]
                         
 max_error_conform_horiz = [ 0.0 ]
 max_error_prestige_horiz = [ 0.0 ]

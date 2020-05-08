@@ -12,7 +12,8 @@ library("reshape")
 # read in the data
 if (!exists("the.data"))
 {
-    the.data <- read.table("../../data/summary_single_logistic.csv",sep=";",header=T)
+    #    the.data <- read.table("../../data/summary_single_logistic.csv",sep=";",header=T)
+    the.data <- read.table("../../data/summary_birth_change.csv",sep=";",header=T)
 }
 
 # little function to find column names 

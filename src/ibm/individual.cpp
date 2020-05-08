@@ -26,6 +26,8 @@ Individual::Individual():
     hc{0.0,0.0},
     cue_juv_envt_high{false},
     cue_ad_envt_high{false},
+    envt_high_selection{false},
+    envt_high_previous{false},
     maternal_envt_cue{false},
     maternal_envt_cue_error{false}
 {
@@ -58,6 +60,8 @@ Individual::Individual(Individual const &other):
     hc{other.hc[0],other.hc[1]},
     cue_juv_envt_high{other.cue_juv_envt_high},
     cue_ad_envt_high{other.cue_ad_envt_high},
+    envt_high_selection{other.envt_high_selection},
+    envt_high_previous{other.envt_high_previous},
     maternal_envt_cue{other.maternal_envt_cue},
     maternal_envt_cue_error{other.maternal_envt_cue_error}
 {
@@ -115,6 +119,9 @@ void Individual::operator=(Individual const &other)
 
     g[0] = other.g[0];
     g[1] = other.g[1];
+    
+    envt_high_selection = other.envt_high_selection;
+    envt_high_previous = other.envt_high_previous;
     
     maternal_envt_cue = other.maternal_envt_cue;
     maternal_envt_cue_error = other.maternal_envt_cue_error;

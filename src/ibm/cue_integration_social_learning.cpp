@@ -378,7 +378,8 @@ void write_dist(std::ofstream &DataFile)
             }
 
             DataFile << g << ";"
-                << Pop[patch_i].envt_high << ";"
+                << Pop[patch_i].breeders[breeder_i].envt_high_selection << ";"
+                << Pop[patch_i].breeders[breeder_i].envt_high_previous << ";"
                 << Pop[patch_i].breeders[breeder_i].cue_ad_envt_high << ";"
                 << Pop[patch_i].breeders[breeder_i].cue_juv_envt_high << ";";
             
@@ -464,7 +465,8 @@ void write_data_headers_dist(std::ofstream &DataFile)
         << "vc;" 
         << "vp;" 
         << "g;" 
-        << "envt;" 
+        << "envt_sel;" 
+        << "envt_prev;" 
         << "cue_ad_envt_high;" 
         << "cue_juv_envt_high;" 
         << "agen_X_g;" 
@@ -1129,6 +1131,9 @@ void create_offspring(Individual &mother
 
     clamp(offspring.hc[1], bmin, bmax);
 
+    offspring.envt_high_selection = offspring_envt_high;
+    offspring.envt_high_previous = offspring_envt_high;
+
     // kid receives juvenile cue
     offspring.cue_juv_envt_high = uniform(rng_r) < qjuv ? 
         offspring_envt_high : !offspring_envt_high;
@@ -1399,16 +1404,29 @@ void replace()
     // of the survival probability
     double surv;
 
+    bool envt_current, envt_previous;
+
     if (envt_change_at_birth)
     {
         for (int patch_i = 0; patch_i < NPatches; ++patch_i)
         {
+
+            envt_previous = Pop[patch_i].envt_high;
+
             if (uniform(rng_r) < 1.0 - p)
             {
                 Pop[patch_i].envt_high = !Pop[patch_i].envt_high;
             }
+            
+            envt_current = Pop[patch_i].envt_high;
+
+            for (int breeder_i = 0; breeder_i < Pop[patch_i].n_breeders; ++breeder_i)
+            {
+                Pop[patch_i].breeders[breeder_i].envt_high_selection = envt_current;
+                Pop[patch_i].breeders[breeder_i].envt_high_previous = envt_previous;
+            }
         }
-    }
+    } // end if envt_change_at_birth
 
     for (int patch_i = 0; patch_i < NPatches; ++patch_i)
     {
@@ -1581,11 +1599,23 @@ void replace()
             Pop[patch_i].breeders[breeder_i].phen_ad = 1.0 / 
                 (1.0 + exp(-Pop[patch_i].breeders[breeder_i].phen_ad_logistic));
         } // for (int breeder_i = 0; breeder_i < Pop[patch_i].n_breeders; ++breeder_i)
-        
+    
+        envt_previous = Pop[patch_i].envt_high;
+
         // envtal change after breeder establishment, but before adult survival
         if (!envt_change_at_birth && uniform(rng_r) < 1.0 - p)
         {
             Pop[patch_i].envt_high = !Pop[patch_i].envt_high;
+           
+        }
+
+        envt_current = Pop[patch_i].envt_high;
+        
+        // set this environment
+        for (int breeder_i = 0; breeder_i < Pop[patch_i].n_breeders; ++breeder_i)
+        {
+            Pop[patch_i].breeders[breeder_i].envt_high_selection = envt_current;
+            Pop[patch_i].breeders[breeder_i].envt_high_previous = envt_previous;
         }
     } // end for (int patch_i = 0
 }

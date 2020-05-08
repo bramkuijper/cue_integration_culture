@@ -166,8 +166,30 @@ literal "false"
 \end_inset
 
  (refs).
- Indeed, a substantial amount of effort has been devoted to delineating
- the ecological conditions in which 
+ However, the majority of models exclusively focus on the evolution of social
+ versus individual learning 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "Rogers1988,Laland2004,Rendell2010"
+literal "false"
+
+\end_inset
+
+, thereby ignoring that individuals obtain information through other means,
+ such as genes 
+\end_layout
+
+\begin_layout Standard
+Indeed, a substantial amount of effort has been devoted to delineating the
+ ecological conditions in which 
+\end_layout
+
+\begin_layout Standard
+TODO:
+\end_layout
+
+\begin_layout Standard
+- 
 \end_layout
 
 \begin_layout Section
@@ -344,7 +366,7 @@ Upon birth, an individual's phenotype
  We have
 \begin_inset Formula 
 \begin{align}
-u & =\frac{1}{1+\exp\left(-a_{\mathrm{gen}}x_{\mathrm{gen}}-a_{\mathrm{envt}}x_{\mathrm{envt}}-a_{\mathrm{mat}}x_{\mathrm{mat}}-a_{\mathrm{soc,vert}}x_{\mathrm{soc,vert}}-a_{\mathrm{soc,hor}}x_{\mathrm{soc,hor}}\right)},\label{eq:liability}
+u & =\frac{1}{1+\exp\left(-a_{\mathrm{gen}}\hat{x}_{\mathrm{gen}}-a_{\mathrm{envt}}x_{\mathrm{envt}}-a_{\mathrm{mat}}x_{\mathrm{mat}}-a_{\mathrm{soc,vert}}x_{\mathrm{soc,vert}}-a_{\mathrm{soc,hor}}x_{\mathrm{soc,hor}}\right)},\label{eq:liability}
 \end{align}
 
 \end_inset
@@ -377,7 +399,339 @@ where
 , each of which is set out below.
 \end_layout
 
-\begin_layout Subsubsection
+\begin_layout Section
+Results
+\end_layout
+
+\begin_layout Section
+Discussion
+\end_layout
+
+\begin_layout Section
+Figure captions
+\end_layout
+
+\begin_layout Paragraph
+Figure 1
+\end_layout
+
+\begin_layout Standard
+The life cycle of the model.
+\end_layout
+
+\begin_layout Section
+Figures
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename img/life_cycle/life_cycle.pdf
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename img/horiz_vert_social/plot_varcomp.pdf
+	scale 40
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename img/contour_eta/levelplot_max_eta.pdf
+	scale 70
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset bibtex
+LatexCommand bibtex
+btprint "btPrintCited"
+bibfiles "/Users/bram/Projects/databases/transgenerational"
+options "bram"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+clearpage
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+setcounter{equation}{0}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+setcounter{section}{0}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+setcounter{table}{0}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+setcounter{figure}{0}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+setcounter{page}{1}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+renewcommand*
+\backslash
+theequation{S
+\backslash
+arabic{equation}}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+renewcommand*
+\backslash
+theHequation{S
+\backslash
+arabic{equation}}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+renewcommand*
+\backslash
+thesection{S
+\backslash
+arabic{section}}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+renewcommand*
+\backslash
+theHsection{S
+\backslash
+arabic{section}}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+renewcommand*
+\backslash
+thefigure{S
+\backslash
+arabic{figure}}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+renewcommand*
+\backslash
+theHfigure{S
+\backslash
+arabic{figure}}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+renewcommand*
+\backslash
+thetable{S
+\backslash
+arabic{table}}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+renewcommand*
+\backslash
+theHtable{S
+\backslash
+arabic{table}}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+renewcommand*
+\backslash
+thepage{S
+\backslash
+arabic{page}}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+thispagestyle{plain}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+LARGE{Supplement: Cue Integration of Social Learning, Epigenetic and Genetic
+ Information}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+clearpage
+\end_layout
+
+\end_inset
+
 Juvenile cues (phenotypic plasticity)
 \end_layout
 
@@ -498,7 +852,7 @@ literal "false"
  eqns 6, 7):
 \begin_inset Formula 
 \begin{align}
-x_{\mathrm{mat}}\left(u,e_{\mathrm{mat}}\right) & =\frac{1}{1+\exp\left[-b_{\mathrm{umat}}\left(u-0.5\right)-e_{\mathrm{mat}}b_{\mathrm{emat}}\right]}+\xi_{\mathrm{mat}},\label{eq:maternal_cue}
+\label{eq:maternal_cue}
 \end{align}
 
 \end_inset
@@ -597,7 +951,7 @@ Upon birth, individuals receive a cue
  We have
 \begin_inset Formula 
 \begin{align}
-x_{\mathrm{soc,\mathrm{vert}}}\left(u_{\mathrm{p,v}},x_{\mathrm{c},\mathrm{v}}\right) & =\frac{1}{1+\exp\left[-v_{\mathrm{p}}\left(u_{\mathrm{p,v}}-0.5\right)-v_{\mathrm{c}}x_{\mathrm{c},\mathrm{v}}\right]}+\xi_{\mathrm{soc},\mathrm{vert}},\label{eq:social_cue}
+\label{eq:social_cue}
 \end{align}
 
 \end_inset
@@ -820,7 +1174,7 @@ After establishment as a breeder and environmental change, but before survival
  We have
 \begin_inset Formula 
 \begin{align}
-x_{\mathrm{soc,\mathrm{hor}}}\left(u_{\mathrm{p,h}},x_{\mathrm{c,h}}\right) & =\frac{1}{1+\exp\left[-h_{\mathrm{p}}\left(u_{\mathrm{p,h}}-0.5\right)-h_{\mathrm{c}}x_{\mathrm{c,h}}\right]}+\xi_{\mathrm{soc},\mathrm{hor}},\label{eq:social_cue_horizontal}
+\label{eq:social_cue_horizontal}
 \end{align}
 
 \end_inset
@@ -896,274 +1250,6 @@ Individual learning over time rather than phenotypic plasticity in response
 .
  However, this requires multiple timesteps in juvenile life, complicating
  the model further.
-\end_layout
-
-\begin_layout Section
-Results
-\end_layout
-
-\begin_layout Section
-Discussion
-\end_layout
-
-\begin_layout Section
-Figure captions
-\end_layout
-
-\begin_layout Paragraph
-Figure 1
-\end_layout
-
-\begin_layout Standard
-The life cycle of the model.
-\end_layout
-
-\begin_layout Section
-Figures
-\end_layout
-
-\begin_layout Standard
-\begin_inset Float figure
-wide false
-sideways false
-status open
-
-\begin_layout Plain Layout
-\align center
-\begin_inset Graphics
-	filename img/life_cycle/life_cycle.pdf
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-\begin_inset Caption Standard
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset CommandInset bibtex
-LatexCommand bibtex
-btprint "btPrintCited"
-bibfiles "/Users/bram/Projects/databases/transgenerational"
-options "bram"
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-clearpage
-\end_layout
-
-\begin_layout Plain Layout
-
-
-\backslash
-setcounter{equation}{0}
-\end_layout
-
-\begin_layout Plain Layout
-
-
-\backslash
-setcounter{section}{0}
-\end_layout
-
-\begin_layout Plain Layout
-
-
-\backslash
-setcounter{table}{0}
-\end_layout
-
-\begin_layout Plain Layout
-
-
-\backslash
-setcounter{figure}{0}
-\end_layout
-
-\begin_layout Plain Layout
-
-
-\backslash
-setcounter{page}{1}
-\end_layout
-
-\begin_layout Plain Layout
-
-
-\backslash
-renewcommand*
-\backslash
-theequation{S
-\backslash
-arabic{equation}}
-\end_layout
-
-\begin_layout Plain Layout
-
-
-\backslash
-renewcommand*
-\backslash
-theHequation{S
-\backslash
-arabic{equation}}
-\end_layout
-
-\begin_layout Plain Layout
-
-
-\backslash
-renewcommand*
-\backslash
-thesection{S
-\backslash
-arabic{section}}
-\end_layout
-
-\begin_layout Plain Layout
-
-
-\backslash
-renewcommand*
-\backslash
-theHsection{S
-\backslash
-arabic{section}}
-\end_layout
-
-\begin_layout Plain Layout
-
-
-\backslash
-renewcommand*
-\backslash
-thefigure{S
-\backslash
-arabic{figure}}
-\end_layout
-
-\begin_layout Plain Layout
-
-
-\backslash
-renewcommand*
-\backslash
-theHfigure{S
-\backslash
-arabic{figure}}
-\end_layout
-
-\begin_layout Plain Layout
-
-
-\backslash
-renewcommand*
-\backslash
-thetable{S
-\backslash
-arabic{table}}
-\end_layout
-
-\begin_layout Plain Layout
-
-
-\backslash
-renewcommand*
-\backslash
-theHtable{S
-\backslash
-arabic{table}}
-\end_layout
-
-\begin_layout Plain Layout
-
-
-\backslash
-renewcommand*
-\backslash
-thepage{S
-\backslash
-arabic{page}}
-\end_layout
-
-\begin_layout Plain Layout
-
-
-\backslash
-thispagestyle{plain}
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-begin{center}
-\end_layout
-
-\begin_layout Plain Layout
-
-
-\backslash
-LARGE{Supplement: Cue Integration of Social Learning, Epigenetic and Genetic
- Information}
-\end_layout
-
-\begin_layout Plain Layout
-
-
-\backslash
-end{center}
-\end_layout
-
-\begin_layout Plain Layout
-
-
-\backslash
-clearpage
-\end_layout
-
-\end_inset
-
-lkjklj lkj;lkj 
 \end_layout
 
 \end_body
