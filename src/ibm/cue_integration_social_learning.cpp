@@ -37,7 +37,8 @@ const int NPatches = 400;
 const int NBreeder = 100;
 
 // number of generations
-int number_generations = 75000;
+//int number_generations = 75000;
+int number_generations = 5;
 
 // environmental switch rate
 //
@@ -55,13 +56,11 @@ double qjuv = 0.5;
 // quality (beyond 0.5 error rate) of maternal cue
 double qmat = 0.5;
 
-double max_error_conform_horiz = 0;
-double max_error_prestige_horiz = 0;
-double max_error_conform_vert = 0;
-double max_error_prestige_vert = 0;
-
-double max_error_mat_phen = 0;
-double max_error_mat_envt = 0;
+double sd_hc_noise = 0;
+double sd_hp_noise = 0;
+double sd_vc_noise = 0;
+double sd_vp_noise = 0;
+double sd_mat_phen_noise = 0;
 
 // whether survival selection has a sigmoidal or a quadratic function
 bool sigmoidal_survival = true;
@@ -69,6 +68,7 @@ bool sigmoidal_survival = true;
 bool laplace = true;
 
 bool envt_change_at_birth = false;
+bool juvenile_learns_remote_envt = false;
 
 // number of loci underlying the genetic cue
 int nloci_g = 3;
@@ -184,56 +184,56 @@ void init_arguments(int argc, char **argv)
     survival_scalar[1] = atof(argv[5]);
     qmat = atof(argv[6]);
     qjuv = atof(argv[7]);
-    max_error_conform_horiz = atof(argv[8]);
-    max_error_prestige_horiz = atof(argv[9]);
-    max_error_conform_vert = atof(argv[10]);
-    max_error_prestige_vert = atof(argv[11]);
-    max_error_mat_phen = atof(argv[12]);
-    max_error_mat_envt = atof(argv[13]);
-    nloci_g = atoi(argv[14]);
+    sd_hc_noise = atof(argv[8]);
+    sd_hp_noise = atof(argv[9]);
+    sd_vc_noise = atof(argv[10]);
+    sd_vp_noise = atof(argv[11]);
+    sd_mat_phen_noise = atof(argv[12]);
+    nloci_g = atoi(argv[13]);
     
-    init_g = atof(argv[15]);
-    init_aintercept = atof(argv[16]);
-    init_ajuv = atof(argv[17]);
+    init_g = atof(argv[14]);
+    init_aintercept = atof(argv[15]);
+    init_ajuv = atof(argv[16]);
 
-    init_agen = atof(argv[18]);
-    init_bmat_phen = atof(argv[19]);
-    init_bmat_envt = atof(argv[20]);
+    init_agen = atof(argv[17]);
+    init_bmat_phen = atof(argv[18]);
+    init_bmat_envt = atof(argv[19]);
 
-    init_hp = atof(argv[21]);
-    init_hc = atof(argv[22]);
-    init_vp = atof(argv[23]);
+    init_hp = atof(argv[20]);
+    init_hc = atof(argv[21]);
+    init_vp = atof(argv[22]);
 
-    init_vc = atof(argv[24]);
+    init_vc = atof(argv[23]);
 
-    gmin = atof(argv[25]);
-    gmax = atof(argv[26]);
-    amin = atof(argv[27]);
-    amax = atof(argv[28]);
-    bmin = atof(argv[29]);
-    bmax = atof(argv[30]);
+    gmin = atof(argv[24]);
+    gmax = atof(argv[25]);
+    amin = atof(argv[26]);
+    amax = atof(argv[27]);
+    bmin = atof(argv[28]);
+    bmax = atof(argv[29]);
 
-    mu_g = atof(argv[31]);
-    mu_aintercept = atof(argv[32]);
-    mu_ajuv = atof(argv[33]);
-    mu_agen = atof(argv[34]);
-    mu_bmat_phen = atof(argv[35]);
-    mu_bmat_envt = atof(argv[36]);
-    mu_hp = atof(argv[37]);
-    mu_hc = atof(argv[38]);
-    mu_vp = atof(argv[39]);
-    mu_vc = atof(argv[40]);
-    sdmu_a = atof(argv[41]);
-    sdmu_b = atof(argv[42]);
-    sdmu_g = atof(argv[43]);
-    m = atof(argv[44]);
-    nph = atoi(argv[45]);
-    nch = atoi(argv[46]);
-    npv = atoi(argv[47]);
-    ncv = atoi(argv[48]);
-    juvenile_survival_on = atoi(argv[49]);
-    adult_survival_on = atoi(argv[50]);
-    envt_change_at_birth = atoi(argv[51]);
+    mu_g = atof(argv[30]);
+    mu_aintercept = atof(argv[31]);
+    mu_ajuv = atof(argv[32]);
+    mu_agen = atof(argv[33]);
+    mu_bmat_phen = atof(argv[34]);
+    mu_bmat_envt = atof(argv[35]);
+    mu_hp = atof(argv[36]);
+    mu_hc = atof(argv[37]);
+    mu_vp = atof(argv[38]);
+    mu_vc = atof(argv[39]);
+    sdmu_a = atof(argv[40]);
+    sdmu_b = atof(argv[41]);
+    sdmu_g = atof(argv[42]);
+    m = atof(argv[43]);
+    nph = atoi(argv[44]);
+    nch = atoi(argv[45]);
+    npv = atoi(argv[46]);
+    ncv = atoi(argv[47]);
+    juvenile_survival_on = atoi(argv[48]);
+    adult_survival_on = atoi(argv[49]);
+    envt_change_at_birth = atoi(argv[50]);
+    juvenile_learns_remote_envt = atoi(argv[51]);
     base_name = argv[52];
 }
 
@@ -246,6 +246,11 @@ void write_parameters(std::ofstream &DataFile)
         << "p;" << p << ";"<< std::endl
         << "qmat;" << qmat << ";"<< std::endl
         << "qjuv;" << qjuv << ";"<< std::endl
+        << "sd_hc_noise;" << sd_hc_noise  << ";" << std::endl
+        << "sd_hp_noise;" << sd_hp_noise << ";" << std::endl
+        << "sd_vc_noise;" << sd_vc_noise << ";" << std::endl
+        << "sd_vp_noise;" << sd_vp_noise << ";" << std::endl
+        << "sd_mat_phen_noise;" << sd_mat_phen_noise << ";" << std::endl
         << "nloci_g;" << nloci_g << ";"<< std::endl
         << "init_g;" << init_g << ";"<< std::endl
         << "init_aintercept;" << init_aintercept << ";"<< std::endl
@@ -270,6 +275,7 @@ void write_parameters(std::ofstream &DataFile)
         << "mu_aintercept;" << mu_aintercept << ";"<< std::endl
         << "juvenile_survival;" << juvenile_survival_on << ";"<< std::endl
         << "envt_change_at_birth;" << envt_change_at_birth << ";"<< std::endl
+        << "juvenile_learns_remote_envt;" << juvenile_learns_remote_envt << ";" << std::endl
         << "adult_survival;" << adult_survival_on << ";"<< std::endl
         << "mu_bmat_phen;" << mu_bmat_phen << ";"<< std::endl
         << "mu_bmat_envt;" << mu_bmat_envt << ";"<< std::endl
@@ -1141,9 +1147,10 @@ void create_offspring(Individual &mother
     // get a cue of the maternal phenotype
     offspring.phen_mat = mother.phen_ad;
 
+    std::normal_distribution<> mat_phen_noise(0.0, sd_mat_phen_noise);
+
     // add noise to the maternal phenotypic cue
-    offspring.phen_mat_error = offspring.phen_mat 
-        + uniform(rng_r) * max_error_mat_phen;
+    offspring.phen_mat_error = offspring.phen_mat + mat_phen_noise(rng_r);
 
     clamp(offspring.phen_mat_error, 0, 1.0);
 
@@ -1163,36 +1170,21 @@ void create_offspring(Individual &mother
     assert(b_envt >= bmin);
     assert(b_phen <= bmax);
 
-//    // generate maternal cue
-//    double xoff = 1.0 /
-//        (1.0 + exp(
-//                   -b_phen * (mother.phen_ad - 0.5) 
-//                   + 
-//                   dmat_weighting * b_envt));
-//
-//    // generate maternal cue again 
-//    // but then holding the maternal environment constant
-//    // this is for stats purposes
-//    double xoff_phen_only = 1.0 /
-//        (1.0 + exp(
-//                   -b_phen * (mother.phen_ad - 0.5)));
-//
-//    // generate maternal cue again 
-//    // but then holding the maternal phenotype constant
-//    // this is for stats purposes
-//    double xoff_envt_only = 1.0 /
-//        (1.0 + exp(dmat_weighting * b_envt));
-
-//    // social learning
+    // vertical social learning
+    // based on conformity biases
     offspring.xconformist_vert = xconformist_vert;
-    offspring.xconformist_vert_error = xconformist_vert + 
-        uniform(rng_r) * max_error_conform_vert;
 
+    // add noise to vertical social learning based on prestige
+    std::normal_distribution<> xconformist_vert_noise(0.0, sd_vc_noise);
+    offspring.xconformist_vert_error = xconformist_vert + xconformist_vert_noise(rng_r);
     clamp(offspring.xconformist_vert_error, 0.0, 1.0);
 
+    // vertical social learning
+    // based on prestige biases
     offspring.phen_prestige_vert = phen_prestige_vert;
-    offspring.phen_prestige_vert_error = phen_prestige_vert +
-        uniform(rng_r) * max_error_prestige_vert;
+
+    std::normal_distribution<> phen_prestige_noise(0.0, sd_vp_noise);
+    offspring.phen_prestige_vert_error = phen_prestige_vert + phen_prestige_noise(rng_r);
     
     clamp(offspring.phen_prestige_vert_error, 0.0, 1.0);
 //
@@ -1404,7 +1396,7 @@ void replace()
     // of the survival probability
     double surv;
 
-    bool envt_current, envt_previous;
+    bool envt_current, envt_previous, local_envt_cue;
 
     if (envt_change_at_birth)
     {
@@ -1487,11 +1479,18 @@ void replace()
                         ,prestige_phen
                         ,xconformist);
 
+                local_envt_cue = Pop[random_remote_patch].envt_high;
+
+                if (juvenile_learns_remote_envt)
+                {
+                    local_envt_cue = Pop[patch_i].envt_high;
+                }
+
                 create_offspring(
                         Pop[random_remote_patch].breeders[random_remote_breeder(rng_r)]
                         ,Pop[random_remote_patch].breeders[random_remote_breeder(rng_r)]
                         ,Kid
-                        ,Pop[random_remote_patch].envt_high
+                        ,local_envt_cue
                         ,prestige_phen
                         ,xconformist
                 );
@@ -1578,15 +1577,27 @@ void replace()
                     + 
                     Pop[patch_i].breeders[breeder_i].hc[1]);
 
+            // horizontal social learning
+            // conformity biases
             Pop[patch_i].breeders[breeder_i].xconformist_horiz = xconformist;
-            Pop[patch_i].breeders[breeder_i].xconformist_horiz_error = xconformist + 
-                uniform(rng_r) * max_error_conform_horiz;
+            
+            // add error to horizontal social learning with 
+            // conformity bias
+            std::normal_distribution<> xconformist_horiz_noise(0.0, sd_hc_noise);
+            Pop[patch_i].breeders[breeder_i].xconformist_horiz_error = 
+                xconformist + xconformist_horiz_noise(rng_r);
 
             clamp(Pop[patch_i].breeders[breeder_i].xconformist_horiz_error, 0.0, 1.0);
 
+            // horizontal social learning
+            // prestige biases
             Pop[patch_i].breeders[breeder_i].phen_prestige_horiz = prestige_phen;
-            Pop[patch_i].breeders[breeder_i].phen_prestige_horiz_error = prestige_phen +
-                uniform(rng_r) * max_error_prestige_horiz;
+            
+            // add error to horizontal social learning with 
+            // prestige bias
+            std::normal_distribution<> phen_prestige_noise(0.0, sd_hp_noise);
+            Pop[patch_i].breeders[breeder_i].phen_prestige_horiz_error = 
+                prestige_phen + phen_prestige_noise(rng_r);
 
             clamp(Pop[patch_i].breeders[breeder_i].phen_prestige_horiz_error, 0.0, 1.0);
 
