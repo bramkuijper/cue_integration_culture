@@ -166,7 +166,11 @@ literal "false"
 \end_inset
 
  (refs).
- However, the majority of models exclusively focus on the evolution of social
+ 
+\end_layout
+
+\begin_layout Standard
+However, the majority of models exclusively focus on the evolution of social
  versus individual learning 
 \begin_inset CommandInset citation
 LatexCommand citep

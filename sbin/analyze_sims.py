@@ -46,6 +46,12 @@ def process_dist(filename):
 
     dist_df = pd.read_csv(dist_filename, sep=";")
 
+    # correlations between the selective 
+    # environment and 
+    # other variables
+    envt_cov_vars = 
+    
+
     # make columns of the relevant variables
     dist_df["bmat_phen_X_phen_mat_error"] = dist_df["bmat_phen"] * (dist_df["phen_mat_error"] - 0.5)
     dist_df["bmat_envt_X_maternal_envt_cue_eror"] = \
