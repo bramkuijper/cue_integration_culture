@@ -90,6 +90,9 @@ class Individual
         // adult cue
         bool cue_ad_envt_high;
 
+        bool envt_high_selection;
+        bool envt_high_previous;
+
         // the maternal environmental cue (stats purposes)
         bool maternal_envt_cue;
         bool maternal_envt_cue_error;
