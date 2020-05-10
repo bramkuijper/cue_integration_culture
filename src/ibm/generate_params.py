@@ -16,9 +16,9 @@ sigmoidal_survival = [ 0 ]
 envt_change_birth = [0]
 
 # frequency of the high environment
-#p = list(np.linspace(0,1,30))
+p = list(np.linspace(0,1,24))
 #p = [0.1]
-p = [0.9]
+#p = [0.9]
 
 survival_scalar_sig = [-2.5,3.5]
 survival_scalar_quad = [0.8,0.0]
@@ -127,7 +127,7 @@ nx = [[5,5,5,5]]
 ctr = 1
 
 # whether jobs should be run in the background
-run_in_background = False
+run_in_background = True
 
 juvenile_survival = [ 0 ]
 adult_survival = [ 1 ]
