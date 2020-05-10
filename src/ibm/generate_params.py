@@ -14,7 +14,7 @@ import datetime
 sigmoidal_survival = [ 0 ]
 
 envt_change_birth = [0]
-juv_learns_remote = [0,1]
+juv_learns_remote = [1]
 
 # frequency of the high environment
 p = list(np.linspace(0,1,30))
@@ -31,7 +31,7 @@ exe = "./xcue_integration.exe"
 
 laplace = 1
 
-nrep = 5
+nrep = 3
 
 # for now we just need 10 zeros, which covers all the traits
 #
