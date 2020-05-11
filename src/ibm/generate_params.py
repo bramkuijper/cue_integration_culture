@@ -14,7 +14,7 @@ import datetime
 sigmoidal_survival = [ 0 ]
 
 envt_change_birth = [0]
-juv_learns_remote = [1]
+juv_learns_remote = [0,1]
 
 # frequency of the high environment
 p = list(np.linspace(0,1,30))
@@ -22,7 +22,7 @@ p = list(np.linspace(0,1,30))
 survival_scalar_sig = [-2.5,3.5]
 survival_scalar_quad = [0.8,0.0]
 
-# combinations of maternal and juvenile cues
+# combinations of juvenile and maternal cues
 qjuv_mat_combinations = [[0.5,0.5]]
 
 nloci_g = [ 3 ]
@@ -31,7 +31,7 @@ exe = "./xcue_integration.exe"
 
 laplace = 1
 
-nrep = 3
+nrep = 5
 
 # for now we just need 10 zeros, which covers all the traits
 #
@@ -86,8 +86,8 @@ mu_combis.append(mu_all)
 # choose what consideration you want. For now only ai
 mu_combis = [ mu_all ]
                         
-#sd_h_noise_combs = [ [0.0,0.0],[0.05,0.05],[0.1,0.1],[0.2,0.2],[0.3,0.3],[0.4,0.4],[0.5,0.5] ]
-sd_h_noise_combs = [[0.5,0.5]]
+sd_h_noise_combs = [ [0.0,0.0],[0.2,0.2],[0.5,0.5] ]
+#sd_h_noise_combs = [[0.5,0.5]]
 sd_vc_noise = [ 0.0 ]
 sd_vp_noise = [ 0.0 ]
 sd_mat_phen_noise = [ 0.0 ]
