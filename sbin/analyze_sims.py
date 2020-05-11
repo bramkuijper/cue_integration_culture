@@ -40,6 +40,10 @@ args = vars(parser.parse_args())
 # auxiliary function to generate a var-cov matrix of a 
 # trait distribution
 def process_dist(filename):
+   
+    # make a dictionary to contain all the 
+    # variances we are going to calculate
+    var_dict = {}
 
     splitname = os.path.splitext(filename)
     dist_filename = splitname[0] + "_dist" + splitname[1]
@@ -49,8 +53,38 @@ def process_dist(filename):
     # correlations between the selective 
     # environment and 
     # other variables
-    envt_cov_vars = 
-    
+    envt_cor_vars = [
+            "phen_ad" 
+            ,"phen_ad_logistic" 
+            ,"phen_juv" 
+            ,"phen_juv_logistic" 
+            ,"phen_mat" 
+            ,"phen_mat_error" 
+            ,"maternal_envt_cue_error" 
+            ,"phen_prestige_vert" 
+            ,"phen_prestige_vert_error" 
+            ,"phen_prestige_horiz" 
+            ,"phen_prestige_horiz_error" 
+            ,"xconformist_vert" 
+            ,"xconformist_vert_error" 
+            ,"xconformist_horiz" 
+            ,"xconformist_horiz_error" 
+            ,"g" 
+            ,"envt_sel" 
+            ,"envt_prev" 
+            ,"cue_ad_envt_high" 
+            ,"cue_juv_envt_high"]
+
+    correlation_matrix = dist_df[envt_cor_vars].corr()
+
+    # get the column for the selective environment
+    # out of the correlation matrix
+    sel_envt_col = correlation_matrix["envt_sel"]
+
+    row_names = sel_envt_col.index.values
+
+    for row_name_i in row_names:
+        var_dict["envt_cor_" + row_name_i] = sel_envt_col[row_name_i]
 
     # make columns of the relevant variables
     dist_df["bmat_phen_X_phen_mat_error"] = dist_df["bmat_phen"] * (dist_df["phen_mat_error"] - 0.5)
@@ -65,9 +99,6 @@ def process_dist(filename):
 
     dist_df["hp_X_phen_prestige_horiz_error"] = dist_df["hp"] * (dist_df["phen_prestige_horiz_error"] - 0.5)
     dist_df["hc_X_xconformist_horiz_error"] = dist_df["hc"] * (dist_df["xconformist_horiz_error"] - 0.5)
-   
-    # make a dictionary for the variances
-    var_dict = {}
 
     # only want to know variances of the following columns
     columns_only_var = ["phen_ad_logistic","phen_juv_logistic","phen_ad","phen_juv"]

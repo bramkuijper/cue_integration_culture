@@ -14,7 +14,7 @@ import datetime
 sigmoidal_survival = [ 0 ]
 
 envt_change_birth = [0]
-juv_learns_remote = [0,1]
+juv_learns_remote = [0]
 
 # frequency of the high environment
 #p = list(np.linspace(0,1,20))
@@ -24,7 +24,6 @@ survival_scalar_sig = [-2.5,3.5]
 survival_scalar_quad = [0.8,0.0]
 
 # combinations of maternal and juvenile cues
-#qjuv_mat_combinations = [[1.0,0.5]]
 qjuv_mat_combinations = []
 
 qjuv = np.linspace(0.5,1.0,30)
@@ -51,7 +50,9 @@ nrep = 1
 #8.  hc
 #9.  vp
 #10. vc
-initvals = " ".join([str(0.0) for x in range(0,10)])
+initval_list = [str(0.0) for x in range(0,10)]
+
+initvals = " ".join(initval_list)
 
 # ranges
 aminmax = "-10.0 10.0"
@@ -60,7 +61,6 @@ bminmax = "-10.0 10.0"
 
 #m = list(np.linspace(0, 1.0, 20))
 m = [0.1]
-
 #mu_g, mu_aintercept, mu_ajuv, mu_agen, mu_bmat_phen, mu_bmat_envt, mu_hp, mu_hc, mu_vp, mu_vc
 #mu_combis = [[ 0.01 for x in range(0,10) ]]
 zeros = [ 0 for i in range(0,10) ]
@@ -91,7 +91,6 @@ mu_combis.append(mu_all)
 # choose what consideration you want. For now only ai
 mu_combis = [ mu_all ]
                         
-#sd_h_noise_combs = [ [0.0,0.0],[0.05,0.05],[0.1,0.1],[0.2,0.2],[0.3,0.3],[0.4,0.4],[0.5,0.5] ]
 
 sd_hv_noise_combs = []
 sd_h_noise = np.linspace(0,1,30)
@@ -126,7 +125,7 @@ nx = [[5,5,5,5]]
 ctr = 1
 
 # whether jobs should be run in the background
-run_in_background = False
+run_in_background = True
 
 juvenile_survival = [ 0 ]
 adult_survival = [ 1 ]

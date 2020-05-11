@@ -33,12 +33,12 @@ std::string base_name;
 // in the init_arguments function which reads parameters from the command line
 
 // number of individuals in population
-const int NPatches = 400;
+const int NPatches = 40;
 const int NBreeder = 100;
 
 // number of generations
-//int number_generations = 75000;
-int number_generations = 5;
+int number_generations = 75000;
+//int number_generations = 5;
 
 // environmental switch rate
 //
