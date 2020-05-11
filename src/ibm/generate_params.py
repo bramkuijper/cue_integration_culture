@@ -14,17 +14,22 @@ import datetime
 sigmoidal_survival = [ 0 ]
 
 envt_change_birth = [0]
-juv_learns_remote = [0]
+juv_learns_remote = [0,1]
 
 # frequency of the high environment
-p = list(np.linspace(0,1,20))
-#p = [0.9]
+#p = list(np.linspace(0,1,20))
+p = [0.2,0.8]
 
 survival_scalar_sig = [-2.5,3.5]
 survival_scalar_quad = [0.8,0.0]
 
 # combinations of maternal and juvenile cues
-qjuv_mat_combinations = [[1.0,0.5]]
+#qjuv_mat_combinations = [[1.0,0.5]]
+qjuv_mat_combinations = []
+
+qjuv = np.linspace(0.5,1.0,30)
+for qjuv_i in qjuv:
+    qjuv_mat_combinations.append([qjuv_i,1.5-qjuv_i])
 
 nloci_g = [ 3 ]
 
@@ -32,7 +37,7 @@ exe = "./xcue_integration.exe"
 
 laplace = 1
 
-nrep = 3
+nrep = 1
 
 # for now we just need 10 zeros, which covers all the traits
 #
@@ -86,9 +91,14 @@ mu_combis.append(mu_all)
 # choose what consideration you want. For now only ai
 mu_combis = [ mu_all ]
                         
-sd_h_noise_combs = [ [0.0,0.0],[0.05,0.05],[0.1,0.1],[0.2,0.2],[0.3,0.3],[0.4,0.4],[0.5,0.5] ]
-sd_vc_noise = [ 0.0 ]
-sd_vp_noise = [ 0.0 ]
+#sd_h_noise_combs = [ [0.0,0.0],[0.05,0.05],[0.1,0.1],[0.2,0.2],[0.3,0.3],[0.4,0.4],[0.5,0.5] ]
+
+sd_hv_noise_combs = []
+sd_h_noise = np.linspace(0,1,30)
+
+for sd_h_i in sd_h_noise:
+    sd_hv_noise_combs.append([sd_h_i, sd_h_i, 1.0 - sd_h_i, 1.0 - sd_h_i])
+
 sd_mat_phen_noise = [ 0.0 ]
 
 #mu_combis = [[ 0.0001, 0.0001, 0.0001, 0.0001, 0.0001, 0.0001 ]]
@@ -153,63 +163,63 @@ for rep_i in range(0,nrep):
                     qmat_i = qjuv_mat_i[1]
 
                     for nloci_g_i in nloci_g:
-                        for sd_h_noise_i in sd_h_noise_combs:
+                        for sd_hv_noise_i in sd_hv_noise_combs:
 
-                            sd_hc_noise_i = sd_h_noise_i[0]
-                            sd_hp_noise_i = sd_h_noise_i[1]
+                            sd_hc_noise_i = sd_hv_noise_i[0]
+                            sd_hp_noise_i = sd_hv_noise_i[1]
+                            sd_vc_noise_i = sd_hv_noise_i[2]
+                            sd_vp_noise_i = sd_hv_noise_i[3]
 
-                            for sd_vc_noise_i in sd_vc_noise:
-                                for sd_vp_noise_i in sd_vp_noise:
-                                    for sd_mat_phen_noise_i in sd_mat_phen_noise:
-                                        for juv_learns_remote_i in juv_learns_remote:
-                                            for m_i in m:
-                                                m_i = round(m_i,3)
-                                                for mu_combi_i in mu_combis:
-                                                    
-                                                    mu_combi_i_str = " ".join(
-                                                            str(x) for x in mu_combi_i)
+                            for sd_mat_phen_noise_i in sd_mat_phen_noise:
+                                for juv_learns_remote_i in juv_learns_remote:
+                                    for m_i in m:
+                                        m_i = round(m_i,3)
+                                        for mu_combi_i in mu_combis:
+                                            
+                                            mu_combi_i_str = " ".join(
+                                                    str(x) for x in mu_combi_i)
 
-                                                    for nx_i in nx:
-                                                        
-                                                        nxstr = " ".join(
-                                                                str(x) for x in nx_i)
+                                            for nx_i in nx:
+                                                
+                                                nxstr = " ".join(
+                                                        str(x) for x in nx_i)
 
-                                                        for juvenile_survival_i in juvenile_survival:
-                                                            for adult_survival_i in adult_survival:
+                                                for juvenile_survival_i in juvenile_survival:
+                                                    for adult_survival_i in adult_survival:
 
-                                                                print("echo " + str(ctr))
-
-
-                                                                base_name_i = base_name + "_" + str(ctr)
+                                                        print("echo " + str(ctr))
 
 
-                                                                print(exe + " \t"
-                                                                        + str(sigmoidal_survival_i) + " \t"
-                                                                        + str(laplace) + " "
-                                                                        + str(p_i) + " \t"
-                                                                        + survival_scalar_i_str + " \t"
-                                                                        + str(qmat_i) + " "
-                                                                        + str(qjuv_i) + " "
-                                                                        + str(sd_hc_noise_i) + " "
-                                                                        + str(sd_hp_noise_i) + " "
-                                                                        + str(sd_vc_noise_i) + " "
-                                                                        + str(sd_vp_noise_i) + " "
-                                                                        + str(sd_mat_phen_noise_i) + " "
-                                                                        + str(nloci_g_i) + " \t"
-                                                                        + initvals + " \t"
-                                                                        + gminmax + " "
-                                                                        + aminmax + " "
-                                                                        + bminmax + " \t"
-                                                                        + mu_combi_i_str + " "
-                                                                        + sdmu + " \t" 
-                                                                        + str(m_i) + " "
-                                                                        + str(nxstr) + " "
-                                                                        + str(juvenile_survival_i) + " "
-                                                                        + str(adult_survival_i) + " "
-                                                                        + str(envt_change_birth_i) + " "
-                                                                        + str(juv_learns_remote_i) + " "
-                                                                        + base_name_i + " "
-                                                                        + bg
-                                                                        )
+                                                        base_name_i = base_name + "_" + str(ctr)
 
-                                                                ctr += 1
+
+                                                        print(exe + " \t"
+                                                                + str(sigmoidal_survival_i) + " \t"
+                                                                + str(laplace) + " "
+                                                                + str(p_i) + " \t"
+                                                                + survival_scalar_i_str + " \t"
+                                                                + str(qmat_i) + " "
+                                                                + str(qjuv_i) + " "
+                                                                + str(sd_hc_noise_i) + " "
+                                                                + str(sd_hp_noise_i) + " "
+                                                                + str(sd_vc_noise_i) + " "
+                                                                + str(sd_vp_noise_i) + " "
+                                                                + str(sd_mat_phen_noise_i) + " "
+                                                                + str(nloci_g_i) + " \t"
+                                                                + initvals + " \t"
+                                                                + gminmax + " "
+                                                                + aminmax + " "
+                                                                + bminmax + " \t"
+                                                                + mu_combi_i_str + " "
+                                                                + sdmu + " \t" 
+                                                                + str(m_i) + " "
+                                                                + str(nxstr) + " "
+                                                                + str(juvenile_survival_i) + " "
+                                                                + str(adult_survival_i) + " "
+                                                                + str(envt_change_birth_i) + " "
+                                                                + str(juv_learns_remote_i) + " "
+                                                                + base_name_i + " "
+                                                                + bg
+                                                                )
+
+                                                        ctr += 1
