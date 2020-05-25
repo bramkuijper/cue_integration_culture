@@ -9,11 +9,12 @@ library("reshape")
 # in Leimar et al 
 
 
+
 # read in the data
 if (!exists("the.data"))
 {
     #    the.data <- read.table("../../data/summary_single_logistic.csv",sep=";",header=T)
-    the.data <- read.table("../../data/summary_learning_moment.csv",sep=";",header=T)
+    the.data <- read.table("../../data/summary_vs_p.csv",sep=";",header=T)
 }
 
 # little function to find column names 
@@ -29,9 +30,7 @@ stopifnot(length(names_prop) > 0)
 
 the.formula = paste(names_prop, collapse=" + ")
 
-the.formula = paste(the.formula, " ~ (1.0 - p) | sd_hc_noise * juvenile_learns_remote_envt")
-
-print(the.data$qjuv)
+the.formula = paste(the.formula, " ~ (1.0 - p) | sd_hc_noise * qmat * qjuv * juvenile_learns_remote_envt * envt_change_at_birth")
 
 pdf("varcomps.pdf",width=20)
 print(xyplot(as.formula(the.formula)

@@ -18,7 +18,8 @@ juv_learns_remote = [0]
 
 # frequency of the high environment
 #p = list(np.linspace(0,1,20))
-p = [0.2,0.8]
+#p = [0.2,0.8]
+p = [0.95,0.99]
 
 survival_scalar_sig = [-2.5,3.5]
 survival_scalar_quad = [0.8,0.0]
@@ -30,13 +31,15 @@ qjuv = np.linspace(0.5,1.0,30)
 for qjuv_i in qjuv:
     qjuv_mat_combinations.append([qjuv_i,1.5-qjuv_i])
 
+qjuv_mat_combinations = [[0.5,0.5]]
+
 nloci_g = [ 3 ]
 
 exe = "./xcue_integration.exe"
 
 laplace = 1
 
-nrep = 1
+nrep = 2
 
 # for now we just need 10 zeros, which covers all the traits
 #
@@ -72,6 +75,11 @@ mu_only_g = zeros[:]
 mu_only_g[0] = 0.01
 mu_combis.append(mu_only_g)
 
+mu_g_plast = zeros[:]
+mu_g_plast[0] = 0.01
+mu_g_plast[2] = 0.01
+mu_g_plast[3] = 0.01
+
 # mutation rate only genes and intercept
 mu_only_ai = zeros[:]
 mu_only_ai[1] = 0.01
@@ -89,7 +97,7 @@ mu_combis.append(mu_all)
 
 
 # choose what consideration you want. For now only ai
-mu_combis = [ mu_all ]
+mu_combis = [ mu_g_plast ]
                         
 sd_hv_noise_combs = []
 sd_h_noise = np.linspace(0,1,30)
@@ -97,8 +105,9 @@ sd_h_noise = np.linspace(0,1,30)
 for sd_h_i in sd_h_noise:
     sd_hv_noise_combs.append([sd_h_i, sd_h_i, 1.0 - sd_h_i, 1.0 - sd_h_i])
 
-sd_mat_phen_noise = [ 0.0 ]
+sd_mat_phen_noise = [ 1.5 ]
 
+sd_hv_noise_combs = [[0,0,0,0]]
 #mu_combis = [[ 0.0001, 0.0001, 0.0001, 0.0001, 0.0001, 0.0001 ]]
 sdmu = "0.02 0.25 0.25"
 
