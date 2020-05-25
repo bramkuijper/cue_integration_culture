@@ -133,7 +133,7 @@ nx = [[5,5,5,5]]
 ctr = 1
 
 # whether jobs should be run in the background
-run_in_background =False 
+run_in_background = True
 
 juvenile_survival = [ 0 ]
 adult_survival = [ 1 ]
