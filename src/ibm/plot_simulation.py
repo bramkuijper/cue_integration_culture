@@ -70,9 +70,15 @@ dat = pd.read_csv(sys.argv[1],
 # trait distribution data
 #########################################
 
+orig_file_name = sys.argv[1].strip()
+
+filename, ext = os.path.splitext(orig_file_name)
+
+distfilename = filename + "_dist" + ext
+
 dist_dat = pd.read_csv(
-        sys.argv[1].strip() + "_dist",
-        sep=";")
+        filepath_or_buffer=distfilename
+        ,sep=";")
 
 distribution_available = dist_dat.shape[0] > 0
 
@@ -108,7 +114,6 @@ gs = gridspec.GridSpec(
         width_ratios=widths,
         height_ratios=heights)
 
-# plot the resulting joining probability 
 ax = plt.subplot(gs[rowctr,0])
 
 ax.plot(
@@ -121,7 +126,6 @@ ax.set_title(loc="left", label=string.ascii_uppercase[rowctr])
 
 rowctr +=1
 
-# plot the resulting joining probability 
 ax = plt.subplot(gs[rowctr,0])
 
 ax.plot(
@@ -131,27 +135,25 @@ ax.plot(
 
 ax.plot(
         dat["generation"]
-        ,dat["mean_amat"]
-        ,label=r"$a_{\mathrm{mat}}$")
+        ,dat["mean_bmat_phen"]
+        ,label=r"$m_{\mathrm{m}}$")
+
+ax.plot(
+        dat["generation"]
+        ,dat["mean_bmat_envt"]
+        ,label=r"$m_{\mathrm{e}}$")
 
 ax.plot(
         dat["generation"]
         ,dat["mean_agen"]
         ,label=r"$a_{\mathrm{gen}}$")
 
-ax.plot(
-        dat["generation"]
-        ,dat["mean_asoc_vert"]
-        ,label=r"$a_{\mathrm{soc,vert}}$")
-
-ax.plot(
-        dat["generation"]
-        ,dat["mean_asoc_horiz"]
-        ,label=r"$a_{\mathrm{soc,horiz}}$")
-
-ax.set_ylabel(r"Sensitivies to cues, $a$")
+ax.set_ylabel(r"Sens nonsocial")
 ax.set_title(loc="left", label=string.ascii_uppercase[rowctr])
 ax.legend()
+
+
+##### social cues #####
 
 rowctr +=1
 
@@ -159,21 +161,8 @@ ax = plt.subplot(gs[rowctr,0])
 
 ax.plot(
         dat["generation"]
-        ,dat["mean_bmat_phen"]
-        ,label=r"$b_{\mathrm{phen}}$")
-
-ax.plot(
-        dat["generation"]
-        ,dat["mean_bmat_envt"]
-        ,label=r"$b_{\mathrm{envt}}$")
-
-ax.set_ylabel(r"Maternal sensitivities, $b$")
-ax.set_title(loc="left", label=string.ascii_uppercase[rowctr])
-ax.legend()
-
-rowctr +=1
-
-ax = plt.subplot(gs[rowctr,0])
+        ,dat["mean_hc"]
+        ,label=r"$h_{\mathrm{c}}$")
 
 ax.plot(
         dat["generation"]
@@ -182,31 +171,18 @@ ax.plot(
 
 ax.plot(
         dat["generation"]
-        ,dat["mean_hc"]
-        ,label=r"$h_{\mathrm{c}}$")
-
-ax.set_ylabel(r"Horiz soc sens, $h$")
-ax.legend()
-ax.set_title(loc="left", label=string.ascii_uppercase[rowctr])
-
-rowctr +=1
-
-
-ax = plt.subplot(gs[rowctr,0])
+        ,dat["mean_vc"]
+        ,label=r"$v_{\mathrm{c}}$")
 
 ax.plot(
         dat["generation"]
         ,dat["mean_vp"]
         ,label=r"$v_{\mathrm{p}}$")
 
-ax.plot(
-        dat["generation"]
-        ,dat["mean_vc"]
-        ,label=r"$v_{\mathrm{c}}$")
-
-ax.set_ylabel(r"Vert soc sens, $v$")
-ax.legend()
+ax.set_ylabel(r"Sens social, $a$")
 ax.set_title(loc="left", label=string.ascii_uppercase[rowctr])
+ax.legend()
+
 
 rowctr +=1
 
@@ -300,12 +276,12 @@ if distribution_available:
 
     ax = plt.subplot(gs[rowctr,0])
 
-    dist_dat_sub0 = dist_dat[(dist_dat["envt"] == 0)]
-    dist_dat_sub1 = dist_dat[(dist_dat["envt"] == 1)]
+    dist_dat_sub0 = dist_dat[(dist_dat["envt_sel"] == 0)]
+    dist_dat_sub1 = dist_dat[(dist_dat["envt_sel"] == 1)]
 
     ax.plot(
             dist_dat_sub0["phen_mat"]
-            ,dist_dat_sub0["xmat"]
+            ,dist_dat_sub0["phen_juv"]
             ,linestyle=""
             ,markersize=0.5
             ,marker="."
@@ -326,7 +302,7 @@ if distribution_available:
 
     ax.plot(
             dist_dat_sub1["phen_mat"]
-            ,dist_dat_sub1["xmat"]
+            ,dist_dat_sub1["phen_juv"]
             ,linestyle=""
             ,markersize=0.5
             ,marker="."
@@ -344,7 +320,7 @@ if distribution_available:
     ax = plt.subplot(gs[rowctr,0])
     
     ax.plot(
-            dist_dat_sub0["xmat"]
+            dist_dat_sub0["phen_mat"]
             ,dist_dat_sub0["phen_ad"]
             ,linestyle=""
             ,markersize=0.5
@@ -363,7 +339,7 @@ if distribution_available:
     ax = plt.subplot(gs[rowctr,0])
 
     ax.plot(
-            dist_dat_sub1["xmat"]
+            dist_dat_sub1["phen_mat"]
             ,dist_dat_sub1["phen_ad"]
             ,linestyle=""
             ,markersize=0.5
@@ -380,8 +356,8 @@ if distribution_available:
     rowctr +=1
    
     # do some kernel density estimation
-    subset_lo = dist_dat[(dist_dat["envt"] == 0)]
-    subset_hi = dist_dat[(dist_dat["envt"] == 1)]
+    subset_lo = dist_dat[(dist_dat["envt_sel"] == 0)]
+    subset_hi = dist_dat[(dist_dat["envt_sel"] == 1)]
 
     # do the kernel estimation
     kernel_lo = stats.gaussian_kde(subset_lo["phen_ad"])

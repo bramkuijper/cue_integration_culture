@@ -8,7 +8,7 @@ then
     exit
 fi
 
-find . -regextype posix-extended -regex "\.\/$1.*[[:digit:]]$"
+find . -regextype posix-extended -regex "\.\/$1.*[[:digit:]].csv$"
 
-find . -regextype posix-extended -regex "\.\/$1.*[[:digit:]]$" -exec ./plot_simulation.py {} \;
+find . -regextype posix-extended -regex "\.\/$1.*[[:digit:]].csv$" -exec ./plot_simulation.py {} \;
 

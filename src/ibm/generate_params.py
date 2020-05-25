@@ -19,8 +19,8 @@ juv_learns_remote = [0]
 
 # frequency of the high environment
 
-#p = list(np.linspace(0,1,20))
-p = [0.95,0.99]
+p = list(np.linspace(0,1,30))
+#p = [0.95,0.99]
 
 survival_scalar_sig = [-2.5,3.5]
 survival_scalar_quad = [0.8,0.0]
@@ -74,6 +74,7 @@ mu_combis = []
 # mutation rate only genes 
 mu_only_g = zeros[:]
 mu_only_g[0] = 0.01
+mu_only_g[3] = 0.01
 mu_combis.append(mu_only_g)
 
 mu_g_plast = zeros[:]
@@ -104,6 +105,8 @@ mu_g_and_social[-4:] = [ 0.01,0.01,0.01,0.01]
 mu_social_only = zeros[:]
 mu_social_only[-4:] = [ 0.01,0.01,0.01,0.01]
 
+mu_hp_only = zeros[:]
+mu_hp_only[-4] = 0.01
 
 mu_h_only = zeros[:]
 mu_h_only[-4:-2] = [ 0.01,0.01]
@@ -112,7 +115,7 @@ mu_v_only = zeros[:]
 mu_v_only[-2:] = [ 0.01,0.01]
 
 # choose what consideration you want. For now only ai
-mu_combis = [ mu_g_plast ]
+mu_combis = [ mu_hp_only ]
                         
 sd_hv_noise_combs = []
 
@@ -151,7 +154,7 @@ nx = [[5,5,5,5]]
 ctr = 1
 
 # whether jobs should be run in the background
-run_in_background = True
+run_in_background = False
 
 juvenile_survival = [ 0 ]
 adult_survival = [ 1 ]
