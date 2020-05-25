@@ -8,6 +8,7 @@
 import numpy as np
 import socket
 import datetime
+import sys
 
 # whether the survival curvive is 
 # sigmoidal or not
@@ -17,8 +18,8 @@ envt_change_birth = [0]
 juv_learns_remote = [0]
 
 # frequency of the high environment
+
 #p = list(np.linspace(0,1,20))
-#p = [0.2,0.8]
 p = [0.95,0.99]
 
 survival_scalar_sig = [-2.5,3.5]
@@ -96,11 +97,28 @@ mu_all = [ 0.01 for i in range(0,10) ]
 mu_combis.append(mu_all)
 
 
+mu_g_and_social = zeros[:]
+mu_g_and_social[0] = 0.01
+mu_g_and_social[-4:] = [ 0.01,0.01,0.01,0.01]
+
+mu_social_only = zeros[:]
+mu_social_only[-4:] = [ 0.01,0.01,0.01,0.01]
+
+
+mu_h_only = zeros[:]
+mu_h_only[-4:-2] = [ 0.01,0.01]
+
+mu_v_only = zeros[:]
+mu_v_only[-2:] = [ 0.01,0.01]
+
 # choose what consideration you want. For now only ai
 mu_combis = [ mu_g_plast ]
                         
 sd_hv_noise_combs = []
+
 sd_h_noise = np.linspace(0,1,30)
+
+sd_h_noise = [ 0.2, 0.8 ]
 
 for sd_h_i in sd_h_noise:
     sd_hv_noise_combs.append([sd_h_i, sd_h_i, 1.0 - sd_h_i, 1.0 - sd_h_i])
@@ -182,9 +200,14 @@ for rep_i in range(0,nrep):
                                     for m_i in m:
                                         m_i = round(m_i,3)
                                         for mu_combi_i in mu_combis:
+
+                                            social_mut_t0 = " ".join(
+                                                    str(x) for x in mu_combi_i[-4:])
                                             
                                             mu_combi_i_str = " ".join(
                                                     str(x) for x in mu_combi_i)
+
+
 
                                             for nx_i in nx:
                                                 
@@ -217,7 +240,8 @@ for rep_i in range(0,nrep):
                                                                 + gminmax + " "
                                                                 + aminmax + " "
                                                                 + bminmax + " \t"
-                                                                + mu_combi_i_str + " "
+                                                                + mu_combi_i_str + " \t"
+                                                                + social_mut_t0 + " \t"
                                                                 + sdmu + " \t" 
                                                                 + str(m_i) + " "
                                                                 + str(nxstr) + " "
