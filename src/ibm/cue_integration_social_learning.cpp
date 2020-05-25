@@ -38,7 +38,7 @@ const int NBreeder = 100;
 
 // number of generations
 int number_generations = 75000;
-//int number_generations = 5;
+// int number_generations = 5;
 
 // environmental switch rate
 //
@@ -106,6 +106,14 @@ double mu_hp = 0.0;
 double mu_hc = 0.0;
 double mu_vp = 0.0;
 double mu_vc = 0.0;
+double mu_hp_t0 = 0.0;
+double mu_hc_t0 = 0.0;
+double mu_vp_t0 = 0.0;
+double mu_vc_t0 = 0.0;
+double mu_hp_t1 = 0.0;
+double mu_hc_t1 = 0.0;
+double mu_vp_t1 = 0.0;
+double mu_vc_t1 = 0.0;
 
 double sdmu_a = 0.0;
 double sdmu_b = 0.0;
@@ -190,7 +198,7 @@ void init_arguments(int argc, char **argv)
     sd_vp_noise = atof(argv[11]);
     sd_mat_phen_noise = atof(argv[12]);
     nloci_g = atoi(argv[13]);
-    
+
     init_g = atof(argv[14]);
     init_aintercept = atof(argv[15]);
     init_ajuv = atof(argv[16]);
@@ -211,30 +219,35 @@ void init_arguments(int argc, char **argv)
     amax = atof(argv[27]);
     bmin = atof(argv[28]);
     bmax = atof(argv[29]);
-
+    
     mu_g = atof(argv[30]);
     mu_aintercept = atof(argv[31]);
     mu_ajuv = atof(argv[32]);
     mu_agen = atof(argv[33]);
     mu_bmat_phen = atof(argv[34]);
     mu_bmat_envt = atof(argv[35]);
-    mu_hp = atof(argv[36]);
-    mu_hc = atof(argv[37]);
-    mu_vp = atof(argv[38]);
-    mu_vc = atof(argv[39]);
-    sdmu_a = atof(argv[40]);
-    sdmu_b = atof(argv[41]);
-    sdmu_g = atof(argv[42]);
-    m = atof(argv[43]);
-    nph = atoi(argv[44]);
-    nch = atoi(argv[45]);
-    npv = atoi(argv[46]);
-    ncv = atoi(argv[47]);
-    juvenile_survival_on = atoi(argv[48]);
-    adult_survival_on = atoi(argv[49]);
-    envt_change_at_birth = atoi(argv[50]);
-    juvenile_learns_remote_envt = atoi(argv[51]);
-    base_name = argv[52];
+    mu_hp_t1 = atof(argv[36]);
+    mu_hc_t1 = atof(argv[37]);
+    mu_vp_t1 = atof(argv[38]);
+    mu_vc_t1 = atof(argv[39]);
+    mu_hp = mu_hp_t0 = atof(argv[40]);
+    mu_hc = mu_hc_t0 = atof(argv[41]);
+    mu_vp = mu_vp_t0 = atof(argv[42]);
+    mu_vc = mu_vc_t0 = atof(argv[43]);
+
+    sdmu_a = atof(argv[44]);
+    sdmu_b = atof(argv[45]);
+    sdmu_g = atof(argv[46]);
+    m = atof(argv[47]);
+    nph = atoi(argv[48]);
+    nch = atoi(argv[49]);
+    npv = atoi(argv[50]);
+    ncv = atoi(argv[51]);
+    juvenile_survival_on = atoi(argv[52]);
+    adult_survival_on = atoi(argv[53]);
+    envt_change_at_birth = atoi(argv[54]);
+    juvenile_learns_remote_envt = atoi(argv[55]);
+    base_name = argv[56];
 }
 
 // write down all parameters to the file DataFile
@@ -283,6 +296,14 @@ void write_parameters(std::ofstream &DataFile)
         << "mu_vp;" << mu_vp << ";"<< std::endl
         << "mu_hc;" << mu_hc << ";"<< std::endl
         << "mu_hp;" << mu_hp << ";"<< std::endl
+        << "mu_vc_t0;" << mu_vc_t0 << ";"<< std::endl
+        << "mu_vp_t0;" << mu_vp_t0 << ";"<< std::endl
+        << "mu_hc_t0;" << mu_hc_t0 << ";"<< std::endl
+        << "mu_hp_t0;" << mu_hp_t0 << ";"<< std::endl
+        << "mu_vc_t1;" << mu_vc_t1 << ";"<< std::endl
+        << "mu_vp_t1;" << mu_vp_t1 << ";"<< std::endl
+        << "mu_hc_t1;" << mu_hc_t1 << ";"<< std::endl
+        << "mu_hp_t1;" << mu_hp_t1 << ";"<< std::endl
         << "sdmu_a;" << sdmu_a << ";"<< std::endl
         << "sdmu_b;" << sdmu_b << ";"<< std::endl
         << "m;" << m << ";"<< std::endl
@@ -1660,6 +1681,15 @@ int main(int argc, char **argv)
 
     for (generation = 0; generation < number_generations; ++generation)
     {
+//        if (generation == number_generations/2)
+//        {
+//            mu_hp = mu_hp_t1;
+//            mu_hc = mu_hp_t1;
+//            mu_vp = mu_hp_t1;
+//            mu_vc = mu_hp_t1;
+//        }
+
+
         // survival of adult breeders followed by reproduction
         adult_survival();
 
