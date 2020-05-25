@@ -14,7 +14,7 @@ import datetime
 sigmoidal_survival = [ 0 ]
 
 envt_change_birth = [0]
-juv_learns_remote = [1]
+juv_learns_remote = [0]
 
 # frequency of the high environment
 p = list(np.linspace(0,1,30))
@@ -117,7 +117,7 @@ nx = [[5,5,5,5]]
 ctr = 1
 
 # whether jobs should be run in the background
-run_in_background = True
+run_in_background =False 
 
 juvenile_survival = [ 0 ]
 adult_survival = [ 1 ]
