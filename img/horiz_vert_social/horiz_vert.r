@@ -9,11 +9,12 @@ library("reshape")
 # in Leimar et al 
 
 
+
 # read in the data
 if (!exists("the.data"))
 {
     #    the.data <- read.table("../../data/summary_single_logistic.csv",sep=";",header=T)
-    the.data <- read.table("../../data/summary_birth_change.csv",sep=";",header=T)
+    the.data <- read.table("../../data/summary_vs_p.csv",sep=";",header=T)
 }
 
 # little function to find column names 
@@ -29,9 +30,21 @@ stopifnot(length(names_prop) > 0)
 
 the.formula = paste(names_prop, collapse=" + ")
 
-the.formula = paste(the.formula, " ~ (1.0 - p) | mu_hp * qjuv * qmat * juvenile_survival * adult_survival")
+the.formula = paste(the.formula, " ~ (1.0 - p) | sd_hc_noise * qmat * qjuv * juvenile_learns_remote_envt * envt_change_at_birth")
 
-pdf("slopes.pdf")
+pdf("varcomps.pdf",width=20)
+print(xyplot(as.formula(the.formula)
+                ,data=the.data
+                ,xlab="Probability environment changes, 1-p"
+                ,ylab="Variance components"
+                ,strip=function(strip.levels,...) { strip.default(strip.levels=T,...) }
+                ,auto.key=T
+                ))
+
+dev.off()
+
+
+pdf("slopes.pdf",width=20)
 print(xyplot(mean_bmat_phen 
                 + mean_bmat_envt
                 + mean_agen
@@ -40,15 +53,17 @@ print(xyplot(mean_bmat_phen
                 + mean_hc
                 + mean_hp
                 + mean_vp
-                + mean_vc ~ (1-p) | mu_hp * qjuv * qmat * juvenile_survival * adult_survival
+                + mean_vc ~ (1-p) | sd_hc_noise * juvenile_learns_remote_envt
                 ,data=the.data
                 ,xlab="Probability environment changes, 1 - p"
-                ,ylab="Variance components"
+                ,ylab="Mean cue sensitivities"
                 #                ,ylim=ylim
                 ,strip=function(strip.levels,...) { strip.default(strip.levels=T,...) }
                 ,auto.key=T
                 )
         )
+
+dev.off()
 
 dat.long <- melt(the.data
         ,id.vars=c("mu_hp","p","qjuv","qmat","juvenile_survival","adult_survival")
@@ -80,7 +95,7 @@ ggsave(filename="overview_horiz_vert_a_weightings_ggplot.pdf", width=60, height=
 
 dev.off()
 
-pdf("var_components.pdf")
+pdf("var_components.pdf",width=20)
 print(xyplot(as.formula(the.formula)
                 ,data=the.data
                 ,xlab="Probability environment changes, 1 - p"

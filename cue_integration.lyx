@@ -9,6 +9,7 @@
 \usepackage{color}
 \definecolor{darkblue}{RGB}{28,29,123}
 \usepackage{apjfonts}
+\usepackage{cite}
 \usepackage{doi}
 \usepackage{amsmath}
 \renewcommand\ttdefault{cmtt}
@@ -35,7 +36,7 @@
 \patchBothAmsMathEnvironmentsForLineno{multline}%
 }
 
-%\linenumbers
+\linenumbers
 \end_preamble
 \use_default_options true
 \maintain_unincluded_children false
@@ -86,8 +87,9 @@
 \use_package stmaryrd 1
 \use_package undertilde 1
 \cite_engine natbib
-\cite_engine_type authoryear
+\cite_engine_type numerical
 \biblio_style plainnat
+\biblio_options numbers,sort&compress
 \use_bibtopic false
 \use_indices false
 \paperorientation portrait
@@ -124,31 +126,79 @@
 \begin_body
 
 \begin_layout Title
-Phenotypic integration of social learning, epigenetic, genetic and environmental
- cues
+Phenotypic integration of horizontal, vertical, epigenetic, genetic and
+ environmental cues
 \end_layout
 
-\begin_layout Author
-Bram Kuijper, Peter R.
- Hammerstein, Olof Leimar, 
-\begin_inset ERT
+\begin_layout Abstract
+Most analyses of the origins of cultural evolution focus on when and where
+ social learning prevails over individual learning, overlooking the fact
+ that there are other developmental inputs that influence phenotypic fit
+ to the selective environment.
+ This raises the question how the presence of other cue integration mechanisms
+ affects the scope for social learning.
+ Here, we present a model that considers the evolution of (i) social learning
+ within the broader context of other evolving inputs on phenotype determination,
+ including (ii) heritable epigenetic factors, (iii) acquisition of environmental
+ information at a single point in time (phenotypic plasticity), (iv) dynamic
+ updating of environmental information over time (individual learning),
+ (v) phenotypic randomization (bet-hedging) and (vi) genetic cues.
+ We consider a spatiotemporally fluctuating environment, allowing us to
+ assess how fundamental properties like the rate of dispersal, the degree
+ of environmental autocorrelation and local competition affect the evolution
+ of each of these cue types (and combinations thereof).
+ Thus, we extend analyses of the evolution and maintenance of social learning
+ and culture by providing a general diagnosis of the conditions under which
+ the full range of informative influences on development are likely to evolve
+ and coexist.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Note Note
 status open
 
 \begin_layout Plain Layout
+TODO:
+\end_layout
 
+\begin_layout Enumerate
+Mention lack of costs
+\end_layout
 
-\backslash
+\begin_layout Plain Layout
+Problems in a nutshell: 
+\end_layout
 
-\backslash
+\begin_layout Enumerate
+not really social learning in the strict sense, as that apparently requires
+ the acquisition of individually learnt information, not genetic / maternal
+ information.
+\end_layout
 
+\begin_layout Enumerate
+Genetic cues not really there at the moment.
+\end_layout
+
+\begin_layout Enumerate
+Should I add random social learning too? 
+\end_layout
+
+\begin_layout Enumerate
+Asymmetric switching rates?
+\end_layout
+
+\begin_layout Enumerate
+Get rid of the selfing and perhaps the hermaphrodites.
+\end_layout
+
+\begin_layout Enumerate
+I am not very clear about which phenotypes we are talking about.
+ We can be more specific as this is about behaviour.
 \end_layout
 
 \end_inset
 
-John M.
- McNamara & Sasha R.
- X.
- Dall
+
 \end_layout
 
 \begin_layout Section
@@ -156,44 +206,193 @@ Introduction
 \end_layout
 
 \begin_layout Standard
-The ability to acquire information from other individuals is an essential
- step towards cumulative cultural evolution 
+Social learning, the ability to acquire information from other individuals,
+ is a fundamental requirement to cultural evolution 
 \begin_inset CommandInset citation
 LatexCommand citep
-key "Mesoudi2016"
+key "Boyd1985,Henrich2003,Aoki2014"
 literal "false"
 
 \end_inset
 
- (refs).
+.
+ Indeed, a substantial amount of theoretical work has sought to identify
+ the ecological conditions in which selection favors social learning as
+ opposed to individual learning (see 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "Henrich2003,Aoki2014"
+literal "false"
+
+\end_inset
+
+ for reviews), finding that a mixture of both social and individual learning
+ is expected to evolve in fluctuating environments (e.g., 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "Rogers1988,Feldman1996,Aoki2005,Laland2004,Rendell2010"
+literal "false"
+
+\end_inset
+
+).
+ However, the conventional focus on the evolution of social versus individual
+ learning overlooks that individuals can also obtain information about their
+ environments by other means.
+ For example, in spatially varying environments an individual's genotype
+ can become statistically associated to its environment through local adaptation
+ 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "Kawecki2004,Savolainen2013"
+literal "false"
+
+\end_inset
+
+, favoring the evolution of genetic cues on phenotypic development 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "Leimar2006,Dall2015,Leimar2016,Leimar2019"
+literal "false"
+
+\end_inset
+
+.
+ In environments that fluctuate predictably over time, theory predicts that
+ individuals are selectively favored to rely on transgenerational cues that
+ stem from their parent's phenotype or the parental environment (e.g., 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "Kuijper2015,Leimar2015,English2015,Kuijper2016,Proulx_2017"
+literal "false"
+
+\end_inset
+
+), transmitted through heritable DNA/histone modifications, parental hormones
+ or even parent-offspring teaching 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "Danchin2011,Radford2018,Boskovic2018,Groothuis2019"
+literal "false"
+
+\end_inset
+
+.
+ Next, rather than relying on direct or indirect cues about the environment,
+ individuals may also be selectively favored to rely on mechanisms that
+ generate phenotypic variation instead (e.g., bet-hedging: 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "Seger1989,Starrfelt2012"
+literal "false"
+
+\end_inset
+
+).
+ Consequently, the presence of other cues than social or individual learning
+ raises the question how organisms should integrate multiple cues when adapting
+ to different environments and how, in turn, this affects the evolutionary
+ scope for social versus individual learning.
+\end_layout
+
+\begin_layout Standard
+While there are a large number of theoretical studies which have analysed
+ the evolutionary implications of subsets of cues (e.g., 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "Leimar2006,Shea2011,Kuijper2014a,Tufto2015,Gestel2016"
+literal "false"
+
+\end_inset
+
+), only a limited number of these studies have sought to predict how organisms
+ should integrate a large number of available cues .
+ These studies find that the rate of environmental change and the degree
+ of environmental predictability are key parameters in determining which
+ cue is most important in phenotype determination, while reliance on mixtures
+ of multiple cues typically occurs in more restrictive settings.
+ However, these studies have only focused on integration of individual and
+ parental cues (e.g., genetic cues, bet-hedging, parental effects and individual
+ learning [phenotypic plasticity]).
+ By contrast, the potential to acquire information via different socially
+ learned cues is yet to be considered in a context that tracks the joint
+ evolution of multiple cues.
+\end_layout
+
+\begin_layout Standard
+To understand how the integration of multiple cues affects the evolution
+ of different social learning mechanisms, we develop a model that tracks
+ the evolution of alternative behavioural phenotypes in a spatiotemporally
+ fluctuating environment.
+ Organisms are selected to develop a behaviour that closely matches the
+ local environment by evolving sensitivity to a range of different cues,
+ where each of these cues potentially provides information about the local
+ environment.
+ Foremost, we consider that individuals can evolve sensitivity to socially
+ learned cues about the phenotypes of others, who are either members of
+ the parental generation (vertical social learning) or of the current generation
+ (horizontal social learning).
+ We then ask how vertical and horizontal social learning evolve jointly
+ with other cues that may affect behavioral development, be it genetic cues,
+ individually learned cues (here represented by within-generational phenotypic
+ plasticity) and transgenerational cues on phenotype determination as in
+ previous models 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "Rivoire2014,Botero2015,McNamara2016"
+literal "false"
+
+\end_inset
+
+.
+ Moreover, because both horizontal and social learning can potentially involve
+ different mechanisms with which models for social learning are chosen 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "Henrich2003"
+literal "false"
+
+\end_inset
+
+, the current model allows sensitivity to evolve based on prestige biases
+ (where individuals obtain cues from the most successful individuals ) and/or
+ conformity biases (where individuals obtain cues from the most commonly
+ observed phenotope) for vertical and horizontal social learning separately.
  
 \end_layout
 
 \begin_layout Standard
-However, the majority of models exclusively focus on the evolution of social
- versus individual learning 
+Existing theory on the evolution of learning mechanisms (reviewed in 
 \begin_inset CommandInset citation
 LatexCommand citep
-key "Rogers1988,Laland2004,Rendell2010"
+key "Aoki2014"
 literal "false"
 
 \end_inset
 
-, thereby ignoring that individuals obtain information through other means,
- such as genes 
-\end_layout
+) often stresses the role of different costs in driving the evolution of
+ social and individual learning.
+ For example, social learning is typically thought to result in outdated
+ information relative to individual learning, whereas individual learning
+ is considered to take more effort (e.g., 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "Rogers1988"
+literal "false"
 
-\begin_layout Standard
-Indeed, a substantial amount of effort has been devoted to delineating the
- ecological conditions in which 
-\end_layout
+\end_inset
 
-\begin_layout Standard
-TODO:
-\end_layout
-
-\begin_layout Standard
-- 
+ more REFS).
+ The key focus of the current model is different, however, as we want to
+ assess what information different combinations of cues can provide and
+ whether some cues can inherently provide more information over and above
+ others.
+ Consequently, we make no a priori assumptions about the relative costs
+ and benefits of one type of cue versus the others, but rather have those
+ costs emerge from the ecological scenarios (via migration and timing of
+ life-history events) that impact the information content of the various
+ cues.
+ 
 \end_layout
 
 \begin_layout Section
@@ -210,8 +409,8 @@ on distributed over
 \begin_inset Formula $K=100$
 \end_inset
 
- hermaphroditic and diploid individuals, closely following the model in
- transgenerational cues in a spatiotemporally changing environment by 
+ hermaphroditic individuals, largely based on previous a model on the evolution
+ of transgenerational effects 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "Leimar2015"
@@ -220,28 +419,20 @@ literal "false"
 \end_inset
 
 .
- A patch is either in two environmental states (low and high).
- Patches change in environmental state independently from each other and
- change with frequency 
-\begin_inset Formula $1-p$
+ While generations are non-overlapping in the sense that only individuals
+ born during the current time step reproduce, the model allows offspring
+ to obtain information from individuals from the previous generation through
+ parental effects and vertical social learning (see Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:life_cycle"
+plural "false"
+caps "false"
+noprefix "false"
+
 \end_inset
 
-, while they remain in the same state with frequency 
-\begin_inset Formula $p$
-\end_inset
-
-.
- On average, high versus low patches have therefore the same frequency,
- yet the number of generations each patch spends in a particular state is
- given by 
-\begin_inset Formula $1/1-p$
-\end_inset
-
-, while the global frequency of each patch type is 
-\begin_inset Formula $f_{e_{1}}=0.5$
-\end_inset
-
-.
+).
  The simulations are written in 
 \begin_inset ERT
 status open
@@ -255,7 +446,7 @@ texttt{C++}
 
 \end_inset
 
- and the code is available here: 
+ and the code can be accessed at 
 \begin_inset ERT
 status open
 
@@ -275,35 +466,44 @@ url{https://github.com/bramkuijper/cue_integration_culture/}
 Life cycle
 \end_layout
 
+\begin_layout Subsubsection
+Environmental variation
+\end_layout
+
 \begin_layout Standard
-The life cycle in the model is provided in Figure 1, where 
-\begin_inset Formula $K$
-\end_inset
-
- adult breeders on each local patch experience survival selection according
- to local conditions and their phenotype.
- Indeed, adults have a phenotype 
-\begin_inset Formula $u$
-\end_inset
-
- (where 
-\begin_inset Formula $0\leq u\leq1$
-\end_inset
-
-), which affects their probability of survival 
-\begin_inset Formula $S$
-\end_inset
-
- before reproduction in low and high environments respectively:
-\begin_inset Formula 
-\begin{align*}
-S_{\text{low}}(u) & =1-0.8u^{2}\\
-S_{\mathrm{high}}(u) & =1-0.8(1-u)^{2}.
-\end{align*}
+An overview of the life cycle of the model is provided in Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:life_cycle"
+plural "false"
+caps "false"
+noprefix "false"
 
 \end_inset
 
+.
+ Each patch is either in one of two local environmental states (low 
+\begin_inset Formula $\theta_{\mathrm{low}}$
+\end_inset
 
+, or high 
+\begin_inset Formula $\theta_{\mathrm{high}}$
+\end_inset
+
+), reflecting, for example, the local temperature or the amount of available
+ resources.
+ Patches can change environmental state independently from other patches
+ at each time step: with probability 
+\begin_inset Formula $p$
+\end_inset
+
+ a patch retains its current environmental state during the next time step,
+ whereas with probability 
+\begin_inset Formula $1-p$
+\end_inset
+
+ it changes to the opposite environmental state.
+ Following 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "Leimar2015"
@@ -311,104 +511,882 @@ literal "false"
 
 \end_inset
 
- also considered other survival functions, which we deal with later.
- After adult survival, 
+, we assume that both environments change at identical rates, so the global
+ equilibrium frequency 
+\begin_inset Formula $f_{\mathrm{high}}$
+\end_inset
+
+ of 
+\begin_inset Formula $\theta_{\mathrm{high}}$
+\end_inset
+
+ patches is 
+\begin_inset Formula $f_{\mathrm{high}}=1-f_{\mathrm{low}}=1/2$
+\end_inset
+
+, while the between-generation environmental autocorrelation of any patch
+ is 
+\begin_inset Formula $\rho(\theta_{t},\theta_{t+1})=2p-1$
+\end_inset
+
+, so that when 
+\begin_inset Formula $p=0$
+\end_inset
+
+ (rapid change), the autocorrelation is 
+\begin_inset Formula $-1$
+\end_inset
+
+, when 
+\begin_inset Formula $p=1$
+\end_inset
+
+ (no change), the autocorrelation is 
+\begin_inset Formula $1$
+\end_inset
+
+ and when 
+\begin_inset Formula $p=0.5$
+\end_inset
+
+ (random change), the autocorrelation is 0.
+ 
+\end_layout
+
+\begin_layout Subsubsection
+Juvenile phenotype determination
+\end_layout
+
+\begin_layout Standard
+Adults develop an adult phenotype 
+\begin_inset Formula $u_{\mathrm{ad}}$
+\end_inset
+
+ (where 
+\begin_inset Formula $0\leq u_{\mathrm{ad}}\leq1$
+\end_inset
+
+), which affects their probability of adult survival 
+\begin_inset Formula $S$
+\end_inset
+
+ before reproduction in low and high environments respectively (see Figure
+ 1B).
+ After adult survival selection, 
 \begin_inset Formula $K$
 \end_inset
 
  newborn offspring are produced to start the new generation.
  Each newborn offspring is produced by randomly selecting a mother and a
  father from among the surviving hermaphroditic adult breeders, potentially
- allowing for selfing in case the number of survivors is very small.
- Upon birth, an individual offspring then determines its phenotype according
- to environmental, genetic, maternal and social cues (see eq.
+ allowing for selfing in case the number of survivors is very small (this
+ hardly ever happens
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+We need to quantify this
+\end_layout
+
+\end_inset
+
+).
+ 
+\end_layout
+
+\begin_layout Standard
+Upon birth, an individual offspring then determines its juvenile phenotype
+ according to genetic, maternal environmental, maternal phenotypic and vertical
+ social cues (see Figure 1A and eq.
  
 \begin_inset CommandInset ref
 LatexCommand ref
-reference "eq:liability"
+reference "eq:liability:juvenile"
 plural "false"
 caps "false"
 noprefix "false"
 
 \end_inset
 
- below), after which a proportion of 
-\begin_inset Formula $m$
+ below).
+ A juvenile phenotype is also affected by individual learning of the local
+ environment (via juvenile environmental cues).
+ However, dependent on the model in question, individual learning either
+ occurs at birth or after migration (see results).
+ Consequently, the juvenile phenotype 
+\begin_inset Formula $u_{\mathrm{juv}}$
 \end_inset
 
- newborn offspring migrates to randomly chosen remote patches.
- All surviving adult breeders then die and are replaced by 
-\begin_inset Formula $K$
+ that is developed after individual learning is a logistic function of a
+ weighted sum 
+\begin_inset Formula $\bar{x}_{\mathrm{juv}}$
 \end_inset
 
- newborn offspring who reside the local patch.
- The newly established adults learn about their environment and receive
- a cue 
-\begin_inset Formula $e_{\mathrm{mat}}$
-\end_inset
-
-, after which the environment potentially changes with probability 
-\begin_inset Formula $1-p$
-\end_inset
-
-.
- Finally, these newly established adults experience survival selection and
- subsequently produce offspring.
-\end_layout
-
-\begin_layout Subsection
-Phenotype determination and cues
-\end_layout
-
-\begin_layout Standard
-Upon birth, an individual's phenotype 
-\begin_inset Formula $0\leq u\leq1$
-\end_inset
-
- is determined according to a logistic function, reflecting a weighted sum
- of the various cues an individual receives at the start of its life.
+ of the various cues an individual has received.
  We have
 \begin_inset Formula 
 \begin{align}
-u & =\frac{1}{1+\exp\left(-a_{\mathrm{gen}}\hat{x}_{\mathrm{gen}}-a_{\mathrm{envt}}x_{\mathrm{envt}}-a_{\mathrm{mat}}x_{\mathrm{mat}}-a_{\mathrm{soc,vert}}x_{\mathrm{soc,vert}}-a_{\mathrm{soc,hor}}x_{\mathrm{soc,hor}}\right)},\label{eq:liability}
+u_{\mathrm{juv}} & =\frac{1}{1+\exp\left(-\bar{x}_{\mathrm{juv}}\right)}\label{eq:liability:juvenile}\\
+\bar{x}_{\mathrm{juv}} & =a_{\mathrm{g}}x_{\mathrm{gen}}+a_{\mathrm{\mathrm{ind}}}x_{\mathrm{juv,envt}}\nonumber \\
+ & +m_{\mathrm{m}}x_{\mathrm{mat,phen}}+m_{\mathrm{e}}x_{\mathrm{mat,envt}}\nonumber \\
+ & +v_{\mathrm{p}}x_{\mathrm{vert,prestige}}+v_{c}x_{\mathrm{vert,conformity}},\label{eq:xbar:juvenile}
+\end{align}
+
+\end_inset
+
+where each of the variables 
+\begin_inset Formula $a_{\mathrm{g}}$
+\end_inset
+
+ (genetic cue), 
+\begin_inset Formula $a_{\mathrm{ind}}$
+\end_inset
+
+ (individual learning), 
+\begin_inset Formula $m_{\mathrm{m}}$
+\end_inset
+
+ (maternal phenotypic cue), 
+\begin_inset Formula $m_{\mathrm{e}}$
+\end_inset
+
+ (maternal environmental cue), 
+\begin_inset Formula $v_{\mathrm{p}}$
+\end_inset
+
+ (vertical social learning; prestige bias) and 
+\begin_inset Formula $v_{\mathrm{c}}$
+\end_inset
+
+ (vertical social learning; conformity bias) reflects an unlinked and evolving
+ diploid locus (bounded between [-10,10]) that reflects the level of sensitivity
+ to each of the different cues 
+\begin_inset Formula $x_{i}$
+\end_inset
+
+ set out below.
+ Note that horizontal social learning only occurs after birth and hence
+ affects phenotypic development later in life (see eqns.
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:liability:adult"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+,
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:xbar:adult"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Paragraph
+Genetic cues
+\end_layout
+
+\begin_layout Standard
+The value of the genetic cue 
+\begin_inset Formula $x_{\mathrm{gen}}$
+\end_inset
+
+ is given by 
+\begin_inset Formula $x_{\mathrm{gen}}=\sum_{i=0}^{n_{\mathrm{g}}}g_{i}$
+\end_inset
+
+.
+ That is, it is the sum of the allelic values of 
+\begin_inset Formula $n_{\mathrm{g}}=3$
+\end_inset
+
+ unlinked, diploid genetic cue loci 
+\begin_inset Formula $g_{i}$
+\end_inset
+
+.
+ Each allele can have values in the range of 
+\begin_inset Formula $-1\leq g_{i}\leq1$
+\end_inset
+
+.
+ As has been previously shown , limited dispersal and strong selection can
+ result in scenarios where alleles become associated with the local environment,
+ so that they become informative.
+\end_layout
+
+\begin_layout Paragraph
+Individually learned cues (juvenile environmental cues)
+\end_layout
+
+\begin_layout Standard
+Juveniles perform individual learning about the state of their local environment
+ by observing a juvenile environmental cue 
+\begin_inset Formula $x_{\mathrm{juv,\mathrm{envt}}}$
+\end_inset
+
+.
+ To this end, each individual independently observes a binary cue reflecting
+ the state of the local environment.
+ The cue is equal to the actual environmental state (value 
+\begin_inset Formula $-1/2$
+\end_inset
+
+ in environment 
+\begin_inset Formula $\theta_{\mathrm{low}}$
+\end_inset
+
+, value 
+\begin_inset Formula $1/2$
+\end_inset
+
+ in environment 
+\begin_inset Formula $\theta_{\mathrm{high}}$
+\end_inset
+
+) with a probability given by the cue fidelity parameter 
+\begin_inset Formula $0.5\leq q_{\mathrm{juv}}\leq1$
+\end_inset
+
+, whereas with probability 
+\begin_inset Formula $1-q_{\mathrm{juv}}$
+\end_inset
+
+ an individual receives a cue associated with the opposite environmental
+ state.
+ 
+\end_layout
+
+\begin_layout Paragraph
+Maternal cues
+\end_layout
+
+\begin_layout Standard
+Juveniles receive two maternal cues: the first is a maternal phenotypic
+ cue 
+\begin_inset Formula $x_{\mathrm{mat,phen}}=u_{\mathrm{ad}}(t-1)-1/2$
+\end_inset
+
+ that reflects the value of the maternal phenotype 
+\begin_inset Formula $0\leq u_{\mathrm{ad}}(t-1)\leq1$
+\end_inset
+
+.
+ By subtracting 
+\begin_inset Formula $1/2$
+\end_inset
+
+ from 
+\begin_inset Formula $u_{\mathrm{ad}}(t-1)$
+\end_inset
+
+ we standardize the maternal phenotype between 
+\begin_inset Formula $-1/2$
+\end_inset
+
+ and 
+\begin_inset Formula $1/2$
+\end_inset
+
+ so that the maternal phenotypic cue has the same range as other plastic
+ cues (and hence evolved cue sensitivities can be directly compared).
+ As 
+\begin_inset Formula $u_{\mathrm{ad}}(t-1)$
+\end_inset
+
+ is itself a function of her mother's phenotype 
+\begin_inset Formula $u_{\mathrm{ad}}(t-2)$
+\end_inset
+
+ (a so-called cascading parental effect: 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "Kirkpatrick1989,McGlothlin2013,Kuijper2015"
+literal "false"
+
+\end_inset
+
+), a maternal phenotypic cue can potentially give rise to grandmaternal
+ effects.
+ See 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "Leimar2015"
+literal "false"
+
+\end_inset
+
+ for an assessment of noise in maternal phenotypic cues, which we do not
+ consider here for the sake of brevity.
+\end_layout
+
+\begin_layout Standard
+The second maternal cue is a maternal environmental cue 
+\begin_inset Formula $x_{\mathrm{mat,envt}}$
+\end_inset
+
+, which reflects the value of the maternal environment 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "Rossiter1998"
+literal "false"
+
+\end_inset
+
+ as provided to the mother by the adult environmental cue (see Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:life_cycle"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+).
+ The cue is equal to the actual environmental state (value 
+\begin_inset Formula $-1/2$
+\end_inset
+
+ in environment 
+\begin_inset Formula $\theta_{\mathrm{low}}$
+\end_inset
+
+, value 
+\begin_inset Formula $1/2$
+\end_inset
+
+ in environment 
+\begin_inset Formula $\theta_{\mathrm{high}}$
+\end_inset
+
+) with a probability given by the cue fidelity parameter 
+\begin_inset Formula $0.5\leq q_{\mathrm{juv}}\leq1$
+\end_inset
+
+, whereas with probability 
+\begin_inset Formula $1-q_{\mathrm{juv}}$
+\end_inset
+
+ an individual receives a cue associated with the opposite environmental
+ state.
+ 
+\end_layout
+
+\begin_layout Paragraph
+Vertical social learning: prestige biases
+\end_layout
+
+\begin_layout Standard
+Following previous models of prestige-based learning 
+\begin_inset CommandInset citation
+LatexCommand citep
+before "e.g.,"
+key "Henrich2004,Kobayashi2012a"
+literal "false"
+
+\end_inset
+
+, we assume that individuals are able to evaluate and rank the performance
+ of observed models.
+ To this end, learners rank the potential survival payoffs 
+\begin_inset Formula $S(u_{\mathrm{ad},i})$
+\end_inset
+
+ of each individual 
+\begin_inset Formula $i$
+\end_inset
+
+ in a random sample of 
+\begin_inset Formula $n_{\mathrm{p}}$
+\end_inset
+
+ adult models after survival selection has taken place in the previous generatio
+n (see Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:life_cycle"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+).
+ The potential survival payoff is evaluated based on 
+\begin_inset Formula $i$
+\end_inset
+
+th model's adult phenotype 
+\begin_inset Formula $u_{\mathrm{ad},i}$
+\end_inset
+
+ that is observed by the learner (see eq.
+ [
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:liability:adult"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+] below) in the learner's environment at time of birth (see Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:life_cycle"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+).
+ The cue 
+\begin_inset Formula $x_{\mathrm{vert,prestige}}$
+\end_inset
+
+ is then a function of the phenotype 
+\begin_inset Formula $u_{\mathrm{ad},\mathrm{max}}$
+\end_inset
+
+ of the sampled individual which has the highest ranked survivorship value,
+ namely 
+\begin_inset Formula $x_{\mathrm{vert,prestige}}=u_{\mathrm{ad},\mathrm{max}}+\xi_{\mathrm{vert,prestige}}-1/2$
+\end_inset
+
+.
+ Here 
+\begin_inset Formula $\xi_{\mathrm{vert,prestige}}$
+\end_inset
+
+ is a sample drawn from a Gaussian noise distribution with mean 0 and standard
+ devation 
+\begin_inset Formula $\sigma_{\mathrm{vert,prestige}}$
+\end_inset
+
+, and subtracting 
+\begin_inset Formula $-1/2$
+\end_inset
+
+ standardizes the cue range to the same scale as for other cues.
+ 
+\end_layout
+
+\begin_layout Paragraph
+Vertical social learning: conformity-biases
+\end_layout
+
+\begin_layout Standard
+We follow previous models of conformity-based social learning 
+\begin_inset CommandInset citation
+LatexCommand citep
+before "e.g.,"
+key "Eriksson2007"
+literal "false"
+
+\end_inset
+
+ where individuals evaluate phenotypes 
+\begin_inset Formula $u_{i}$
+\end_inset
+
+ of each individual belonging to randomly chosen subset of 
+\begin_inset Formula $n_{\mathrm{c}}$
+\end_inset
+
+ surviving adult models from the parental generation in the local patch.
+ Individuals take account of the number of individuals 
+\begin_inset Formula $n_{\mathrm{c,lo}}\leq n_{\mathrm{c}}$
+\end_inset
+
+ with a phenotypes 
+\begin_inset Formula $u_{i}$
+\end_inset
+
+ corresponding to the low environment (i.e., 
+\begin_inset Formula $u_{i}<0.5$
+\end_inset
+
+), whereas 
+\begin_inset Formula $n_{\mathrm{c,hi}}=n_{\mathrm{c}}-n_{\mathrm{c,lo}}$
+\end_inset
+
+ reflects the number of individuals with phenotypes 
+\begin_inset Formula $u_{i}>0.5$
+\end_inset
+
+.
+ We then have
+\begin_inset Formula 
+\begin{align*}
+x_{\mathrm{vert,conformity}} & =\begin{cases}
+-1/2 & n_{\mathrm{c,lo}}>n_{\mathrm{c,hi}}\text{ (low-matching phenotype predominates)}\\
+0 & n_{\mathrm{c,lo}}=n_{\mathrm{c,hi}}\text{\text{ (no phenotype predominates)}}\\
+1/2 & n_{\mathrm{c,lo}}<n_{\mathrm{c,hi}}\text{\text{ (high-matching phenotype predominates)}}
+\end{cases}.
+\end{align*}
+
+\end_inset
+
+Moreover, we add noise to the cue by adding a random deviate from a Gaussian
+ distribution with mean 
+\begin_inset Formula $0$
+\end_inset
+
+ and standard deviation 
+\begin_inset Formula $\sigma_{\mathrm{vert,conformity}}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsection
+Adult cue determination
+\end_layout
+
+\begin_layout Standard
+After juvenile cue determination, all adults from the previous generation
+ die and individuals learn from other individuals of their current generation
+ (horizontal social learning).
+ Information acquired from horizontally learned social cues is then used
+ by individuals to update the various cue weightings 
+\begin_inset Formula $\bar{x}_{\mathrm{juv}}$
+\end_inset
+
+ in eq.
+ (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:xbar:juvenile"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+) and develop an adult phenotype.
+ Consequently, the adult phenotype 
+\begin_inset Formula $u_{\mathrm{ad}}$
+\end_inset
+
+ that is developed after horizontal social learning is an updated logistic
+ function of a weighted sum 
+\begin_inset Formula $\bar{x}_{\mathrm{ad}}$
+\end_inset
+
+ of the various cues an individual has received.
+ We have
+\begin_inset Formula 
+\begin{align}
+u_{\mathrm{ad}} & =\frac{1}{1+\exp\left(-\bar{x}_{\mathrm{ad}}\right)}\label{eq:liability:adult}\\
+\bar{x}_{\mathrm{ad}} & =\bar{x}_{\mathrm{juv}}+h_{\mathrm{p}}x_{\mathrm{horiz,prestige}}+h_{c}x_{\mathrm{horiz,conformity}},\label{eq:xbar:adult}
 \end{align}
 
 \end_inset
 
 where 
-\begin_inset Formula $a_{\mathrm{juv}}$
+\begin_inset Formula $h_{\mathrm{p}}$
 \end_inset
 
-, 
-\begin_inset Formula $a_{\mathrm{gen}}$
+ (horizontal social learning; prestige bias) and 
+\begin_inset Formula $h_{\mathrm{c}}$
 \end_inset
 
-, 
-\begin_inset Formula $a_{\mathrm{mat}}$
-\end_inset
-
-, 
-\begin_inset Formula $a_{\mathrm{soc,vert}}$
+ (horizontal social learning; conformity bias) again reflect unlinked and
+ evolving diploid loci (bounded between [-10,10]) that reflect sensitivity
+ to both horizontally learned social cues 
+\begin_inset Formula $x_{\mathrm{horiz,prestige}}$
 \end_inset
 
  and 
-\begin_inset Formula $a_{\mathrm{soc,hor}}$
+\begin_inset Formula $\bar{x}_{\mathrm{horiz,}\text{conformity}}$
 \end_inset
 
- are diploid, unlinked loci (bounded on the interval [0,8]) that reflect
- evolving levels of sensitivity to different cues 
-\begin_inset Formula $x_{i}$
+.
+\end_layout
+
+\begin_layout Paragraph
+Horizontal social learning: prestige biases
+\end_layout
+
+\begin_layout Standard
+Horizontally learning juveniles rely on the same mechanism as vertical social
+ learning, where they rank the potential survival payoffs 
+\begin_inset Formula $S(u_{\mathrm{juv},i})$
 \end_inset
 
-, each of which is set out below.
+ of each individual 
+\begin_inset Formula $i$
+\end_inset
+
+ in a random sample of 
+\begin_inset Formula $n_{\mathrm{p}}$
+\end_inset
+
+ juvenile models (no survival selection has yet taken place; see Figure
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:life_cycle"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+).
+ The potential survival payoff is evaluated based on 
+\begin_inset Formula $i$
+\end_inset
+
+th model's juvenile phenotype 
+\begin_inset Formula $u_{\mathrm{juv},i}$
+\end_inset
+
+ that is observed by the juvenile learner (see eq.
+ [
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:liability:adult"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+] below) in the learner's environment at time of birth (see Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:life_cycle"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+).
+ The cue 
+\begin_inset Formula $x_{\mathrm{horiz,prestige}}$
+\end_inset
+
+ is then a function of the phenotype 
+\begin_inset Formula $u_{\mathrm{juv},\mathrm{max}}$
+\end_inset
+
+ of the sampled individual which has the highest ranked survivorship value,
+ namely 
+\begin_inset Formula $x_{\mathrm{horiz,prestige}}=u_{\mathrm{juv},\mathrm{max}}+\xi_{\mathrm{horiz,prestige}}-1/2$
+\end_inset
+
+.
+ Here 
+\begin_inset Formula $\xi_{\mathrm{horiz,prestige}}$
+\end_inset
+
+ is a sample drawn from a Gaussian noise distribution with mean 0 and standard
+ devation 
+\begin_inset Formula $\sigma_{\mathrm{horiz,prestige}}$
+\end_inset
+
+, and subtracting 
+\begin_inset Formula $-1/2$
+\end_inset
+
+ standardizes the cue range to the same scale as for other cues.
+ 
+\end_layout
+
+\begin_layout Paragraph
+Horizontal social learning: conformity-biases
+\end_layout
+
+\begin_layout Standard
+We follow previous models of conformity-based social learning 
+\begin_inset CommandInset citation
+LatexCommand citep
+before "e.g.,"
+key "Eriksson2007"
+literal "false"
+
+\end_inset
+
+ where individuals evaluate phenotypes 
+\begin_inset Formula $u_{i}$
+\end_inset
+
+ of each individual belonging to randomly chosen subset of 
+\begin_inset Formula $n_{\mathrm{c}}$
+\end_inset
+
+ juvenile models from the current generation in the local patch.
+ Individuals take account of the number of individuals 
+\begin_inset Formula $n_{\mathrm{c,lo}}\leq n_{\mathrm{c}}$
+\end_inset
+
+ with a phenotypes 
+\begin_inset Formula $u_{i}$
+\end_inset
+
+ corresponding to the low environment (i.e., 
+\begin_inset Formula $u_{i}<0.5$
+\end_inset
+
+), whereas 
+\begin_inset Formula $n_{\mathrm{c,hi}}=n_{\mathrm{c}}-n_{\mathrm{c,lo}}$
+\end_inset
+
+ reflects the number of individuals with phenotypes 
+\begin_inset Formula $u_{i}>0.5$
+\end_inset
+
+.
+ We then have
+\begin_inset Formula 
+\begin{align*}
+x_{\mathrm{horiz,conformity}} & =\begin{cases}
+-1/2 & n_{\mathrm{c,lo}}>n_{\mathrm{c,hi}}\text{ (low-matching phenotype predominates)}\\
+0 & n_{\mathrm{c,lo}}=n_{\mathrm{c,hi}}\text{\text{ (no phenotype predominates)}}\\
+1/2 & n_{\mathrm{c,lo}}<n_{\mathrm{c,hi}}\text{\text{ (high-matching phenotype predominates)}}
+\end{cases}.
+\end{align*}
+
+\end_inset
+
+Moreover, we add noise to the cue by adding a random deviate from a Gaussian
+ distribution with mean 
+\begin_inset Formula $0$
+\end_inset
+
+ and standard deviation 
+\begin_inset Formula $\sigma_{\mathrm{horiz,conformity}}$
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Section
 Results
 \end_layout
 
+\begin_layout Paragraph
+Result 1: Sensitivity to a single cue dominates, but multiple cues are involved
+ in adaptation
+\end_layout
+
+\begin_layout Standard
+Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:cue_eta2"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ depicts four example scenarios that demonstrate how sensitivities to different
+ cues jointly evolve in environments that vary in their predictability.
+ In environments that are substantially positively or negatively autocorrelated
+ (i.e., away from the middle of each panel where environments are random),
+ we find that sensitivity to a single cue typically explains a large majority
+ of phenotypic variation
+\end_layout
+
+\begin_layout Standard
+, except in Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:cue_eta2"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+C and 
+\begin_inset Formula $1-p>0.7$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+To establish a baseline for comparison, Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:cue_eta2"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+A depicts a scenario of adaptation without social learning, as studied in
+ various previous models (e.g., 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "Leimar2006,McNamara2016,English2015"
+literal "false"
+
+\end_inset
+
+).
+ Unsurprisingly, we find that whenever 
+\end_layout
+
 \begin_layout Section
 Discussion
+\end_layout
+
+\begin_layout Standard
+The current model provides substantial scope for future improvement.
+ One key aspect the current model does not consider is the role of trade-offs
+ between different phenotypes
+\end_layout
+
+\begin_layout Standard
+negative frequency-dependent selection, which can be important in several
+ processes where gathering of information trades off with the speed of decision
+ making 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+Mention developmental networks study by Van Gestel
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+clearpage
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Section
@@ -420,7 +1398,88 @@ Figure 1
 \end_layout
 
 \begin_layout Standard
-The life cycle of the model.
+Panel A: The life cycle of the model and the different types cues: abiotic
+ environmental cues (white arrows), heritable cues (red arrows), vertical
+ social cues (purple arrows) and horizontal social cues (yellow arrows).
+ Panel B: survival probabilities in high and low environments for different
+ adult phenotypes 
+\begin_inset Formula $u_{\mathrm{ad}}$
+\end_inset
+
+, where 
+\begin_inset Formula $S_{\mathrm{low}}=1-0.8u_{\mathrm{ad}}^{2}$
+\end_inset
+
+ and 
+\begin_inset Formula $S_{\mathrm{high}}=1-0.8\left(1-u_{\mathrm{ad}}\right)^{2}$
+\end_inset
+
+ (following eqns [1,2] in 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "Leimar2015"
+literal "false"
+
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Paragraph
+Figure 2
+\end_layout
+
+\begin_layout Standard
+The proportion of variance in adult phenotypes explained by sensitivity
+ to different cues.
+ Panel A: when vertical and horizontal learning cannot evolve, we find 
+\end_layout
+
+\begin_layout Standard
+The adult phenotype is measured at the logistic scale (
+\begin_inset Formula $\bar{x}_{\mathrm{ad}}$
+\end_inset
+
+ in eq [
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:liability:adult"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+]).
+ Variance proportions were calculated through ordinary least squares regression
+ of 
+\begin_inset Formula $\bar{x}_{\mathrm{ad}}$
+\end_inset
+
+ on the different terms in eq.
+ [
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:liability:adult"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+] and then calculating 
+\begin_inset Formula $\eta^{2}=\mathrm{SS}_{\mathrm{between}}/\mathrm{SS}_{\mathrm{total}}$
+\end_inset
+
+ for each indepent variable (i.e., the partial 
+\begin_inset Formula $R^{2}$
+\end_inset
+
+ also known as the `classical' 
+\begin_inset Formula $\eta^{2}$
+\end_inset
+
+).
 \end_layout
 
 \begin_layout Section
@@ -428,6 +1487,22 @@ Figures
 \end_layout
 
 \begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+clearpage
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
 \begin_inset Float figure
 wide false
 sideways false
@@ -436,7 +1511,8 @@ status open
 \begin_layout Plain Layout
 \align center
 \begin_inset Graphics
-	filename img/life_cycle/life_cycle.pdf
+	filename figure1.pdf
+	scale 50
 
 \end_inset
 
@@ -447,6 +1523,12 @@ status open
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:life_cycle"
+
+\end_inset
+
 
 \end_layout
 
@@ -473,8 +1555,8 @@ status open
 \begin_layout Plain Layout
 \align center
 \begin_inset Graphics
-	filename img/horiz_vert_social/plot_varcomp.pdf
-	scale 40
+	filename img/horiz_vert_social/plot_varcomp_vary_horiz.pdf
+	scale 60
 
 \end_inset
 
@@ -485,6 +1567,12 @@ status open
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:cue_eta2"
+
+\end_inset
+
 
 \end_layout
 
@@ -507,7 +1595,7 @@ status open
 \begin_layout Plain Layout
 \align center
 \begin_inset Graphics
-	filename img/contour_eta/levelplot_max_eta.pdf
+	filename figure2_a4.pdf
 	scale 70
 
 \end_inset
@@ -533,11 +1621,27 @@ status open
 \end_layout
 
 \begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+clearpage
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
 \begin_inset CommandInset bibtex
 LatexCommand bibtex
 btprint "btPrintCited"
 bibfiles "/Users/bram/Projects/databases/transgenerational"
-options "bram"
+options "procbnumer"
 
 \end_inset
 
@@ -702,40 +1806,6 @@ thispagestyle{plain}
 \end_layout
 
 \begin_layout Standard
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-begin{center}
-\end_layout
-
-\begin_layout Plain Layout
-
-
-\backslash
-LARGE{Supplement: Cue Integration of Social Learning, Epigenetic and Genetic
- Information}
-\end_layout
-
-\begin_layout Plain Layout
-
-
-\backslash
-end{center}
-\end_layout
-
-\begin_layout Plain Layout
-
-
-\backslash
-clearpage
-\end_layout
-
-\end_inset
-
 Juvenile cues (phenotypic plasticity)
 \end_layout
 
@@ -769,53 +1839,6 @@ Upon birth and before dispersal, each individual offspring receives a binary
 
 \begin_layout Subsubsection
 Genetic cues
-\end_layout
-
-\begin_layout Standard
-Upon birth, individuals receive a genetic cue 
-\begin_inset Formula $x_{\mathrm{gen}}=\sum_{i=0}^{2n_{g}}g_{i}$
-\end_inset
-
-, which is the sum of the allelic values of 
-\begin_inset Formula $n_{\mathrm{g}}=3$
-\end_inset
-
- unlinked, diploid genetic cue loci 
-\begin_inset Formula $g_{i}$
-\end_inset
-
-.
- Each allele can have values in the range of 
-\begin_inset Formula $-1\leq g_{i}\leq1$
-\end_inset
-
-.
- As has been previously shown by 
-\begin_inset CommandInset citation
-LatexCommand citet
-key "Leimar2005"
-literal "false"
-
-\end_inset
-
-, 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "Leimar2015"
-literal "false"
-
-\end_inset
-
- and 
-\begin_inset CommandInset citation
-LatexCommand citet
-key "Leimar2019"
-literal "false"
-
-\end_inset
-
-, limited dispersal and strong selection can result in scenarios where alleles
- become associated with the local environment, so that they become informative.
 \end_layout
 
 \begin_layout Subsubsection
@@ -937,184 +1960,6 @@ The perceived environment
 \end_inset
 
 .
-\end_layout
-
-\begin_layout Subsubsection
-Social learning from the parental generation (vertical social learning)
-\end_layout
-
-\begin_layout Standard
-Upon birth, individuals receive a cue 
-\begin_inset Formula $x_{\mathrm{soc,vert}}$
-\end_inset
-
- obtained through vertical social learning.
- These cues are obtained by learning the phenotypes of members of the parental
- generation (e.g., when that phenotype is a certain behaviour), where learning
- either occurs through a prestige or a conformity bias mechanism.
- We have
-\begin_inset Formula 
-\begin{align}
-\label{eq:social_cue}
-\end{align}
-
-\end_inset
-
-where 
-\begin_inset Formula $x_{\mathrm{soc,vert}}(u_{\mathrm{p,v}},x_{\mathrm{c,h}})$
-\end_inset
-
- is truncated to the interval 
-\begin_inset Formula $[0,1]$
-\end_inset
-
-.
- In the expression above, 
-\begin_inset Formula $\xi_{\mathrm{soc}}$
-\end_inset
-
- reflects the amount of noise in the vertically transmitted social cue,
- which is a normally distributed variable with mean 
-\begin_inset Formula $0$
-\end_inset
-
- and standard deviation 
-\begin_inset Formula $\sigma_{\mathrm{soc},\mathrm{vert}}=0.05$
-\end_inset
-
-.
- In the first part of the expression, 
-\begin_inset Formula $v_{\mathrm{p}}$
-\end_inset
-
- and 
-\begin_inset Formula $v_{\mathrm{c}}$
-\end_inset
-
- reflect two unlinked, diploid evolving loci that reflect sensitivity to
- phenotypic cues acquired through prestige-based (
-\begin_inset Formula $u_{\mathrm{p,v}}$
-\end_inset
-
-) and conformity-based (
-\begin_inset Formula $x_{\mathrm{c},\mathrm{v}}$
-\end_inset
-
-) social learning.
- 
-\end_layout
-
-\begin_layout Paragraph
-Prestige biases
-\end_layout
-
-\begin_layout Standard
-Following previous models of prestige-based learning 
-\begin_inset CommandInset citation
-LatexCommand citep
-before "e.g.,"
-key "Henrich2004,Kobayashi2012a"
-literal "false"
-
-\end_inset
-
-, a socially learnt cue is obtained by ranking the potential survival payoff
- 
-\begin_inset Formula $S(u)$
-\end_inset
-
- of a randomly chosen sample of 
-\begin_inset Formula $n_{\mathrm{p}}$
-\end_inset
-
- individuals (
-\begin_inset Formula $0<n_{\mathrm{p}}\leq K$
-\end_inset
-
-) from the parental generation in the local patch, where 
-\begin_inset Formula $u_{\mathrm{p}}$
-\end_inset
-
- is the phenotype of the individual with the highest ranked survivorship
- value 
-\begin_inset Formula $S(u)$
-\end_inset
-
- in the current environment.
- Note that offspring ranking of parental survivorship occurs after the parental
- generation has experienced survival selection (thus reducing the amount
- of variation in parental survivorship apparent to offspring), but also
- after the local environment has experienced change with probability 
-\begin_inset Formula $1-p$
-\end_inset
-
- (thus increasing the amount of variation in parental survivorship apparent
- to offspring).
- Errors in ranking individuals or errors in copying socially learnt cues
- will have to be considered later.
-\end_layout
-
-\begin_layout Paragraph
-Conformity-biases
-\end_layout
-
-\begin_layout Standard
-We follow previous models of conformity-based social learning 
-\begin_inset CommandInset citation
-LatexCommand citep
-before "e.g.,"
-key "Eriksson2007"
-literal "false"
-
-\end_inset
-
- where individuals evaluate phenotypes 
-\begin_inset Formula $u_{i}$
-\end_inset
-
- of each individual belonging to randomly chosen subset of 
-\begin_inset Formula $n_{\mathrm{c}}$
-\end_inset
-
- individuals (
-\begin_inset Formula $0<n_{\mathrm{c}}<K$
-\end_inset
-
-) from the parental generation in the local patch.
- Individuals take account of the number of individuals 
-\begin_inset Formula $n_{\mathrm{c,lo}}\leq n_{\mathrm{c}}$
-\end_inset
-
- with a phenotypes 
-\begin_inset Formula $u_{i}$
-\end_inset
-
- corresponding to the low environment (i.e., 
-\begin_inset Formula $u_{i}<0.5$
-\end_inset
-
-), whereas 
-\begin_inset Formula $n_{\mathrm{c,hi}}=n_{\mathrm{c}}-n_{\mathrm{c,lo}}$
-\end_inset
-
- reflects the number of individuals with phenotypes 
-\begin_inset Formula $u_{i}>0.5$
-\end_inset
-
-.
- We then have
-\begin_inset Formula 
-\begin{align*}
-x_{c} & =\begin{cases}
--1 & n_{\mathrm{c,lo}}>n_{\mathrm{c,hi}}\text{ (low-matching phenotype predominates)}\\
-0 & n_{\mathrm{c,lo}}=n_{\mathrm{c,hi}}\text{\text{ (no phenotype predominates)}}\\
-1 & n_{\mathrm{c,lo}}<n_{\mathrm{c,hi}}\text{\text{ (high-matching phenotype predominates)}}
-\end{cases}.
-\end{align*}
-
-\end_inset
-
-
 \end_layout
 
 \begin_layout Standard
