@@ -118,7 +118,9 @@ def process_dist(filename):
             ,"hp_X_phen_prestige_horiz_error"
             ,"hc_X_xconformist_horiz_error"]
 
-    formula = "phen_ad_logistic ~ "
+    formula_start = "phen_ad_logistic ~ "
+
+    formula = formula_start
 
     not_first = False
 
@@ -135,24 +137,26 @@ def process_dist(filename):
             # just add a 0 to the var dict
             var_dict["eta2_" + column] = 0.0
 
-    # create the linear model
-    lm_model = ols(formula,data=dist_df).fit()
+    if formula != formula_start:
+        
+        # create the linear model
+        lm_model = ols(formula,data=dist_df).fit()
 
-    # get the anova table
-    anova_table = sm.stats.anova_lm(lm_model,typ=2)
+        # get the anova table
+        anova_table = sm.stats.anova_lm(lm_model,typ=2)
 
-    # get the eta squares
-    # this is classical eta^2, not partial eta^2 as it is 
-    # SSR/SST rather than SSR/(SST + SSE)
-    # (i.e., it sums up to 1)
-    eta_sq = anova_table[:-1]["sum_sq"]/sum(anova_table["sum_sq"])
+        # get the eta squares
+        # this is classical eta^2, not partial eta^2 as it is 
+        # SSR/SST rather than SSR/(SST + SSE)
+        # (i.e., it sums up to 1)
+        eta_sq = anova_table[:-1]["sum_sq"]/sum(anova_table["sum_sq"])
 
-    # make a eta squared dict
-    eta_sq_dict = eta_sq.to_dict()
+        # make a eta squared dict
+        eta_sq_dict = eta_sq.to_dict()
 
-    # add to var_dict, step-by-step, allowing us to change names
-    for key, value in eta_sq_dict.items():
-        var_dict["eta2_" + key] = value
+        # add to var_dict, step-by-step, allowing us to change names
+        for key, value in eta_sq_dict.items():
+            var_dict["eta2_" + key] = value
 
     # now make sure all keys have the same order between files
     # as python chokes on this otherwise

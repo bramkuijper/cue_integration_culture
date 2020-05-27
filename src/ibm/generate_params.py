@@ -19,7 +19,7 @@ juv_learns_remote = [0]
 
 # frequency of the high environment
 
-p = list(np.linspace(0,1,20))
+p = list(np.linspace(0,1,30))
 #p = [0.95,0.99]
 
 survival_scalar_sig = [-2.5,3.5]
@@ -32,7 +32,9 @@ qjuv = np.linspace(0.5,1.0,30)
 for qjuv_i in qjuv:
     qjuv_mat_combinations.append([qjuv_i,1.5-qjuv_i])
 
-qjuv_mat_combinations = [[0.5,0.5]]
+#qjuv_mat_combinations = [[0.5,0.5],[1.0,0.5],[0.5,1.0],[1.0,1.0]]
+
+qjuv_mat_combinations = [[1.0,1.0]]
 
 nloci_g = [ 3 ]
 
@@ -40,7 +42,7 @@ exe = "./xcue_integration.exe"
 
 laplace = 1
 
-nrep = 2
+nrep = 5
 
 # for now we just need 10 zeros, which covers all the traits
 #
@@ -74,6 +76,7 @@ mu_combis = []
 # mutation rate only genes 
 mu_only_g = zeros[:]
 mu_only_g[0] = 0.01
+mu_only_g[3] = 0.01
 mu_combis.append(mu_only_g)
 
 mu_g_plast = zeros[:]
@@ -96,6 +99,9 @@ mu_combis.append(mu_no_social)
 mu_all = [ 0.01 for i in range(0,10) ]
 mu_combis.append(mu_all)
 
+mu_mat_phen_and_social = zeros[:]
+mu_mat_phen_and_social[4] = 0.01
+mu_mat_phen_and_social[-4:] = [ 0.01,0.01,0.0,0.0]
 
 mu_g_and_social = zeros[:]
 mu_g_and_social[0] = 0.01
@@ -104,6 +110,8 @@ mu_g_and_social[-4:] = [ 0.01,0.01,0.01,0.01]
 mu_social_only = zeros[:]
 mu_social_only[-4:] = [ 0.01,0.01,0.01,0.01]
 
+mu_hp_only = zeros[:]
+mu_hp_only[-4] = 0.01
 
 mu_h_only = zeros[:]
 mu_h_only[-4:-2] = [ 0.01,0.01]
@@ -112,18 +120,18 @@ mu_v_only = zeros[:]
 mu_v_only[-2:] = [ 0.01,0.01]
 
 # choose what consideration you want. For now only ai
-mu_combis = [ mu_g_plast ]
+mu_combis = [mu_mat_phen_and_social] 
                         
 sd_hv_noise_combs = []
 
 sd_h_noise = np.linspace(0,1,30)
 
-sd_h_noise = [ 0.2, 0.8 ]
+#sd_h_noise = [ 0, 0.2, 0.8 ]
 
 for sd_h_i in sd_h_noise:
     sd_hv_noise_combs.append([sd_h_i, sd_h_i, 1.0 - sd_h_i, 1.0 - sd_h_i])
 
-sd_mat_phen_noise = [ 1.5 ]
+sd_mat_phen_noise = [ 0 ]
 
 sd_hv_noise_combs = [[0,0,0,0]]
 #mu_combis = [[ 0.0001, 0.0001, 0.0001, 0.0001, 0.0001, 0.0001 ]]
@@ -151,7 +159,7 @@ nx = [[5,5,5,5]]
 ctr = 1
 
 # whether jobs should be run in the background
-run_in_background = True
+run_in_background = False
 
 juvenile_survival = [ 0 ]
 adult_survival = [ 1 ]
