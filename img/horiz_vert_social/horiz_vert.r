@@ -44,6 +44,25 @@ print(xyplot(mean_surv0 + mean_surv1 ~ (1.0 - p) | sd_hc_noise * qmat * qjuv * j
                 ,auto.key=T
                 ))
 dev.off()
+pdf("envt_cors_learning.pdf",width=20)
+print(xyplot(envt_cor_phen_prestige_horiz + envt_cor_phen_prestige_vert + envt_cor_xconformist_horiz + envt_cor_xconformist_vert + envt_cor_cue_juv_envt_high ~ (1.0 - p) | sd_hc_noise * qmat * qjuv * juvenile_learns_remote_envt * envt_change_at_birth * mu_hc
+                ,data=the.data
+                ,xlab="Probability environment changes, 1-p"
+                ,ylab="corr"
+                ,strip=function(strip.levels,...) { strip.default(strip.levels=T,...) }
+                ,auto.key=T
+                ))
+dev.off()
+
+pdf("envt_cors.pdf",width=20)
+print(xyplot(envt_cor_cue_ad_envt_high + envt_cor_envt_prev + envt_cor_g + envt_cor_phen_ad + envt_cor_phen_juv + envt_cor_phen_mat ~ (1.0 - p) | sd_hc_noise * qmat * qjuv * juvenile_learns_remote_envt * envt_change_at_birth * mu_hc
+                ,data=the.data
+                ,xlab="Probability environment changes, 1-p"
+                ,ylab="corr"
+                ,strip=function(strip.levels,...) { strip.default(strip.levels=T,...) }
+                ,auto.key=T
+                ))
+dev.off()
 
 
 pdf("varcomps.pdf",width=20)

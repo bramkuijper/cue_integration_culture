@@ -19,8 +19,8 @@ juv_learns_remote = [0]
 
 # frequency of the high environment
 
-p = list(np.linspace(0,1,30))
-#p = [0.95,0.99]
+#p = list(np.linspace(0,1,30))
+p = [0.1]
 
 survival_scalar_sig = [-2.5,3.5]
 survival_scalar_quad = [0.8,0.0]
@@ -40,7 +40,7 @@ exe = "./xcue_integration.exe"
 
 laplace = 1
 
-nrep = 2
+nrep = 1
 
 # for now we just need 10 zeros, which covers all the traits
 #
@@ -115,7 +115,7 @@ mu_v_only = zeros[:]
 mu_v_only[-2:] = [ 0.01,0.01]
 
 # choose what consideration you want. For now only ai
-mu_combis = [ mu_hp_only ]
+mu_combis = [ mu_all ]
                         
 sd_hv_noise_combs = []
 

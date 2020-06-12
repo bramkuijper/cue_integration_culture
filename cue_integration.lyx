@@ -130,11 +130,20 @@ Phenotypic integration of horizontal, vertical, epigenetic, genetic and
  environmental cues
 \end_layout
 
+\begin_layout Author
+Bram Kuijper, Olof Leimar, Peter R.
+ Hammerstein, John M.
+ McNamara, Sasha R.
+ X.
+ Dall
+\end_layout
+
 \begin_layout Abstract
-Most analyses of the origins of cultural evolution focus on when and where
- social learning prevails over individual learning, overlooking the fact
- that there are other developmental inputs that influence phenotypic fit
- to the selective environment.
+[this is the original, will rewrite once we agree on key messages]Most analyses
+ of the origins of cultural evolution focus on when and where social learning
+ prevails over individual learning, overlooking the fact that there are
+ other developmental inputs that influence phenotypic fit to the selective
+ environment.
  This raises the question how the presence of other cue integration mechanisms
  affects the scope for social learning.
  Here, we present a model that considers the evolution of (i) social learning
@@ -446,7 +455,7 @@ texttt{C++}
 
 \end_inset
 
- and the code can be accessed at 
+ and the code is available at 
 \begin_inset ERT
 status open
 
@@ -482,11 +491,11 @@ noprefix "false"
 \end_inset
 
 .
- Each patch is either in one of two local environmental states (low 
+ Each patch is either in one of two local environmental states (low: 
 \begin_inset Formula $\theta_{\mathrm{low}}$
 \end_inset
 
-, or high 
+, or high: 
 \begin_inset Formula $\theta_{\mathrm{high}}$
 \end_inset
 
@@ -502,7 +511,16 @@ noprefix "false"
 \begin_inset Formula $1-p$
 \end_inset
 
- it changes to the opposite environmental state.
+ it changes to the opposite environmental state (similar to two-state models
+ in 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "Feldman1996,Aoki2014"
+literal "false"
+
+\end_inset
+
+).
  Following 
 \begin_inset CommandInset citation
 LatexCommand cite
@@ -516,11 +534,11 @@ literal "false"
 \begin_inset Formula $f_{\mathrm{high}}$
 \end_inset
 
- of 
+ of patches in environmental state 
 \begin_inset Formula $\theta_{\mathrm{high}}$
 \end_inset
 
- patches is 
+ is given by 
 \begin_inset Formula $f_{\mathrm{high}}=1-f_{\mathrm{low}}=1/2$
 \end_inset
 
@@ -554,7 +572,20 @@ literal "false"
 \end_layout
 
 \begin_layout Subsubsection
-Juvenile phenotype determination
+Phenotype determination
+\end_layout
+
+\begin_layout Standard
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+TODO.
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -869,16 +900,22 @@ noprefix "false"
 \end_inset
 
 ) with a probability given by the cue fidelity parameter 
-\begin_inset Formula $0.5\leq q_{\mathrm{juv}}\leq1$
+\begin_inset Formula $0.5\leq q_{\mathrm{mat}}\leq1$
 \end_inset
 
 , whereas with probability 
-\begin_inset Formula $1-q_{\mathrm{juv}}$
+\begin_inset Formula $1-q_{\mathrm{mat}}$
 \end_inset
 
  an individual receives a cue associated with the opposite environmental
  state.
- 
+ We assume that all offspring born form the same mother obtain the same
+ value of 
+\begin_inset Formula $x_{\mathrm{mat,envt}}$
+\end_inset
+
+ (i.e., errors act at the level of the brood, rather than at the level of
+ the individual offspring).
 \end_layout
 
 \begin_layout Paragraph
@@ -1675,6 +1712,7 @@ noprefix "false"
 \end_inset
 
 D).
+ 
 \end_layout
 
 \begin_layout Section
@@ -1682,11 +1720,118 @@ Discussion
 \end_layout
 
 \begin_layout Standard
-Here we have analysed when and how individuals should integrate various
- socially learned cues in the presence of other cues on phenotype determination.
- Not unexpectedly, our analysis finds that individually learned cues or
- socially learned cues typically prevail over all other cues.
- Moreover, we 
+Here we provide the first model on how individual and social learning are
+ predicted to coevolve with a multitude of other cues on phenotype determination.
+ Our analysis finds that individual learning or social learning (either
+ horizontal or vertical) typically prevails over all other cues, be it genetic
+ cues, maternal environmental cues, maternal phenotypic cues (i.e., cascading
+ maternal effects) or bet-hedging (i.e., no sensitivity to any cue).
+ 
+\end_layout
+
+\begin_layout Standard
+The prevalence of individual and social learning is unsurprising, as individual
+ learning allows individuals to directly detect the state of the local environme
+nt.
+ Social learning provides more indirect information about local conditions,
+ as it relies on direct or indirect measures of the performance of others
+ in the local environment: when social learning is based on prestige biases,
+ individuals use cues from the sampled individual with the best performance
+ in the local environment.
+ Figure SXX shows that even when these cues are based on a sample of just
+ 
+\begin_inset Formula $n=2$
+\end_inset
+
+ individuals, we still find that socially learned cues based on prestige
+ biases prevail in a large range of the parameter space.
+ Being able to rank the performance of others' phenotypes provides highly
+ accurate information about the local environment, particularly when the
+ sampled phenotypes themselves have accumulated information from individual
+ learning and/or other cues.
+ By contrast, social learning based on conformity biases provides more indirect
+ environmental information, as it allows individuals to infer the median
+ phenotype in the local environment.
+\end_layout
+
+\begin_layout Standard
+In a seminal paper by Shea et al 2011 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "Shea2011"
+literal "false"
+
+\end_inset
+
+ (see also 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "McNamara2016"
+literal "false"
+
+\end_inset
+
+), sensitivity to different cues has been classified as either selection-based
+ or detection-based.
+ Briefly, selection-based cues occur when phenotypic variants become associated
+ to a local environment through differential selection and therefore become
+ informative about that environment.
+ An example are genetic cues that arise because of local adaptation of different
+ genetic variants 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "Leimar2006,Dall2015,Leimar2019"
+literal "false"
+
+\end_inset
+
+ or maternal phenotypic effects, where selection on the maternal phenotype
+ before reproduction results in assocations between the maternal phenotype
+ and the local environment 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "Kuijper2015,Kuijper2016"
+literal "false"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+detection-based when it involves sensitivity to direct cues about the environmen
+t that do not rely on the distribution 
+\end_layout
+
+\begin_layout Standard
+to classify inheritance systems, we would classify social learning based
+ on prestige biases as a detection-based effect, as an evaluation of phenotypic
+ performance provides a direct cue about the environment.
+ By contrast, social learning based on conformity-biases is the 
+\end_layout
+
+\begin_layout Standard
+.
+ By contrast, when social learning is based on con
+\end_layout
+
+\begin_layout Standard
+given that genetic and maternal phenotypic effects are the most indirect
+ sources of environmental information, in which information about the environmen
+t only arises through selective accumulation of phenotypes in their respective
+ environments (selection-based effects, `).
+ Maternal environmental effects Alternatively, maternal environmental effects
+ do evolve as the most dominant cue on phenotype determination, 
+\end_layout
+
+\begin_layout Standard
+Moreover, interactions between mul of these aforementioned cues 
+\end_layout
+
+\begin_layout Standard
+that sensitivity to a single of these aforementioned cues prevails (in terms
+ of explaining phenotypic variation), while the sensitivities of other cues
+ are far less importatn
 \end_layout
 
 \begin_layout Standard

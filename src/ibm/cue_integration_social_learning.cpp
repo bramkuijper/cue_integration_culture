@@ -1221,6 +1221,7 @@ void create_offspring(Individual &mother
     // expressing a juvenile phenotype
     offspring.phen_juv = 1.0 / (1.0 + exp( - offspring.phen_juv_logistic ));
 
+    offspring.xconformist_horiz = NAN;
     offspring.phen_ad = NAN;
 } // end create_offspring()
 
@@ -1386,7 +1387,13 @@ void social_learning(
     }
 
     // give conformist cue which is between 0 and 1
-    xconformist = nhi/(nhi + nlo);
+    if (nlo == nhi)
+    {
+        xconformist = 0;
+    }
+
+
+    xconformist = nlo > nhi ? -1 : 1;
 } // end void social_learning
  
 
@@ -1395,7 +1402,7 @@ void social_learning(
 // juvenile cue integration
 // juvenile selection
 // adult cue integration (aka horizontal social learning)
-void replace()
+void replace(int const generation )
 {
     // randomly chosen remote patch to obtain
     // individuals from
@@ -1423,7 +1430,6 @@ void replace()
     {
         for (int patch_i = 0; patch_i < NPatches; ++patch_i)
         {
-
             envt_previous = Pop[patch_i].envt_high;
 
             if (uniform(rng_r) < 1.0 - p)
@@ -1550,6 +1556,12 @@ void replace()
     // auxiliary variables for horizontal social learning
     double hp, hc;
 
+    double ss_xconf_envt = 0;
+    double ss_envt_envt = 0;
+    double mean_xconf = 0;
+    double mean_envt = 0;
+    double n_xconf_envt = 0;
+
     // all new breeders born etc, copy them over
     // and perform horiz social learning
     for (int patch_i = 0; patch_i < NPatches; ++patch_i)
@@ -1648,9 +1660,27 @@ void replace()
         {
             Pop[patch_i].breeders[breeder_i].envt_high_selection = envt_current;
             Pop[patch_i].breeders[breeder_i].envt_high_previous = envt_previous;
+
+            ss_xconf_envt += envt_current * Pop[patch_i].breeders[breeder_i].xconformist_horiz;
+            ss_envt_envt+= envt_current * envt_previous;
+
+            mean_xconf += Pop[patch_i].breeders[breeder_i].xconformist_horiz;
+            mean_envt += envt_current;
+            ++n_xconf_envt;
+
+//            if (patch_i == 20 && generation > 0.9 * number_generations)
+//            {
+//                std::cout << generation << ";" << breeder_i << ";" << envt_current << ";" << Pop[patch_i].breeders[breeder_i].xconformist_horiz << ";" << std::endl;
+//            }
         }
     } // end for (int patch_i = 0
-}
+
+//    mean_xconf /= n_xconf_envt;
+//    mean_envt /= n_xconf_envt;
+//    ss_xconf_envt /= n_xconf_envt;
+//    ss_envt_envt/=n_xconf_envt;
+//    std::cout << mean_xconf << ";" << ss_envt_envt << ";" << ss_xconf_envt - mean_xconf * mean_envt << std::endl;
+} // end replace()
 
 // the key part of the code
 // accepting command line arguments
@@ -1696,7 +1726,7 @@ int main(int argc, char **argv)
         // new breeder establishment, 
         // followed by horizontal learning
         // and finally enviromental change
-        replace();
+        replace(generation);
 
         if (generation % data_nth_generation == 0)
         {
