@@ -122,7 +122,7 @@ mu_v_only = zeros[:]
 mu_v_only[-2:] = [ 0.01,0.01]
 
 # choose what consideration you want. For now only ai
-mu_combis = [mu_g_and_social] 
+mu_combis = [ mu_all ]
                         
 sd_hv_noise_combs = []
 
