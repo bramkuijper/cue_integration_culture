@@ -19,8 +19,9 @@ juv_learns_remote = [0]
 
 # frequency of the high environment
 
-p = list(np.linspace(0,1,30))
-#p = [0.95,0.99]
+#p = list(np.linspace(0,1,30))
+
+p = [ 0.2 ]
 
 survival_scalar_sig = [-2.5,3.5]
 survival_scalar_quad = [0.8,0.0]
@@ -34,7 +35,7 @@ for qjuv_i in qjuv:
 
 #qjuv_mat_combinations = [[0.5,0.5],[1.0,0.5],[0.5,1.0],[1.0,1.0]]
 
-qjuv_mat_combinations = [[1.0,1.0]]
+#qjuv_mat_combinations = [[0.5,0.5]]
 
 nloci_g = [ 3 ]
 
@@ -42,7 +43,7 @@ exe = "./xcue_integration.exe"
 
 laplace = 1
 
-nrep = 5
+nrep = 1
 
 # for now we just need 10 zeros, which covers all the traits
 #
@@ -105,7 +106,8 @@ mu_mat_phen_and_social[-4:] = [ 0.01,0.01,0.0,0.0]
 
 mu_g_and_social = zeros[:]
 mu_g_and_social[0] = 0.01
-mu_g_and_social[-4:] = [ 0.01,0.01,0.01,0.01]
+mu_g_and_social[3] = 0.01
+mu_g_and_social[-4:-2] = [ 0.01,0.01]
 
 mu_social_only = zeros[:]
 mu_social_only[-4:] = [ 0.01,0.01,0.01,0.01]
@@ -120,7 +122,7 @@ mu_v_only = zeros[:]
 mu_v_only[-2:] = [ 0.01,0.01]
 
 # choose what consideration you want. For now only ai
-mu_combis = [mu_mat_phen_and_social] 
+mu_combis = [mu_g_and_social] 
                         
 sd_hv_noise_combs = []
 
@@ -131,16 +133,18 @@ sd_h_noise = np.linspace(0,1,30)
 for sd_h_i in sd_h_noise:
     sd_hv_noise_combs.append([sd_h_i, sd_h_i, 1.0 - sd_h_i, 1.0 - sd_h_i])
 
+#sd_hv_noise_combs = [[0,0,0,0]]
+
 sd_mat_phen_noise = [ 0 ]
 
-sd_hv_noise_combs = [[0,0,0,0]]
+#sd_hv_noise_combs = [[0,0,0,0]]
 #mu_combis = [[ 0.0001, 0.0001, 0.0001, 0.0001, 0.0001, 0.0001 ]]
 sdmu = "0.02 0.25 0.25"
 
 # sampling sizes for social learning
 # nph, nch (performance and conformity for horizontal)
 # npv, ncv (performance and conformity for vertical)
-nx = [[5,5,5,5]]
+nx = [[1,1,1,1],[2,2,2,2],[3,3,3,3]]
 
 #nx = []
 #nc_max = 5
