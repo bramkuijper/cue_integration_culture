@@ -343,7 +343,8 @@ def eta_panel(
 data_dir = os.path.join(os.path.expanduser("~"),"Projects/cue_integration_culture/data/")
 
 # the data file is obtained from the command line arguments
-data_file_name = "summary_single_logistic.csv"
+#data_file_name = "summary_single_logistic.csv"
+data_file_name = "summary_vary_p_social.csv"
 
 # read in the data
 data = pd.read_csv(os.path.join(data_dir,data_file_name)
