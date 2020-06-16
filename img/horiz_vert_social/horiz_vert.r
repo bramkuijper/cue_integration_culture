@@ -17,8 +17,8 @@ if (!exists("the.data"))
     #    the.data <- read.table("../../data/summary_g_and_horiz.csv",sep=";",header=T)
     #        the.data <- read.table("../../data/summary_dunno.csv",sep=";",header=T)
     #    the.data <- read.table("../../data/summary_vary_h_components.csv",sep=";",header=T)
-    #    the.data <- read.table("../../data/summary_learning_moment.csv",sep=";",header=T)
-    the.data <- read.table("../../data/summary_vary_p_social.csv",sep=";",header=T)
+    the.data <- read.table("../../data/summary_learning_moment.csv",sep=";",header=T)
+    #    the.data <- read.table("../../data/summary_vary_p_social.csv",sep=";",header=T)
 }
 
 # little function to find column names 
