@@ -40,7 +40,7 @@ exe = "./xcue_integration.exe"
 
 laplace = 1
 
-nrep = 2
+nrep = 3
 
 # for now we just need 10 zeros, which covers all the traits
 #
@@ -100,7 +100,9 @@ mu_combis.append(mu_all)
 
 mu_g_and_social = zeros[:]
 mu_g_and_social[0] = 0.01
-mu_g_and_social[-4:] = [ 0.01,0.01,0.01,0.01]
+mu_g_and_social[3] = 0.01
+# hc and hp
+mu_g_and_social[-4:-2] = [ 0.01,0.01]
 
 mu_social_only = zeros[:]
 mu_social_only[-4:] = [ 0.01,0.01,0.01,0.01]
@@ -115,7 +117,7 @@ mu_v_only = zeros[:]
 mu_v_only[-2:] = [ 0.01,0.01]
 
 # choose what consideration you want. For now only ai
-mu_combis = [ mu_hp_only ]
+mu_combis = [ mu_g_and_social ]
                         
 sd_hv_noise_combs = []
 
