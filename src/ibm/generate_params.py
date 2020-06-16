@@ -9,6 +9,7 @@ import numpy as np
 import socket
 import datetime
 import sys
+import copy
 
 # whether the survival curvive is 
 # sigmoidal or not
@@ -19,9 +20,9 @@ juv_learns_remote = [0]
 
 # frequency of the high environment
 
-#p = list(np.linspace(0,1,30))
+p = list(np.linspace(0,1,30))
 
-p = [ 0.2 ]
+#p = [ 0.2 ]
 
 survival_scalar_sig = [-2.5,3.5]
 survival_scalar_quad = [0.8,0.0]
@@ -33,9 +34,9 @@ qjuv = np.linspace(0.5,1.0,30)
 for qjuv_i in qjuv:
     qjuv_mat_combinations.append([qjuv_i,1.5-qjuv_i])
 
-#qjuv_mat_combinations = [[0.5,0.5],[1.0,0.5],[0.5,1.0],[1.0,1.0]]
+#qjuv_mat_combinations = [[0.5,0.5],[1.0,0.5],[0.5,1.0],[1.0,1.0],[0.75,1.0],[0.75,0.5]]
 
-#qjuv_mat_combinations = [[0.5,0.5]]
+qjuv_mat_combinations = [[0.5,0.5]]
 
 nloci_g = [ 3 ]
 
@@ -43,7 +44,7 @@ exe = "./xcue_integration.exe"
 
 laplace = 1
 
-nrep = 1
+nrep = 5
 
 # for now we just need 10 zeros, which covers all the traits
 #
@@ -112,6 +113,9 @@ mu_g_and_social[-4:-2] = [ 0.01,0.01]
 mu_social_only = zeros[:]
 mu_social_only[-4:] = [ 0.01,0.01,0.01,0.01]
 
+mu_all_but_prestige = copy.deepcopy(mu_all)
+mu_all_but_prestige[-4] = mu_all_but_prestige[-2] = 0
+
 mu_hp_only = zeros[:]
 mu_hp_only[-4] = 0.01
 
@@ -122,7 +126,7 @@ mu_v_only = zeros[:]
 mu_v_only[-2:] = [ 0.01,0.01]
 
 # choose what consideration you want. For now only ai
-mu_combis = [ mu_all ]
+mu_combis = [ mu_all,mu_all_but_prestige ]
                         
 sd_hv_noise_combs = []
 
@@ -133,7 +137,7 @@ sd_h_noise = np.linspace(0,1,30)
 for sd_h_i in sd_h_noise:
     sd_hv_noise_combs.append([sd_h_i, sd_h_i, 1.0 - sd_h_i, 1.0 - sd_h_i])
 
-#sd_hv_noise_combs = [[0,0,0,0]]
+sd_hv_noise_combs = [[1,1,1,1],[1,1,0,0],[0,0,1,1]]
 
 sd_mat_phen_noise = [ 0 ]
 
@@ -144,8 +148,8 @@ sdmu = "0.02 0.25 0.25"
 # sampling sizes for social learning
 # nph, nch (performance and conformity for horizontal)
 # npv, ncv (performance and conformity for vertical)
-nx = [[1,1,1,1],[2,2,2,2],[3,3,3,3]]
-
+#nx = [[1,1,1,1],[2,2,2,2],[3,3,3,3]]
+nx = [[5,5,5,5]]
 #nx = []
 #nc_max = 5
 #
