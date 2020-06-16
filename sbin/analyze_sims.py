@@ -50,6 +50,9 @@ def process_dist(filename):
 
     dist_df = pd.read_csv(dist_filename, sep=";")
 
+    if dist_df.shape[0] < 1:
+        return False
+
     # correlations between the selective 
     # environment and 
     # other variables
