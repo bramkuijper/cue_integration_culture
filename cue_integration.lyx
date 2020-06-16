@@ -576,19 +576,6 @@ Phenotype determination
 \end_layout
 
 \begin_layout Standard
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-TODO.
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
 Adults develop an adult phenotype 
 \begin_inset Formula $u_{\mathrm{ad}}$
 \end_inset
@@ -2021,6 +2008,14 @@ The proportion of variance in adult phenotype (measured at the logistic
 .
  Other parameters: 
 \begin_inset Formula $q_{\mathrm{mat}}=0.5$
+\end_inset
+
+, 
+\begin_inset Formula $m=0.1$
+\end_inset
+
+, 
+\begin_inset Formula $n=5$
 \end_inset
 
 .

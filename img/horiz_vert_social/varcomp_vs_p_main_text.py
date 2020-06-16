@@ -358,6 +358,12 @@ learning_moment2 = "summary_learning_moment2.csv"
 
 data_learning_moment2 = pd.read_csv(os.path.join(data_dir,learning_moment2)
         ,sep=";")
+
+
+file_full_factorial = "summary_vary_p_social.csv"
+data_full_factorial = pd.read_csv(os.path.join(data_dir,file_full_factorial)
+        ,sep=";")
+
 ##### data selection #####
 
 
@@ -394,13 +400,13 @@ ax.legend(loc="best", bbox_to_anchor=(1.0,0.5,0.1,0.5))
 
 title = "With social learning" 
 
-query_str = "qmat == 0.5 & qjuv == 1.0 & mu_hp > 0.0 & sd_hc_noise == 0.0 & juvenile_learns_remote_envt == 0 & adult_survival == 1 & juvenile_survival == 0"
+query_str = "qmat == 0.5 & qjuv == 1.0 & mu_hp > 0.0 & sd_hc_noise == 0.0 & juvenile_learns_remote_envt == 1 & adult_survival == 1 & juvenile_survival == 0 & envt_change_at_birth == 0"
 
 ax = eta_panel(
         the_fig=the_fig
         ,row=1
         ,col=0
-        ,dataset=data_learning_moment
+        ,dataset=data_full_factorial
         ,query_str=query_str
         ,trait_selection=[1,2,3,4,5,6,7,8]
         ,legend=False

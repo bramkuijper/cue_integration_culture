@@ -18,6 +18,7 @@ if (!exists("the.data"))
     #        the.data <- read.table("../../data/summary_dunno.csv",sep=";",header=T)
     #    the.data <- read.table("../../data/summary_vary_h_components.csv",sep=";",header=T)
     the.data <- read.table("../../data/summary_learning_moment.csv",sep=";",header=T)
+    #    the.data <- read.table("../../data/summary_vary_p_social.csv",sep=";",header=T)
 }
 
 # little function to find column names 
@@ -33,10 +34,10 @@ stopifnot(length(names_prop) > 0)
 
 the.formula = paste(names_prop, collapse=" + ")
 
-the.formula = paste(the.formula, " ~ (1.0 - p) | sd_hc_noise * qmat * qjuv * juvenile_learns_remote_envt * envt_change_at_birth * mu_hc")
+the.formula = paste(the.formula, " ~ (1.0 - p) | sd_hc_noise * qmat * qjuv * juvenile_learns_remote_envt * envt_change_at_birth * mu_hc * mu_hp")
 
 pdf("survival",width=20)
-print(xyplot(mean_surv0 + mean_surv1 ~ (1.0 - p) | sd_hc_noise * qmat * qjuv * juvenile_learns_remote_envt * envt_change_at_birth * mu_hc
+print(xyplot(mean_surv0 + mean_surv1 ~ (1.0 - p) | sd_hc_noise * qmat * qjuv * juvenile_learns_remote_envt * envt_change_at_birth * mu_hc * mu_hp
                 ,data=the.data
                 ,xlab="Probability environment changes, 1-p"
                 ,ylab="Survival"
@@ -45,7 +46,7 @@ print(xyplot(mean_surv0 + mean_surv1 ~ (1.0 - p) | sd_hc_noise * qmat * qjuv * j
                 ))
 dev.off()
 pdf("envt_cors_learning.pdf",width=20)
-print(xyplot(envt_cor_phen_prestige_horiz + envt_cor_phen_prestige_vert + envt_cor_xconformist_horiz + envt_cor_xconformist_vert + envt_cor_cue_juv_envt_high ~ (1.0 - p) | sd_hc_noise * qmat * qjuv * juvenile_learns_remote_envt * envt_change_at_birth * mu_hc
+print(xyplot(envt_cor_phen_prestige_horiz + envt_cor_phen_prestige_vert + envt_cor_xconformist_horiz + envt_cor_xconformist_vert + envt_cor_cue_juv_envt_high ~ (1.0 - p) | sd_hc_noise * qmat * qjuv * juvenile_learns_remote_envt * envt_change_at_birth * mu_hc * mu_hp
                 ,data=the.data
                 ,xlab="Probability environment changes, 1-p"
                 ,ylab="corr"
@@ -55,7 +56,7 @@ print(xyplot(envt_cor_phen_prestige_horiz + envt_cor_phen_prestige_vert + envt_c
 dev.off()
 
 pdf("envt_cors.pdf",width=20)
-print(xyplot(envt_cor_cue_ad_envt_high + envt_cor_envt_prev + envt_cor_g + envt_cor_phen_ad + envt_cor_phen_juv + envt_cor_phen_mat ~ (1.0 - p) | sd_hc_noise * qmat * qjuv * juvenile_learns_remote_envt * envt_change_at_birth * mu_hc
+print(xyplot(envt_cor_cue_ad_envt_high + envt_cor_envt_prev + envt_cor_g + envt_cor_phen_ad + envt_cor_phen_juv + envt_cor_phen_mat ~ (1.0 - p) | sd_hc_noise * qmat * qjuv * juvenile_learns_remote_envt * envt_change_at_birth * mu_hc * mu_hp
                 ,data=the.data
                 ,xlab="Probability environment changes, 1-p"
                 ,ylab="corr"
@@ -86,7 +87,7 @@ print(xyplot(mean_bmat_phen
                 + mean_hc
                 + mean_hp
                 + mean_vp
-                + mean_vc ~ (1-p) | sd_hc_noise * qmat * qjuv * juvenile_learns_remote_envt * envt_change_at_birth * mu_hc
+                + mean_vc ~ (1-p) | sd_hc_noise * qmat * qjuv * juvenile_learns_remote_envt * envt_change_at_birth * mu_hc * mu_hp
                 ,data=the.data
                 ,xlab="Probability environment changes, 1 - p"
                 ,ylab="Mean cue sensitivities"

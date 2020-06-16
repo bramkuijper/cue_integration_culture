@@ -1,31 +1,47 @@
 # simple plot to give an overview of varying nc versus np
+library("RColorBrewer")
 
 
-the.data <- read.table("../../data/summary_vary_nc_np.csv",sep=";",header=T)
+# get the directory name of this script
+# we use this to get the directory name of the
+# data folder
+script.dir <- dirname(sys.frame(1)$ofile)
 
-print(table(the.data[,c("npv","ncv","nph","nch")]))
+# the filename of the data file 
+filename <- "summary_vary_n_max_eta_.csv"
 
-the.data.s <- subset(the.data, ncv == 6 - npv & p >= 0.5)
+full_filename = file.path(script.dir,"../../data",filename)
 
-stopifnot(nrow(the.data.s) > 0)
+dat <- read.table(full_filename, sep=";",header=T)
 
+cue.intervals <- seq(-1,9,1)
+colors <- brewer.pal(n=length(cue.intervals),name="Set3")
 
-pdf("mean_a_for_nc_vs_np.pdf")
+pdf("contour_vary_n.pdf")
 print(
-        xyplot(mean_ajuv + mean_amat + mean_asoc_vert + mean_asoc_horiz ~ npv | qjuv * qmat * p
-        ,data=the.data.s
-        ,auto.key=T
-        ,strip=function(strip.levels,...) {strip.default(strip.levels=T,...) }
-        )
-        )
-dev.off()
+        levelplot(eta2_max ~ qjuv * sd_vc_noise | nch
+                #                ,strip=myStrip
+                ,strip=function(strip.levels,...) { strip.default(strip.levels=T,...) }
+                ,data=dat
+                ,at=cue.intervals
+                ,xlim=c(0.5,1)
+                ,ylim=c(0,1)
+                #                ,xlab=list(label=expression(paste("Probability environment changes, ",1-{},italic("p"))),cex=1.5)
+                #                            ,ylab=as.list("Noise in vertical versus horizontal",expression(paste("social learning, ",sigma["v"],"=",1-sigma["h"],sep="")))
 
-pdf("mean_a_for_nc_vs_np.pdf")
-print(
-        xyplot(mean_hp + mean_hc + mean_vp + mean_vc ~ npv | qjuv * qmat * p
-        ,data=the.data.s
-        ,auto.key=T
-        ,strip=function(strip.levels,...) {strip.default(strip.levels=T,...) }
-        )
-        )
+
+                ,ylab=list(label=expression(atop("Noise in vertical versus horizontal",
+               paste("social learning, ",sigma["v"],"=",1-sigma["h"],sep=""))),cex=1.5)
+                ,colorkey=F
+                ,fontsize=16
+                ,col.regions=colors
+                ,scales=list(
+                    y=list(
+                      at=c(0,0.2,0.4,0.6,0.8,1.0)
+                      ),
+                    x=list(
+                      at=c(0,0.2,0.4,0.6,0.8,1.0)
+                      )
+                    )
+                ))
 dev.off()

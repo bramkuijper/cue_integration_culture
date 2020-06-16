@@ -1221,7 +1221,6 @@ void create_offspring(Individual &mother
     // expressing a juvenile phenotype
     offspring.phen_juv = 1.0 / (1.0 + exp( - offspring.phen_juv_logistic ));
 
-    offspring.xconformist_horiz = NAN;
     offspring.phen_ad = NAN;
 } // end create_offspring()
 
@@ -1389,11 +1388,11 @@ void social_learning(
     // give conformist cue which is between 0 and 1
     if (nlo == nhi)
     {
-        xconformist = 0;
+        xconformist = 0.5;
     }
 
 
-    xconformist = nlo > nhi ? -1 : 1;
+    xconformist = nlo > nhi ? 0.0 : 1.0;
 } // end void social_learning
  
 
