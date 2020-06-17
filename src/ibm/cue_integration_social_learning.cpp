@@ -1384,17 +1384,16 @@ void social_learning(
             ++nlo;
         }
     }
-    xconformist = (double) nhi / (nlo + nhi);
 
 
-//    // give conformist cue which is between 0 and 1
-//    if (nlo == nhi)
-//    {
-//        xconformist = 0.5;
-//    }
-//
-//
-//    xconformist = nlo > nhi ? 0.0 : 1.0;
+    // give conformist cue which is between 0 and 1
+    if (nlo == nhi)
+    {
+        xconformist = 0.5;
+    }
+
+
+    xconformist = nlo > nhi ? 0.0 : 1.0;
 } // end void social_learning
  
 
