@@ -32,7 +32,7 @@ qjuv = np.linspace(0.5,1.0,30)
 for qjuv_i in qjuv:
     qjuv_mat_combinations.append([qjuv_i,1.5-qjuv_i])
 
-qjuv_mat_combinations = [[1.0,0.5]]
+qjuv_mat_combinations = [[0.5,0.5]]
 
 nloci_g = [ 3 ]
 
@@ -40,7 +40,7 @@ exe = "./xcue_integration.exe"
 
 laplace = 1
 
-nrep = 3
+nrep = 5
 
 # for now we just need 10 zeros, which covers all the traits
 #
@@ -136,7 +136,7 @@ for sd_h_i in sd_h_noise:
 
 sd_mat_phen_noise = [ 0.0 ]
 
-sd_hv_noise_combs = [[0,0,0,0]]
+sd_hv_noise_combs = [[0.5,0.5,0,0]]
 #mu_combis = [[ 0.0001, 0.0001, 0.0001, 0.0001, 0.0001, 0.0001 ]]
 sdmu = "0.02 0.25 0.25"
 
