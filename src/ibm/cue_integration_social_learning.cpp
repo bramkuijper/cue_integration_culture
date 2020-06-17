@@ -1386,7 +1386,7 @@ void social_learning(
             ++nlo;
         }
     }
-
+    
     // give conformist cue which is between 0 and 1
     if (nlo == nhi)
     {
