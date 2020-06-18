@@ -15,8 +15,8 @@ import copy
 # sigmoidal or not
 sigmoidal_survival = [ 0 ]
 
-envt_change_birth = [0]
-juv_learns_remote = [0]
+envt_change_birth = [0,1]
+juv_learns_remote = [0,1]
 
 # frequency of the high environment
 
@@ -36,7 +36,7 @@ for qjuv_i in qjuv:
 
 #qjuv_mat_combinations = [[0.5,0.5],[1.0,0.5],[0.5,1.0],[1.0,1.0],[0.75,1.0],[0.75,0.5]]
 
-qjuv_mat_combinations = [[0.5,0.5]]
+qjuv_mat_combinations = [[1.0,0.5]]
 
 nloci_g = [ 3 ]
 
@@ -126,7 +126,7 @@ mu_v_only = zeros[:]
 mu_v_only[-2:] = [ 0.01,0.01]
 
 # choose what consideration you want. For now only ai
-mu_combis = [ mu_all,mu_all_but_prestige ]
+mu_combis = [ mu_all ]
                         
 sd_hv_noise_combs = []
 
@@ -137,11 +137,10 @@ sd_h_noise = np.linspace(0,1,30)
 for sd_h_i in sd_h_noise:
     sd_hv_noise_combs.append([sd_h_i, sd_h_i, 1.0 - sd_h_i, 1.0 - sd_h_i])
 
-sd_hv_noise_combs = [[1,1,1,1],[1,1,0,0],[0,0,1,1]]
-
 sd_mat_phen_noise = [ 0 ]
 
 #sd_hv_noise_combs = [[0,0,0,0]]
+sd_hv_noise_combs = [[1.0,1.0,1.0,1.0]]
 #mu_combis = [[ 0.0001, 0.0001, 0.0001, 0.0001, 0.0001, 0.0001 ]]
 sdmu = "0.02 0.25 0.25"
 
