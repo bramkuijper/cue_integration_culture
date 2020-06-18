@@ -165,7 +165,7 @@ def mean_a_panel(
                         ,color=current_color
                         ,markerfacecolor=current_color
                         ,markeredgecolor=current_color
-                        ,label=list(traits_n_labels.values())[i])
+                        ,label=traits_n_labels[trait_i])
 
     if legend:
         the_axis.legend()
@@ -366,103 +366,112 @@ data_full_factorial = pd.read_csv(os.path.join(data_dir,file_full_factorial)
 
 ##### data selection #####
 
+moment_envt_change = [ 0, 1 ]
 
 ######## make the eta plot ########
 
-# start the figure
-the_fig = multipanel.MultiPanel(
-        panel_widths=[1]
-        ,panel_heights=[1,1,1,1]
-        ,filename="plot_varcomp_vary_horiz.pdf"
-        ,hspace=0.3
-        ,width=8
-        ,height=15
-        )
+for envt_change_i in moment_envt_change:
 
-title = "No social learning" 
+    subset = data_full_factorial.loc[data_full_factorial["envt_change_at_birth"] == envt_change_i]
 
-#query_str = "qmat == 0.5 & qjuv == 1.0 & mu_hp == 0.0 & adult_survival == 1 & juvenile_survival == 0"
+    # start the figure
+    the_fig = multipanel.MultiPanel(
+            panel_widths=[1]
+            ,panel_heights=[1,1,1,1]
+            ,filename="plot_varcomp_vary_horiz" + str(envt_change_i) + ".pdf"
+            ,hspace=0.3
+            ,width=8
+            ,height=15
+            )
 
-query_str = "qmat == 0.5 & qjuv == 1.0 & mu_hp > 0.0 & mu_vp > 0.0 & sd_hc_noise == 1.0 & sd_vc_noise == 1.0 & juvenile_learns_remote_envt == 0 & adult_survival == 1 & juvenile_survival == 0 & envt_change_at_birth == 0"
+    title = "No social learning" 
 
-# make each panel
-ax = eta_panel(
-        the_fig=the_fig
-        ,row=0
-        ,col=0
-        ,dataset=data_learning_moment
-        ,query_str=query_str
-        ,trait_selection=[1,2,3,4]
-        ,legend=False
-        ,title=title)
+    #query_str = "qmat == 0.5 & qjuv == 1.0 & mu_hp == 0.0 & adult_survival == 1 & juvenile_survival == 0"
 
-ax.legend(loc="best", bbox_to_anchor=(1.0,0.5,0.1,0.5))
+    query_str = "qmat == 0.5 & qjuv == 1.0 & mu_hp > 0.0 & mu_vp > 0.0 & sd_hc_noise == 1.0 & sd_vc_noise == 1.0 & juvenile_learns_remote_envt == 0 & adult_survival == 1 & juvenile_survival == 0 & envt_change_at_birth == " + str(envt_change_i)
 
-title = "With social learning" 
+    #data_learning_moment make each panel
+    ax = eta_panel(
+            the_fig=the_fig
+            ,row=0
+            ,col=0
+            ,dataset=data_learning_moment
+            ,query_str=query_str
+            ,trait_selection=[1,2,3,4]
+            ,legend=False
+            ,title=title)
 
-query_str = "qmat == 0.5 & qjuv == 1.0 & mu_hp > 0.0 & sd_hc_noise == 0.0 & juvenile_learns_remote_envt == 1 & adult_survival == 1 & juvenile_survival == 0 & envt_change_at_birth == 0"
+    if type(ax) != type(None):
+        ax.legend(loc="best", bbox_to_anchor=(1.0,0.5,0.1,0.5))
 
-ax = eta_panel(
-        the_fig=the_fig
-        ,row=1
-        ,col=0
-        ,dataset=data_full_factorial
-        ,query_str=query_str
-        ,trait_selection=[1,2,3,4,5,6,7,8]
-        ,legend=False
-        ,title=title)
+    title = "With social learning" 
 
-ax.legend(loc="best", bbox_to_anchor=(1.0,0.5,0.1,0.5))
+#    query_str = "qmat == 0.5 & qjuv == 1.0 & mu_hp > 0.0 & sd_hc_noise == 0.0 & juvenile_learns_remote_envt == 0 & adult_survival == 1 & juvenile_survival == 0 & envt_change_at_birth == 0"
+    query_str = "qmat == 0.5 & qjuv == 1.0 & mu_hp > 0.0 & sd_hc_noise == 0.0 & juvenile_learns_remote_envt == 0 & adult_survival == 1 & juvenile_survival == 0" 
 
-title = "With social learning; noise in individual learning" 
-query_str = "qmat == 0.5 & qjuv == 0.5 & mu_hp > 0.0 & sd_hc_noise == 0.0 & juvenile_learns_remote_envt == 0 & adult_survival == 1 & juvenile_survival == 0"
+    ax = eta_panel(
+            the_fig=the_fig
+            ,row=1
+            ,col=0
+    #        ,dataset=data_learning_moment
+            ,dataset=subset
+            ,query_str=query_str
+            ,trait_selection=[1,2,3,4,5,6,7,8]
+            ,legend=False
+            ,title=title)
 
-ax = eta_panel(
-        the_fig=the_fig
-        ,row=2
-        ,col=0
-        ,dataset=data_learning_moment2
-        ,query_str=query_str
-        ,trait_selection=[1,2,3,4,5,6,7,8]
-        ,legend=False
-        ,title=title)
+    if type(ax) != type(None):
+        ax.legend(loc="best", bbox_to_anchor=(1.0,0.5,0.1,0.5))
 
-title = "With social learning; noise in individual \& horizontal social learning" 
-query_str = "qmat == 0.5 & qjuv == 0.5 & mu_hp > 0.0 & sd_hc_noise == 0.5 & juvenile_learns_remote_envt == 0 & adult_survival == 1 & juvenile_survival == 0"
+    title = "With social learning; noise in individual learning" 
+    query_str = "qmat == 0.5 & qjuv == 0.5 & mu_hp > 0.0 & sd_hc_noise == 0.0 & juvenile_learns_remote_envt == 0 & adult_survival == 1 & juvenile_survival == 0"
 
-ax = eta_panel(
-        the_fig=the_fig
-        ,row=3
-        ,col=0
-        ,dataset=data_learning_moment2
-        ,query_str=query_str
-        ,trait_selection=[1,2,3,4,5,6,7,8]
-        ,legend=False
-        ,title=title)
+    ax = eta_panel(
+            the_fig=the_fig
+            ,row=2
+            ,col=0
+    #        ,dataset=data_learning_moment2
+            ,dataset=subset
+            ,query_str=query_str
+            ,trait_selection=[1,2,3,4,5,6,7,8]
+            ,legend=False
+            ,title=title)
 
+    title = "With social learning; noise in individual \& horizontal social learning" 
+    query_str = "qmat == 0.5 & qjuv == 0.5 & mu_hp > 0.0 & sd_hc_noise == 0.5 & juvenile_learns_remote_envt == 0 & adult_survival == 1 & juvenile_survival == 0"
 
-the_fig.fig.text(
-        x=0.01
-        ,y=0.5
-        ,s=r"Proportion of variance explained in adult phenotype, $\eta^{2}_{\bar{x}_{\mathrm{ad}}}$"
-        ,rotation=90
-        ,fontsize=18
-        ,horizontalalignment="center"
-        ,verticalalignment="center"
-        ,transform=the_fig.fig.transFigure)
-
-the_fig.fig.text(
-        x=0.52
-        ,y=0.06
-        ,s=r"Probability of environmental change, $1-p$"
-        ,fontsize=18
-        ,horizontalalignment="center"
-        ,verticalalignment="center"
-        ,transform=the_fig.fig.transFigure)
-
-the_fig.close(tight=True)
+    ax = eta_panel(
+            the_fig=the_fig
+            ,row=3
+            ,col=0
+    #        ,dataset=data_learning_moment2
+            ,dataset=subset
+            ,query_str=query_str
+            ,trait_selection=[1,2,3,4,5,6,7,8]
+            ,legend=False
+            ,title=title)
 
 
+    the_fig.fig.text(
+            x=0.01
+            ,y=0.5
+            ,s=r"Proportion of variance explained in adult phenotype, $\eta^{2}_{\bar{x}_{\mathrm{ad}}}$"
+            ,rotation=90
+            ,fontsize=18
+            ,horizontalalignment="center"
+            ,verticalalignment="center"
+            ,transform=the_fig.fig.transFigure)
+
+    the_fig.fig.text(
+            x=0.52
+            ,y=0.06
+            ,s=r"Probability of environmental change, $1-p$"
+            ,fontsize=18
+            ,horizontalalignment="center"
+            ,verticalalignment="center"
+            ,transform=the_fig.fig.transFigure)
+
+    the_fig.close(tight=True)
 
 
 
@@ -470,103 +479,108 @@ the_fig.close(tight=True)
 
 
 
-print("Varcomp plot done.")
-######## make the slope plot ########
-
-# start the figure
-the_fig = multipanel.MultiPanel(
-        panel_widths=[1]
-        ,panel_heights=[1,1,1,1]
-        ,filename="plot_meana_vary_horiz.pdf"
-        ,hspace=0.3
-        ,width=8
-        ,height=15
-        )
-
-title = "No social learning" 
-
-#query_str = "qmat == 0.5 & qjuv == 1.0 & mu_hp == 0.0 & adult_survival == 1 & juvenile_survival == 0"
-
-query_str = "qmat == 0.5 & qjuv == 1.0 & mu_hp > 0.0 & mu_vp > 0.0 & sd_hc_noise == 1.0 & sd_vc_noise == 1.0 & juvenile_learns_remote_envt == 0 & adult_survival == 1 & juvenile_survival == 0 & envt_change_at_birth == 0"
-
-# make each panel
-ax = mean_a_panel(
-        the_fig=the_fig
-        ,row=0
-        ,col=0
-        ,dataset=data_learning_moment
-        ,query_str=query_str
-        ,trait_selection=[1,2,3,4,5,6,7,8]
-        ,legend=False
-        ,title=title)
-
-ax.legend(loc="best", bbox_to_anchor=(1.0,0.5,0.1,0.5))
-
-title = "With social learning" 
-
-query_str = "qmat == 0.5 & qjuv == 1.0 & mu_hp > 0.0 & sd_hc_noise == 0.0 & juvenile_learns_remote_envt == 0 & adult_survival == 1 & juvenile_survival == 0"
-
-ax = mean_a_panel(
-        the_fig=the_fig
-        ,row=1
-        ,col=0
-        ,dataset=data_learning_moment
-        ,query_str=query_str
-        ,trait_selection=[1,2,3,4,5,6,7,8]
-        ,legend=False
-        ,title=title)
-
-#ax.legend(loc="best", bbox_to_anchor=(1.0,0.5,0.1,0.5))
-
-title = "With social learning; noise in individual learning" 
-query_str = "qmat == 0.5 & qjuv == 0.5 & mu_hp > 0.0 & sd_hc_noise == 0.0 & juvenile_learns_remote_envt == 0 & adult_survival == 1 & juvenile_survival == 0"
-
-ax = mean_a_panel(
-        the_fig=the_fig
-        ,row=2
-        ,col=0
-        ,dataset=data_learning_moment2
-        ,query_str=query_str
-        ,trait_selection=[1,2,3,4,5,6,7,8]
-        ,legend=False
-        ,title=title)
-
-title = "With social learning; noise in individual \& horizontal social learning" 
-query_str = "qmat == 0.5 & qjuv == 0.5 & mu_hp > 0.0 & sd_hc_noise == 0.5 & juvenile_learns_remote_envt == 0 & adult_survival == 1 & juvenile_survival == 0"
-
-ax = mean_a_panel(
-        the_fig=the_fig
-        ,row=3
-        ,col=0
-        ,dataset=data_learning_moment2
-        ,query_str=query_str
-        ,trait_selection=[1,2,3,4,5,6,7,8]
-        ,legend=False
-        ,title=title)
 
 
-the_fig.fig.text(
-        x=0.01
-        ,y=0.5
-        ,s=r"Average sensitivity to each cue"
-        ,rotation=90
-        ,fontsize=18
-        ,horizontalalignment="center"
-        ,verticalalignment="center"
-        ,transform=the_fig.fig.transFigure)
+    print("Varcomp plot done.")
+    ######## make the slope plot ########
 
-the_fig.fig.text(
-        x=0.52
-        ,y=0.06
-        ,s=r"Probability of environmental change, $1-p$"
-        ,fontsize=18
-        ,horizontalalignment="center"
-        ,verticalalignment="center"
-        ,transform=the_fig.fig.transFigure)
+    # start the figure
+    the_fig = multipanel.MultiPanel(
+            panel_widths=[1]
+            ,panel_heights=[1,1,1,1]
+            ,filename="plot_meana_vary_horiz" + str(envt_change_i) + ".pdf"
+            ,hspace=0.3
+            ,width=8
+            ,height=15
+            )
 
-the_fig.close(tight=True)
+    title = "No social learning" 
 
-print("Slopes plot done too.")
+    #query_str = "qmat == 0.5 & qjuv == 1.0 & mu_hp == 0.0 & adult_survival == 1 & juvenile_survival == 0"
+
+    query_str = "qmat == 0.5 & qjuv == 1.0 & mu_hp > 0.0 & mu_vp > 0.0 & sd_hc_noise == 1.0 & sd_vc_noise == 1.0 & juvenile_learns_remote_envt == 0 & adult_survival == 1 & juvenile_survival == 0 & envt_change_at_birth == " + str(envt_change_i)
+
+    # make each panel
+    ax = mean_a_panel(
+            the_fig=the_fig
+            ,row=0
+            ,col=0
+            ,dataset=data_learning_moment
+            ,query_str=query_str
+            ,trait_selection=[1,2,3,4,5,6,7,8]
+            ,legend=False
+            ,title=title)
+
+    if type(ax) != type(None):
+        ax.legend(loc="best", bbox_to_anchor=(1.0,0.5,0.1,0.5))
+
+    title = "With social learning" 
+
+    query_str = "qmat == 0.5 & qjuv == 1.0 & mu_hp > 0.0 & sd_hc_noise == 0.0 & juvenile_learns_remote_envt == 0 & adult_survival == 1 & juvenile_survival == 0"
+
+    ax = mean_a_panel(
+            the_fig=the_fig
+            ,row=1
+            ,col=0
+            ,dataset=subset
+            ,query_str=query_str
+            ,trait_selection=[1,2,3,4,5,6,7,8]
+            ,legend=False
+            ,title=title)
+
+    #ax.legend(loc="best", bbox_to_anchor=(1.0,0.5,0.1,0.5))
+
+    title = "With social learning; noise in individual learning" 
+    query_str = "qmat == 0.5 & qjuv == 0.5 & mu_hp > 0.0 & sd_hc_noise == 0.0 & juvenile_learns_remote_envt == 0 & adult_survival == 1 & juvenile_survival == 0"
+
+
+    ax = mean_a_panel(
+            the_fig=the_fig
+            ,row=2
+            ,col=0
+            ,dataset=subset
+            ,query_str=query_str
+            ,trait_selection=[1,2,3,4,5,6,7,8]
+            ,legend=False
+            ,title=title)
+
+    title = "With social learning; noise in individual \& horizontal social learning" 
+    query_str = "qmat == 0.5 & qjuv == 0.5 & mu_hp > 0.0 & sd_hc_noise == 0.5 & juvenile_learns_remote_envt == 0 & adult_survival == 1 & juvenile_survival == 0"
+
+
+    ax = mean_a_panel(
+            the_fig=the_fig
+            ,row=3
+            ,col=0
+            ,dataset=subset
+            ,query_str=query_str
+            ,trait_selection=[1,2,3,4,5,6,7,8]
+            ,legend=False
+            ,title=title)
+
+
+    the_fig.fig.text(
+            x=0.01
+            ,y=0.5
+            ,s=r"Average sensitivity to each cue"
+            ,rotation=90
+            ,fontsize=18
+            ,horizontalalignment="center"
+            ,verticalalignment="center"
+            ,transform=the_fig.fig.transFigure)
+
+    the_fig.fig.text(
+            x=0.52
+            ,y=0.06
+            ,s=r"Probability of environmental change, $1-p$"
+            ,fontsize=18
+            ,horizontalalignment="center"
+            ,verticalalignment="center"
+            ,transform=the_fig.fig.transFigure)
+
+    the_fig.close(tight=True)
+
+    print("Slopes plot done too.")
 
 
 

@@ -17,8 +17,12 @@ if (!exists("the.data"))
     #    the.data <- read.table("../../data/summary_g_and_horiz.csv",sep=";",header=T)
     #        the.data <- read.table("../../data/summary_dunno.csv",sep=";",header=T)
     #    the.data <- read.table("../../data/summary_vary_h_components.csv",sep=";",header=T)
-    the.data <- read.table("../../data/summary_learning_moment.csv",sep=";",header=T)
-    #    the.data <- read.table("../../data/summary_vary_p_social.csv",sep=";",header=T)
+    #    the.data <- read.table("../../data/summary_learning_moment.csv",sep=";",header=T)
+    #    the.data <- read.table("../../data/summary_learning_moment.csv",sep=";",header=T)
+    #    the.data <- read.table("../../data/summary_bug.csv",sep=";",header=T)
+    #the.data <- read.table("../../data/summary_vary_p_social.csv",sep=";",header=T)
+    #    the.data <- read.table("../../data/summary_something.csv",sep=";",header=T)
+    the.data <- read.table("../../data/summary_something2.csv",sep=";",header=T)
 }
 
 # little function to find column names 
@@ -66,11 +70,12 @@ print(xyplot(envt_cor_cue_ad_envt_high + envt_cor_envt_prev + envt_cor_g + envt_
 dev.off()
 
 
-pdf("varcomps.pdf",width=20)
+pdf("varcomps.pdf",width=10)
 print(xyplot(as.formula(the.formula)
                 ,data=the.data
                 ,xlab="Probability environment changes, 1-p"
                 ,ylab="Variance components"
+                ,ylim=c(0.0,1.0)
                 ,strip=function(strip.levels,...) { strip.default(strip.levels=T,...) }
                 ,auto.key=T
                 ))
