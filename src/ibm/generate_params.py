@@ -9,12 +9,13 @@ import numpy as np
 import socket
 import datetime
 import sys
+import copy
 
 # whether the survival curvive is 
 # sigmoidal or not
 sigmoidal_survival = [ 0 ]
 
-envt_change_birth = [0]
+envt_change_birth = [0,1]
 juv_learns_remote = [0]
 
 # frequency of the high environment
@@ -120,10 +121,14 @@ mu_h_only[-4:-2] = [ 0.01,0.01]
 mu_v_only = zeros[:]
 mu_v_only[-2:] = [ 0.01,0.01]
 
+# only want conformity based social learning, nothing else
+mu_c_only = copy.deepcopy(mu_all)
+mu_c_only[-2] = 0.0
+mu_c_only[-4] = 0.0
 
 
 # choose what set of traits evolving we want
-mu_combis = [ mu_all ]
+mu_combis = [ mu_c_only ]
                         
 sd_hv_noise_combs = []
 
@@ -136,14 +141,14 @@ for sd_h_i in sd_h_noise:
 
 sd_mat_phen_noise = [ 0.0 ]
 
-sd_hv_noise_combs = [[0.5,0.5,0,0]]
+sd_hv_noise_combs = [[0.0,0.0,0,0]]
 #mu_combis = [[ 0.0001, 0.0001, 0.0001, 0.0001, 0.0001, 0.0001 ]]
 sdmu = "0.02 0.25 0.25"
 
 # sampling sizes for social learning
 # nph, nch (performance and conformity for horizontal)
 # npv, ncv (performance and conformity for vertical)
-nx = [[5,5,5,5]]
+nx = [[1,5,1,5]]
 
 #nx = []
 #nc_max = 5
