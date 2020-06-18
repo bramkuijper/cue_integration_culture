@@ -102,10 +102,19 @@ class SummarizeSims:
         if len(self.file_list) < 1:
             raise Exception("There are no files to be processed here...")
 
+        # loop through all files in the list
         for file_i in self.file_list:
 
             result = self.analyze_file(file_i)
             
+            if type(result) == type(None):
+                continue
+                
+
+            # append the result to the full dataset
+
+            # if the original dataset is still None
+            # then result is self.full data
             if type(self.full_data) == type(None):
                 self.full_data = result
                 temp_data = self.output_postprocess(self.full_data)
@@ -319,6 +328,11 @@ class SummarizeSims:
             if self.posthoc_function != None:
                 data_posthoc = self.posthoc_function(filename)
 
+                # might have been an error in the posthoc function
+                # in which case skip the whole file
+                if type(data_posthoc) == type(False):
+                    return None
+
             data = self.analyze_data(
                     filename=filename
                     ,linenumber_start=non_data_lines_start[-1]
@@ -340,13 +354,17 @@ class SummarizeSims:
 
             if self.posthoc_function != None:
                 data_posthoc = self.posthoc_function(filename)
+
+                # might have been an error in the posthoc function
+                # in which case skip the whole file
+                if type(data_posthoc) == type(False):
+                    return None
             
             parameters = self.analyze_parameters_new(
                     linenumber_start=last_data_line + 1
                     ,linenumber_end=None
                     ,filename = filename)
-            
-                   
+           
         # combine both parameters and data
         data_params_combined = pd.concat(
                 [parameters.reset_index(drop=True)

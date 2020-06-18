@@ -22,8 +22,6 @@ juv_learns_remote = [0,1]
 
 p = list(np.linspace(0,1,30))
 
-#p = [ 0.2 ]
-
 survival_scalar_sig = [-2.5,3.5]
 survival_scalar_quad = [0.8,0.0]
 
@@ -110,6 +108,7 @@ mu_g_and_social[0] = 0.01
 mu_g_and_social[3] = 0.01
 mu_g_and_social[-4:-2] = [ 0.01,0.01]
 
+# only want social learning, nothing else
 mu_social_only = zeros[:]
 mu_social_only[-4:] = [ 0.01,0.01,0.01,0.01]
 
@@ -119,13 +118,17 @@ mu_all_but_prestige[-4] = mu_all_but_prestige[-2] = 0
 mu_hp_only = zeros[:]
 mu_hp_only[-4] = 0.01
 
+# only want horizontal social learning, nothing else
 mu_h_only = zeros[:]
 mu_h_only[-4:-2] = [ 0.01,0.01]
 
+# only want vertical social learning, nothing else
 mu_v_only = zeros[:]
 mu_v_only[-2:] = [ 0.01,0.01]
 
-# choose what consideration you want. For now only ai
+
+
+# choose what set of traits evolving we want
 mu_combis = [ mu_all ]
                         
 sd_hv_noise_combs = []
@@ -139,8 +142,9 @@ for sd_h_i in sd_h_noise:
 
 sd_mat_phen_noise = [ 0 ]
 
-#sd_hv_noise_combs = [[0,0,0,0]]
-sd_hv_noise_combs = [[1.0,1.0,1.0,1.0]]
+
+sd_mat_phen_noise = [ 0.0 ]
+
 #mu_combis = [[ 0.0001, 0.0001, 0.0001, 0.0001, 0.0001, 0.0001 ]]
 sdmu = "0.02 0.25 0.25"
 

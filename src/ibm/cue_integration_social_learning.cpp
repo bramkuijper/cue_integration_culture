@@ -306,6 +306,8 @@ void write_parameters(std::ofstream &DataFile)
         << "mu_hp_t1;" << mu_hp_t1 << ";"<< std::endl
         << "sdmu_a;" << sdmu_a << ";"<< std::endl
         << "sdmu_b;" << sdmu_b << ";"<< std::endl
+        << "NPatches;" << NPatches << ";" << std::endl
+        << "NBreeder;" << NBreeder << ";" << std::endl
         << "m;" << m << ";"<< std::endl
         << "nph;" << nph << ";"<< std::endl
         << "nch;" << nch << ";"<< std::endl
@@ -1384,13 +1386,12 @@ void social_learning(
             ++nlo;
         }
     }
-
+    
     // give conformist cue which is between 0 and 1
     if (nlo == nhi)
     {
         xconformist = 0.5;
     }
-
 
     xconformist = nlo > nhi ? 0.0 : 1.0;
 } // end void social_learning
