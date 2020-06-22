@@ -1016,8 +1016,8 @@ C), such as a combination of horizontal social learning based on conformity
  (grey lines) and vertical social learning (pink lines) based on prestige.
  To understand why conformity biases are more likely to prevail in negatively
  autocorrelated environments rather than prestige biases, Figure XX depicts
- the correlation between the selective environment and individually and
- socially learned cues.
+ correlations between the selective environment and individually and socially
+ learned cues.
 \end_layout
 
 \begin_layout Standard
@@ -1619,7 +1619,7 @@ noprefix "false"
 Figure 
 \begin_inset CommandInset ref
 LatexCommand ref
-reference "fig:contour_fidelity_vs_p"
+reference "fig:correlation"
 plural "false"
 caps "false"
 noprefix "false"
@@ -1630,50 +1630,19 @@ noprefix "false"
 \end_layout
 
 \begin_layout Standard
-The cue that explains the largest proportion of adult phenotypic variance
- when varying the probability of environmental change (
-\begin_inset Formula $x$
+Correlations between the selective environment 
+\begin_inset Formula $\theta(t)$
 \end_inset
 
--axis) and the fidelity of vertically versus socially learnt cues (
-\begin_inset Formula $y$
+ and individually and socially learned cues.
+ When environments are positively autocorrelated (left-hand side where 
+\begin_inset Formula $1-p<0.5$
 \end_inset
 
--axis: 
-\begin_inset Formula $\sigma_{\mathrm{v}}=\sigma_{\mathrm{vert,conformity}}=\sigma_{\mathrm{vert,conformity}}$
-\end_inset
-
- and 
-\begin_inset Formula $\sigma_{\mathrm{h}}=\sigma_{\mathrm{v}}=\sigma_{\mathrm{horiz,conformity}}=\sigma_{\mathrm{horiz,conformity}}$
-\end_inset
-
-).
- Panel A: Individual learning is uninformative (
-\begin_inset Formula $q_{\mathrm{juv}}=0.5$
-\end_inset
-
-).
- Panel B: individual learning is moderately informative (
-\begin_inset Formula $q_{\mathrm{juv}}=0.75$
-\end_inset
-
-).
- Panel C: individual learning is fully informative (
-\begin_inset Formula $q_{\mathrm{juv}}=1.0$
-\end_inset
-
-).
- Parameters: see Figure 
-\begin_inset CommandInset ref
-LatexCommand ref
-reference "fig:eta_vs_p"
-plural "false"
-caps "false"
-noprefix "false"
-
-\end_inset
-
-.
+) we find that vertical conformity-based cues are (on average) the worst
+ predictor of the selective environment, whereas horizontal prestige-based
+ cues are the best predictor of the selective environment.
+ By contrast, in negatively autocorrelated environments, 
 \end_layout
 
 \begin_layout Paragraph
@@ -1692,11 +1661,13 @@ noprefix "false"
 
 \begin_layout Standard
 The cue that explains the largest proportion of adult phenotypic variance
- when varying the fidelity of individually learned cues (
+ when varying the fidelity of maternal versus individually learned cues
+ (
 \begin_inset Formula $x$
 \end_inset
 
--axis) and the fidelity of socially learned cues (
+-axis) and the fidelity of vertical versus horizontal socially learned cues
+ (
 \begin_inset Formula $y$
 \end_inset
 
@@ -1813,6 +1784,46 @@ name "fig:eta_vs_p"
 wide false
 sideways false
 status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename img/correlations/plot_correlations.pdf
+	scale 120
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:correlation"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
 
 \begin_layout Plain Layout
 \align center

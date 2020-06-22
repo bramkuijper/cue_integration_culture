@@ -1364,16 +1364,6 @@ void social_learning(
         }
     }
 
-    if (prestige_phen < 0.5)
-    {
-        prestige_phen = 0.0;
-    }
-    else
-    {
-        prestige_phen = 1.0;
-    }
-
-
 
     int nlo = 0;
     int nhi = 0;
