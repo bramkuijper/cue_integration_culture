@@ -1364,6 +1364,17 @@ void social_learning(
         }
     }
 
+    if (prestige_phen < 0.5)
+    {
+        return(0.0);
+    }
+    else
+    {
+        return(1.0);
+    }
+
+
+
     int nlo = 0;
     int nhi = 0;
 
@@ -1389,7 +1400,7 @@ void social_learning(
             ++nlo;
         }
     }
-    
+
     // give conformist cue which is between 0 and 1
     if (nlo == nhi)
     {
@@ -1736,10 +1747,10 @@ int main(int argc, char **argv)
             write_stats(DataFile, generation, 2);
         }
 
-        if (generation >= number_generations - 10)
-        {
-            write_dist(DataFileDist, generation);
-        }
+//        if (generation >= number_generations - 10)
+//        {
+//            write_dist(DataFileDist, generation);
+//        }
     }
             
     write_stats(DataFile, generation, 2);
