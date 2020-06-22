@@ -323,7 +323,7 @@ void write_parameters(std::ofstream &DataFile)
 // write all properties of all individuals
 // to the file DataFile (to obtain information about
 // the distribution of traits)
-void write_dist(std::ofstream &DataFile)
+void write_dist(std::ofstream &DataFile, int const generation)
 {
     double g; // auxiliary variable to temporarily 
                 // store trait expression
@@ -332,7 +332,9 @@ void write_dist(std::ofstream &DataFile)
     {
         for (int breeder_i = 0; breeder_i < Pop[patch_i].n_breeders; ++breeder_i)
         {
-            DataFile << patch_i << ";" 
+            DataFile 
+                << generation << ";" 
+                << patch_i << ";" 
                 << breeder_i << ";"
                 << Pop[patch_i].breeders[breeder_i].phen_ad << ";"
                 << Pop[patch_i].breeders[breeder_i].phen_ad_logistic << ";"
@@ -467,6 +469,7 @@ void write_dist(std::ofstream &DataFile)
 void write_data_headers_dist(std::ofstream &DataFile)
 {
     DataFile 
+        << "generation;" 
         << "patch_id;" 
         << "id;" 
         << "phen_ad;" 
@@ -1736,7 +1739,7 @@ int main(int argc, char **argv)
             
     write_stats(DataFile, generation, 2);
 
-    write_dist(DataFileDist);
+    write_dist(DataFileDist, generation);
     
     write_parameters(DataFile);
 }
