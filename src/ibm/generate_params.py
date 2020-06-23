@@ -20,8 +20,7 @@ juv_learns_remote = [0]
 
 # frequency of the high environment
 
-
-p = [ 0.1 ]
+p = [ 0.2 ]
 
 survival_scalar_sig = [-2.5,3.5]
 survival_scalar_quad = [0.8,0.0]
@@ -36,7 +35,8 @@ for qjuv_i in qjuv:
 #qjuv_mat_combinations = [[0.5,0.5],[1.0,0.5],[0.5,1.0],[1.0,1.0],[0.75,1.0],[0.75,0.5]]
 
 #qjuv_mat_combinations = [[0.5,1.0],[0.75,1.0],[1.0,1.0]]
-qjuv_mat_combinations = [[1.0,1.0]]
+#qjuv_mat_combinations = [[1.0,1.0]]
+qjuv_mat_combinations = [[0.5,1.0],[0.75,0.75]]
 
 nloci_g = [ 3 ]
 
@@ -44,7 +44,7 @@ exe = "./xcue_integration.exe"
 
 laplace = 1
 
-nrep =3
+nrep =1
 
 # for now we just need 10 zeros, which covers all the traits
 #
@@ -68,7 +68,8 @@ gminmax = "-1.0 1.0"
 bminmax = "-10.0 10.0"
 
 #m = list(np.linspace(0, 1.0, 20))
-m = [0.3,0.5,0.8]
+#m = [0.3,0.5,0.8]
+m = [0.1]
 #mu_g, mu_aintercept, mu_ajuv, mu_agen, mu_bmat_phen, mu_bmat_envt, mu_hp, mu_hc, mu_vp, mu_vc
 #mu_combis = [[ 0.01 for x in range(0,10) ]]
 zeros = [ 0 for i in range(0,10) ]
@@ -135,7 +136,7 @@ mu_c_only[-4] = 0.0
 
 
 # choose what set of traits evolving we want
-mu_combis = [ mu_c_only ]
+mu_combis = [ mu_all ]
                         
 sd_hv_noise_combs = []
 

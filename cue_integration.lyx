@@ -469,8 +469,8 @@ url{https://github.com/bramkuijper/cue_integration_culture/}
 \end_inset
 
 .
- A brief overview of the cue integration mechanisms, while a more elaborate
- description is provided in section 
+ Figure A brief overview of the cue integration mechanisms, while a more
+ elaborate description is provided in section 
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "sec:supplement:Supplementary-model-description"
@@ -864,8 +864,12 @@ noprefix "false"
 
  depicts four example scenarios -- in which reliability of different cues
  is varied – that demonstrate how sensitivities to cues jointly evolve in
- environments that change at different rates.
- Figure 
+ environments that change at different rates of change 
+\begin_inset Formula $1-p$
+\end_inset
+
+.
+ To highlight the relative importance of each cue, Figure 
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "fig:eta_vs_p"
@@ -875,9 +879,9 @@ noprefix "false"
 
 \end_inset
 
- measures what proportion of variance in the adult phenotype (measured at
- the logistic scale) is explained by sensitivity to each cue, while the
- evolved average values of the sensitivities 
+ measures the proportion of variance in the adult phenotype (measured at
+ the logistic scale) that is explained by sensitivity to each cue, while
+ the evolved values of the sensitivities 
 \begin_inset Formula $a_{i}$
 \end_inset
 
@@ -997,10 +1001,21 @@ noprefix "false"
 \end_layout
 
 \begin_layout Standard
-When environments are negatively autocorrelated (right-hand side of each
- panel), again either individual or social learning prevails.
+When environments are negatively autocorrelated (right-hand sides of Figure
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:eta_vs_p"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+B-D), again either individual or social learning prevails.
  Interestingly, however, in case horizontal social learning prevails, it
- is often based on conformity biases rather than prestige biases.
+ is typically based on conformity biases rather than the prestige biases
+ that are observed in positively autocorrelated environments.
  Moreover, we find that sometimes multiple cues predominate (e.g., right-hand
  side of Figure 
 \begin_inset CommandInset ref
@@ -1014,10 +1029,7 @@ noprefix "false"
 
 C), such as a combination of horizontal social learning based on conformity
  (grey lines) and vertical social learning (pink lines) based on prestige.
- To understand why conformity biases are more likely to prevail in negatively
- autocorrelated environments rather than prestige biases, Figure XX depicts
- correlations between the selective environment and individually and socially
- learned cues.
+ 
 \end_layout
 
 \begin_layout Standard
@@ -1032,13 +1044,20 @@ noprefix "false"
 \end_inset
 
 B-D show that once the intrinsic fidelity of socially learned cues is large
- enough, they explain the majority of phenotypic variance.
+ enough, they explain the majority of phenotypic variance, while individual
+ learning is far less important.
  This raises the question what phenotypic information is then learned from
- others, 
-\end_layout
+ others, as previous theory suggests that combinations of individual learning
+ and social learning are expected to evolve (e.g., 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "Henrich2003,Laland2004,Aoki2014"
+literal "false"
 
-\begin_layout Standard
-Figure 
+\end_inset
+
+).
+ Figure 
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "fig:suppl:non_individual_learning"
@@ -1048,18 +1067,10 @@ noprefix "false"
 
 \end_inset
 
- shows that 
-\end_layout
-
-\begin_layout Standard
-when individual learning is absent, social learning still prevails over
- all other cues.
- Hence, a focal individual which obtains socially learned cues from other
- individuals' phenotypes
-\end_layout
-
-\begin_layout Standard
-(Figure 
+ shows that even when individual learning cannot evolve, social learning
+ still prevails over all other cues.
+ Indeed, social learning still prevails when it only coevolves with genetic
+ cues on phenotype determination (Figure 
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "fig:suppl:non_individual_learning"
@@ -1080,16 +1091,7 @@ noprefix "false"
 \end_inset
 
 B).
- 
-\end_layout
-
-\begin_layout Standard
-Consequently, social learning then relies on s coevolution where individuals
- sample the environment and develop their juvenile phenotypes through the
- more indirect genetic cues or maternal phenotypic cues, after which horizontal
- social learning of others allows individuals to enhance adaptation to the
- prevalent environment.
- Indeed, only when no other than horizontally learned cues are available
+ Only when no other cues than horizontally learned social cues are available
  is there no scope for adaptation (Figure 
 \begin_inset CommandInset ref
 LatexCommand ref
@@ -1101,10 +1103,54 @@ noprefix "false"
 \end_inset
 
 C).
+ This is unsurprising, as either individual learning or genes/maternal cues
+ are necessary to result in an evolutionary response where phenotypes become
+ associated to their respective environments.
 \end_layout
 
 \begin_layout Subsection
-Result 2: socially and individually learned cues prevail over other cues
+Result 2: timing of environmental change matters
+\end_layout
+
+\begin_layout Standard
+So far, we have considered a scenario where the environment changes between
+ juvenility and adulthood.
+ In Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:suppl:eta_vs_p:envt_change_birth"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, however, we consider a scenario where the environment changes at birth.
+ Consequently, cues about the environment that are obtained during the juvenile
+ stage are fully informative about the adult selective period, reflecting,
+ for example, a scenario in which early-life conditions are sufficiently
+ informative about later life 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "Frankenhuis2018,Kuijper2019a,Gluckman2019"
+literal "false"
+
+\end_inset
+
+.
+ For the scenarios previously considered in Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:eta_vs_p"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, we find that horizontal social learning based on prestige biases nearly
+ always prevails, while conformity biases are rare.
+ This is unsurprising, as 
 \end_layout
 
 \begin_layout Standard
@@ -1190,10 +1236,6 @@ noprefix "false"
  By contrast, vertically learned social cues based on conformity biases
  or genetic cues do not prevail anywhere.
  
-\end_layout
-
-\begin_layout Subsection
-Result 3: timing of environmental change matters
 \end_layout
 
 \begin_layout Standard
@@ -1290,8 +1332,17 @@ nt.
  in the local environment: when social learning is based on prestige biases,
  individuals use cues from the sampled individual with the best performance
  in the local environment.
- Figure SXX shows that even when these cues are based on a sample of just
- 
+ Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:supplement:vary_n"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ shows that even when these cues are based on a sample of just 
 \begin_inset Formula $n=2$
 \end_inset
 
@@ -1301,9 +1352,107 @@ nt.
  accurate information about the local environment, particularly when the
  sampled phenotypes themselves have accumulated information from individual
  learning and/or other cues.
- By contrast, social learning based on conformity biases provides more indirect
- environmental information, as it allows individuals to infer the median
- phenotype in the local environment.
+ 
+\end_layout
+
+\begin_layout Standard
+However, when environments are negatively autocorrelated (with environmental
+ change occuring between juvenility and adulthood), Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:eta_vs_p"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+B-C showed that conformity biases are more likely to prevail than horizontal
+ prestige biases (see also Supplementary Figure XX).
+ To understand why horizontal conformity biases prevail over prestige biases,
+ Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:correlation"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ considers the informative value of all learned cues by depicting their
+ correlations with the adult selective environment.
+ Surprisingly, in negatively autocorrelated environments, cues based on
+ horizontal conformism correlate positively (and relatively strongly) with
+ the adult selective environment, whereas horizontal prestige cues are only
+ weakly negatively correlated.
+ Less surprsing is that vertically learned and individually learned cues
+ are all negatively correlated with the environment (with individual learned
+ cues exhibiting negative correlations of the strongest magnitude), as the
+ environment experienced by adults of generation 
+\begin_inset Formula $t-1$
+\end_inset
+
+ and by juveniles in generation 
+\begin_inset Formula $t$
+\end_inset
+
+ is most likely opposite to the selective environment that will be experienced
+ later by adults in generation 
+\begin_inset Formula $t.$
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Standard
+Why do correlations so strongly diverge in negatively autocorrelated environment
+s (Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:correlation"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+)? Note that juveniles will initially use individual/vertical learning to
+ develop a phenotype opposite to their current juvenile environment.
+ This is because long-term selection has shaped reaction norms to anticipate
+ that selective conditions are likely to change between juvenility and adulthood
+ (indeed, reaction norms based on individual/vertical learning are negative
+ on the right-hand sides of Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:suppl:sensitivities"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+B-D, so that juveniles born in a low environment are likely to develop a
+ phenotype matching a high environment).
+ Once phenotypes based on individual/vertical learning have developed, juveniles
+ perform horizontal social learning.
+ However, as most juveniles now have phenotypes mismatched to their current
+ juvenile environment (but matched to later conditions), any individual
+ is most likely to take prestige-based cues from juvenile models with a
+ more intermediate phenotype (as models with more extreme phenotypes have
+ very low predicted survival values in their juvenile environment and are
+ thus disregarded).
+ In turn, phenotypes of intermediate value are equally likely to occur in
+ any environment, thus resulting in a correlation between horizontal prestige
+ and the adult selective environment of a small magnitude.
+ By contrast, when socially learned cues are based on horizontal conformity
+ biases, a cue is taken that simply reflects the majority of phenotypes
+ without considering any measure of current survival.
+ Consequently, in case a majority of sampled juveniles has a low phenotype,
+ this is a good indicator that the adult selective environment is likely
+ to be in a low state too.
+ Consequently, conformity biases result in strong and positive correlations
+ when the environment is negatively autocorrelated.
 \end_layout
 
 \begin_layout Standard
@@ -1326,10 +1475,10 @@ literal "false"
 ), sensitivity to different cues has been classified as either selection-based
  or detection-based.
  Briefly, selection-based cues occur when phenotypic variants become associated
- to a local environment through differential selection and therefore become
+ to a local environments through differential selection and therefore become
  informative about that environment.
- An example are genetic cues that arise because of local adaptation of different
- genetic variants 
+ An example are genetic cues, where local adaptation results in the assocation
+ of different genetic variants to different selective conditions 
 \begin_inset CommandInset citation
 LatexCommand citep
 key "Leimar2006,Dall2015,Leimar2019"
@@ -1342,12 +1491,15 @@ literal "false"
  and the local environment 
 \begin_inset CommandInset citation
 LatexCommand citep
-key "Kuijper2015,Kuijper2016"
+key "Kuijper2015,Kuijper2016,English2015,McNamara2016"
 literal "false"
 
 \end_inset
 
 .
+ In the context of social learning, conformity-biases can also be considered
+ selection-based effects, as our example above shows long-term selection
+ determines whether 
 \end_layout
 
 \begin_layout Standard
@@ -1495,7 +1647,7 @@ The proportion of variance in adult phenotype (measured at the logistic
 \begin_inset Formula $n=5$
 \end_inset
 
- replicate simulations, while envelopes reflect standard deviations.
+ replicate simulations, while envelopes reflect sample standard deviations.
  Panel A: in case there is substantial noise in horizontal and vertical
  social learning, individual learning becomes the most important cue on
  phenotype determination.
@@ -1619,36 +1771,6 @@ noprefix "false"
 Figure 
 \begin_inset CommandInset ref
 LatexCommand ref
-reference "fig:correlation"
-plural "false"
-caps "false"
-noprefix "false"
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Correlations between the selective environment 
-\begin_inset Formula $\theta(t)$
-\end_inset
-
- and individually and socially learned cues.
- When environments are positively autocorrelated (left-hand side where 
-\begin_inset Formula $1-p<0.5$
-\end_inset
-
-) we find that vertical conformity-based cues are (on average) the worst
- predictor of the selective environment, whereas horizontal prestige-based
- cues are the best predictor of the selective environment.
- By contrast, in negatively autocorrelated environments, 
-\end_layout
-
-\begin_layout Paragraph
-Figure 
-\begin_inset CommandInset ref
-LatexCommand ref
 reference "fig:contour_fidelity"
 plural "false"
 caps "false"
@@ -1675,6 +1797,55 @@ The cue that explains the largest proportion of adult phenotypic variance
  Panels A, B: environmental change
 \end_layout
 
+\begin_layout Paragraph
+Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:correlation"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Informational value of the different learned cues.
+ Depicted are the correlations between the adult selective environment 
+\begin_inset Formula $\theta(t)$
+\end_inset
+
+ and individually and socially learned cues at the preceding juvenile stage.
+ When environments are positively autocorrelated (left-hand side where 
+\begin_inset Formula $1-p<0.5$
+\end_inset
+
+) we find that vertical conformity-based cues are (on average) the worst
+ predictor of the selective environment, whereas horizontal prestige-based
+ cues are the best predictor of the selective environment.
+ By contrast, in negatively autocorrelated environments, horizontal conformism-b
+ased cues are positively correlated with the selective environment, while
+ all other cues are typically negatively correlated.
+ Individually learned cues and conformity-based horizontal social cues have
+ the largest magnitude in negatively autocorrelated environments.
+ Each dot depicts the average correlation over 5 replicate simulations,
+ while envelopes reflect sample standard deviations.
+ Parameters as in Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:eta_vs_p"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+B.
+ 
+\end_layout
+
 \begin_layout Section
 Figures
 \end_layout
@@ -1699,7 +1870,7 @@ clearpage
 \begin_inset Float figure
 wide false
 sideways false
-status open
+status collapsed
 
 \begin_layout Plain Layout
 \align center
@@ -1783,46 +1954,6 @@ name "fig:eta_vs_p"
 \begin_inset Float figure
 wide false
 sideways false
-status open
-
-\begin_layout Plain Layout
-\align center
-\begin_inset Graphics
-	filename img/correlations/plot_correlations.pdf
-	scale 120
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-\begin_inset Caption Standard
-
-\begin_layout Plain Layout
-\begin_inset CommandInset label
-LatexCommand label
-name "fig:correlation"
-
-\end_inset
-
-
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Float figure
-wide false
-sideways false
 status collapsed
 
 \begin_layout Plain Layout
@@ -1843,6 +1974,46 @@ status collapsed
 \begin_inset CommandInset label
 LatexCommand label
 name "fig:contour_fidelity"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename img/correlations/plot_correlations.pdf
+	scale 80
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:correlation"
 
 \end_inset
 
@@ -2073,7 +2244,150 @@ thispagestyle{plain}
 \end_layout
 
 \begin_layout Paragraph
-Figure S1
+Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:suppl:example_simulation"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Example simulations in a negatively autocorrelated environment (
+\begin_inset Formula $1-p=0.9$
+\end_inset
+
+), where each line depicts the average trait value of a single replicate
+ run for over 
+\begin_inset Formula $75000$
+\end_inset
+
+ generations.Sensitivity to individually learned cues 
+\begin_inset Formula $a_{\mathrm{ind}}$
+\end_inset
+
+ evolves to slight negative values (panel B), while both vertical and horizontal
+ly learned cues based on conformism 
+\begin_inset Formula $(v_{\mathrm{c}}$
+\end_inset
+
+ and 
+\begin_inset Formula $h_{\mathrm{c}}$
+\end_inset
+
+) evolve to positive values (panels D,E).
+ See also panel B of Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:suppl:sensitivities"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ at the value 
+\begin_inset Formula $1-p=0.9$
+\end_inset
+
+.
+ Parameters: 
+\begin_inset Formula $q_{\mathrm{ind}}=1.0,$
+\end_inset
+
+ 
+\begin_inset Formula $q_{\mathrm{mat}}=0.5$
+\end_inset
+
+, 
+\begin_inset Formula $n=5$
+\end_inset
+
+, 
+\begin_inset Formula $m=0.1$
+\end_inset
+
+, 
+\begin_inset Formula $1-p=0.9$
+\end_inset
+
+.
+ Total number of replicates: 5.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename img/single_sim_plot/simulation_example.pdf
+	scale 60
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:suppl:example_simulation"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+clearpage
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Paragraph
+Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:suppl:sensitivities"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -2099,15 +2413,17 @@ noprefix "false"
 \end_inset
 
  cue combinations.
- Parameters: 
-\begin_inset Formula $q_{\mathrm{mat}}=0.5$
+ See Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:eta_vs_p"
+plural "false"
+caps "false"
+noprefix "false"
+
 \end_inset
 
-, 
-\begin_inset Formula $q_{\mathrm{juv}}=1.0$
-\end_inset
-
-, 
+ for parameters.
 \end_layout
 
 \begin_layout Standard
@@ -2171,7 +2487,27 @@ clearpage
 \end_layout
 
 \begin_layout Paragraph
-Figure S2
+Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:suppl:non_individual_learning"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+Genes instead of individual learning
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -2179,14 +2515,24 @@ Proportions of variance explained when horizontal social learning based
  on prestige or conformism biases coevolves exclusively with genetic cues
  (panel A), exclusively with maternal phenotypic cues (panel B) and without
  any other cues (panel C).
- 
+ See Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:eta_vs_p"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ for parameters.
 \end_layout
 
 \begin_layout Standard
 \begin_inset Float figure
 wide false
 sideways false
-status collapsed
+status open
 
 \begin_layout Plain Layout
 \align center
@@ -2239,25 +2585,53 @@ clearpage
 \end_layout
 
 \begin_layout Paragraph
-Figure S3
+Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:suppl:eta_vs_p:envt_change_birth"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+Envt change at birth
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
-Cue that explains the majority of phenotypic variance in adult phenotype
- (measured at the logistic scale) when varying the rate of migration from
- modest (
-\begin_inset Formula $m=0.3$
+Proportions of variance explained when environmental change occurs at birth,
+ rather than between juvenility and adulthood (compare with Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:eta_vs_p"
+plural "false"
+caps "false"
+noprefix "false"
+
 \end_inset
 
-, panels A,D) to high (
-\begin_inset Formula $m=0.8$
+).
+ See Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:eta_vs_p"
+plural "false"
+caps "false"
+noprefix "false"
+
 \end_inset
 
-, panels C, F) in positively and negatively autocorrelated environments.
- With increasing levels of migration, we find that horizontal socially learned
- cues based on prestige prevail over a large region of the parameter space.
- This is because only horizontal learning allows an individual to obtain
- information about its local environment.
+ for parameters.
 \end_layout
 
 \begin_layout Standard
@@ -2269,7 +2643,117 @@ status collapsed
 \begin_layout Plain Layout
 \align center
 \begin_inset Graphics
-	filename img/migration_contour/mlevelplots_overview_annotated.pdf
+	filename img/horiz_vert_social/plot_varcomp_vary_horiz1.pdf
+	scale 60
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:suppl:eta_vs_p:envt_change_birth"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+clearpage
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Paragraph
+Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:suppl:vary_migration"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+migration
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Cues that explain the majority of phenotypic variance in adult phenotype
+ (measured at the logistic scale) when varying the probability of migration
+ from modest (
+\begin_inset Formula $m=0.3$
+\end_inset
+
+, panels A,D) to high (
+\begin_inset Formula $m=0.8$
+\end_inset
+
+, panels C, F) in positively vs negatively autocorrelated environments (top
+ vs bottom rows).
+ With increasing levels of migration, we find that horizontal socially learned
+ cues based on prestige prevail over a large region of the parameter space.
+ This is because only horizontal learning allows an individual to obtain
+ information about its local environment.
+ Parameters as in Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:contour_fidelity"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename img/migration_contour/levelplot_vary_migration.pdf
 	scale 50
 
 \end_inset
@@ -2283,7 +2767,7 @@ status collapsed
 \begin_layout Plain Layout
 \begin_inset CommandInset label
 LatexCommand label
-name "fig:suppl:non_individual_learning-1"
+name "fig:suppl:vary_migration"
 
 \end_inset
 
@@ -2292,6 +2776,97 @@ name "fig:suppl:non_individual_learning-1"
 
 \end_inset
 
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Paragraph
+Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:supplement:vary_n"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The effect of varying the number 
+\begin_inset Formula $n$
+\end_inset
+
+ of models sampled when performing horizontal or vertical social learning.
+ As in Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:contour_fidelity"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ in the main text (in which 
+\begin_inset Formula $n=5$
+\end_inset
+
+).
+ Panel A: when 
+\begin_inset Formula $n=1$
+\end_inset
+
+ (i.e., random sampling of models), we find that maternal environmental effects
+ or individual learning prevail, although conformity biases prevail at intermedi
+ate values of 
+\begin_inset Formula $q_{\mathrm{ind}}=1.5-q_{\mathrm{mat}}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename img/vary_nc_np/levelplot_vary_n.pdf
+	scale 60
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:supplement:vary_n"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
 
 \end_layout
 
