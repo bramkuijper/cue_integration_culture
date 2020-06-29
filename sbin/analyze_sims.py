@@ -161,6 +161,57 @@ def process_dist(filename):
         for key, value in eta_sq_dict.items():
             var_dict["eta2_" + key] = value
 
+
+    # all columns for the variance covariance matrix
+    columns_eta_juv = [
+            "aintercept"
+            ,"bmat_phen_X_phen_mat_error"
+            ,"bmat_envt_X_maternal_envt_cue_eror"
+            ,"agen_X_g"
+            ,"ajuv_X_cue_juv_envt_high"
+            ,"vc_X_xconformist_vert_error"
+            ,"vp_X_phen_prestige_vert_error"]
+
+    formula_start = "phen_juv_logistic ~ "
+
+    formula = formula_start
+
+    not_first = False
+
+    for column in columns_eta_juv:
+        if dist_df[column].var() > 0.0:
+
+            if not_first: 
+                formula += " + " + column
+            else:
+                formula += column
+                not_first = True
+        else:
+            # variable excluded from eta calculations
+            # just add a 0 to the var dict
+            var_dict["eta2_jv_" + column] = 0.0
+
+    if formula != formula_start:
+        
+        # create the linear model
+        lm_model = ols(formula,data=dist_df).fit()
+
+        # get the anova table
+        anova_table = sm.stats.anova_lm(lm_model,typ=2)
+
+        # get the eta squares
+        # this is classical eta^2, not partial eta^2 as it is 
+        # SSR/SST rather than SSR/(SST + SSE)
+        # (i.e., it sums up to 1)
+        eta_sq = anova_table[:-1]["sum_sq"]/sum(anova_table["sum_sq"])
+
+        # make a eta squared dict
+        eta_sq_dict = eta_sq.to_dict()
+
+        # add to var_dict, step-by-step, allowing us to change names
+        for key, value in eta_sq_dict.items():
+            var_dict["eta2_jv_" + key] = value
+
     # now make sure all keys have the same order between files
     # as python chokes on this otherwise
     var_dict_keys = list(var_dict.keys())

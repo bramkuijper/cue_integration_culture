@@ -20,8 +20,7 @@ juv_learns_remote = [0]
 
 # frequency of the high environment
 
-
-p = [ 0.1 ]
+p = [ 0.8 ]
 
 survival_scalar_sig = [-2.5,3.5]
 survival_scalar_quad = [0.8,0.0]
@@ -37,6 +36,8 @@ for qjuv_i in qjuv:
 
 #qjuv_mat_combinations = [[0.5,1.0],[0.75,1.0],[1.0,1.0]]
 qjuv_mat_combinations = [[1.0,0.5]]
+#qjuv_mat_combinations = [[1.0,1.0]]
+qjuv_mat_combinations = [[0.5,1.0],[0.75,0.75]]
 
 nloci_g = [ 3 ]
 
@@ -44,7 +45,8 @@ exe = "./xcue_integration.exe"
 
 laplace = 1
 
-nrep =5
+nrep =1
+
 
 # for now we just need 10 zeros, which covers all the traits
 #
