@@ -205,7 +205,7 @@ def eta_panel(
         ,title=""
         ,random_bar=False # depict a bar in the middle with random
         ,random_bar_text=False # depict a label with 'Random'
-        ,random_bar_text=False # depict a label with 'Random'
+        ,autocorrelation_text=False # depict a label with 'Random'
         ):
 
     # generate the query string dependent on command line args and other things
@@ -404,6 +404,9 @@ for envt_change_i in moment_envt_change:
             ,query_str=query_str
             ,trait_selection=[1,2,3,4]
             ,legend=False
+            ,random_bar=envt_change_i == 0# depict a bar in the middle with random
+            ,random_bar_text=envt_change_i == 0 # depict a label with 'Random'
+            ,autocorrelation_text=envt_change_i == 0 # depict a label with 'Random'
             ,title=title)
 
     if type(ax) != type(None):
