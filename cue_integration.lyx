@@ -38,7 +38,7 @@
 \patchBothAmsMathEnvironmentsForLineno{multline}%
 }
 
-%\linenumbers
+\linenumbers
 \end_preamble
 \use_default_options true
 \maintain_unincluded_children false
@@ -231,7 +231,7 @@ Most analyses of the origins of cultural evolution focus on when and where
  positively autocorrelated environments, whereas conformity biases prevail
  in negatively autocorrelated environments.
  Only when environments are unpredictable or horizontal social learning
- is characterized by an intrinsically low information content, other cues
+ is characterised by an intrinsically low information content, other cues
  such as conservative bet-hedging or vertical prestige biases prevail.
 \end_layout
 
@@ -363,8 +363,9 @@ literal "false"
 
 .
  In environments that fluctuate predictably over time, theory predicts that
- individuals are selectively favored to rely on transgenerational cues that
- stem from their parent's phenotype or the parental environment (e.g., 
+ individuals are selectively favoured to rely on transgenerational cues
+ that stem from their parent's phenotype or the parental environment (e.g.,
+ 
 \begin_inset CommandInset citation
 LatexCommand citep
 key "Kuijper2015,Leimar2015,English2015,Kuijper2016,Proulx_2017"
@@ -383,7 +384,7 @@ literal "false"
 
 .
  Next, rather than relying on direct or indirect cues about the environment,
- individuals may also be selectively favored to rely on mechanisms that
+ individuals may also be selectively favoured to rely on mechanisms that
  generate phenotypic variation instead (e.g., bet-hedging: 
 \begin_inset CommandInset citation
 LatexCommand citep
@@ -446,10 +447,10 @@ To understand how the integration of multiple cues affects the evolution
  the parental generation (vertical social learning) or of the current generation
  (horizontal social learning).
  We then ask how vertical and horizontal social learning evolve jointly
- with other cues that may affect behavioral development, be it genetic cues,
- individually learned cues (here represented by within-generational phenotypic
- plasticity) and transgenerational cues for phenotype determination as in
- previous models 
+ with other cues that may affect behavioural development, be it genetic
+ cues, individually learned cues (here represented by within-generational
+ phenotypic plasticity) and transgenerational cues for phenotype determination
+ as in previous models 
 \begin_inset CommandInset citation
 LatexCommand citep
 key "Rivoire2014,Botero2015,McNamara2016"
@@ -470,7 +471,7 @@ literal "false"
 
 , the current model allows sensitivity to evolve based on prestige biases
  (individuals obtain cues from the most successful individual) and/or conformity
- biases (individuals obtain cues from the most commonly observed phenotope)
+ biases (individuals obtain cues from the most commonly observed phenotype)
  for vertical and horizontal social learning independently.
  
 \end_layout
@@ -492,7 +493,7 @@ literal "false"
  over information (e.g., 
 \begin_inset CommandInset citation
 LatexCommand citep
-key "Barnard1981,Rogers1988,Giraldeau2002,Laland2004,Enquist2007"
+key "Barnard1981,Rogers1988,Giraldeau2002,Laland2004,Enquist2007,Bossan2015"
 literal "false"
 
 \end_inset
@@ -524,8 +525,8 @@ We performed individual-based simulations of a sexually reproducing population
 \begin_inset Formula $K=100$
 \end_inset
 
- hermaphroditic individuals, largely based on a previous model on the evolution
- of transgenerational effects 
+ diploid, hermaphroditic individuals, largely based on a previous model
+ on the evolution of transgenerational effects 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "Leimar2015"
@@ -1040,8 +1041,9 @@ noprefix "false"
 \end_inset
 
 , we find that sensitivity to a single cue explains the large majority of
- phenotypic variation, at least when environments are sufficiently predictable
- (by being either sufficiently positively or negatively autocorrelated).
+ phenotypic variation in adult phenotypes, at least when environments are
+ sufficiently predictable (by being either sufficiently positively or negatively
+ autocorrelated).
  Moreover, dominant cues are always individually or socially learned, as
  opposed to genetic cues or maternal effects.
  In positively autocorrelated environments (left-hand side of each panel
@@ -1057,7 +1059,7 @@ noprefix "false"
 
 ), either individual learning (green lines) or social learning driven by
  prestige biases (horizontal [yellow] or vertical [pink]) prevails.
- Evolved sensititivies to all other cues explain substantially less phenotypic
+ Evolved sensitivities to all other cues explain substantially less phenotypic
  variance.
  The prevalence of individual and social learning in predictable environments
  is unsurprising, as either acquiring direct cues about the environment
@@ -1226,7 +1228,7 @@ noprefix "false"
 \end_inset
 
  we consider a scenario where the environment changes at birth instead,
- implying that nonmigrant juveniles and adults encounter the same environmental
+ implying that non-migrant juveniles and adults encounter the same environmental
  conditions.
  For example, this may reflect fluctuating environments where early-life
  conditions are highly predictive of the later-life environment 
@@ -1268,7 +1270,7 @@ noprefix "false"
 
 \end_inset
 
- generalizes the findings above while varying key parameters that affect
+ generalises the findings above while varying key parameters that affect
  fidelity of the different cues.
  Specifically, we vary the fidelity of maternal environmental cues versus
  individual learning (
@@ -1280,7 +1282,7 @@ noprefix "false"
 \end_inset
 
 -axis) for both positively (panels A and C) and negatively autocorrelated
- environments (panels B and D) (see Figure 
+ environments (panels B and D; see Figure 
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "fig:suppl:vary_migration"
@@ -1290,7 +1292,7 @@ noprefix "false"
 
 \end_inset
 
- for largely similar results when varying the migration rate).
+ for similar results when varying the migration rate).
  Similar to Figure 
 \begin_inset CommandInset ref
 LatexCommand ref
@@ -1330,9 +1332,9 @@ C, D).
  social learning.
  In either case however, social learning is mostly based on prestige biases.
  Also, we find that there is little difference between positively and negatively
- autocorrelated environments once the environment changes at birth, as the
- rate of change does not affect the relationship between environments experience
-d between juvenility and adulthood (Figure 
+ autocorrelated environments once the environment changes at birth, as in
+ this case, the rate of change does not affect the relationship between
+ environments experienced between juvenility and adulthood (Figure 
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "fig:suppl:eta_vs_p:envt_change_birth"
@@ -1369,8 +1371,8 @@ noprefix "false"
 \end_inset
 
 A, B vs C, D).
- Intestingly, we find that the fidelity of individual learning affects the
- evolutionary scope of different social learning mechanisms, as prestige
+ Interestingly, we find that the fidelity of individual learning affects
+ the evolutionary scope of different social learning mechanisms, as prestige
  based horizontal social learning predominates when individually learned
  cues have a low fidelity (
 \begin_inset Formula $q_{\mathrm{ind}}\approx0.5$
@@ -1419,6 +1421,33 @@ B-D).
 ).
 \end_layout
 
+\begin_layout Standard
+While Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:contour_fidelity"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ shows that horizontal social learning (based on either prestige or conformity)
+ often predominates in the development of the adult phenotype, Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:suppl:contour_fidelity:juv"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ shows that vertical social learning based on prestige and individual learning
+ predominate in the development of the juvenile phenotype.
+ 
+\end_layout
+
 \begin_layout Section
 Discussion
 \end_layout
@@ -1443,7 +1472,7 @@ noprefix "false"
 
 ).
  Alternatively, when all other cues prove to be unreliable do we find that
- environmental maternal effects are selectively favored (see Figure 
+ environmental maternal effects are selectively favoured (see Figure 
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "fig:contour_fidelity"
@@ -1500,7 +1529,7 @@ noprefix "false"
 
 \begin_layout Standard
 However, when environments are negatively autocorrelated (with environmental
- change occuring between juvenility and adulthood), Figures 
+ change occurring between juvenility and adulthood), Figures 
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "fig:eta_vs_p"
@@ -1538,7 +1567,7 @@ noprefix "false"
  horizontal conformism correlate positively (and relatively strongly) with
  the adult selective environment, whereas horizontal prestige cues are only
  weakly negatively correlated.
- Less surprsing is that vertically learned and individually learned cues
+ Less surprising is that vertically learned and individually learned cues
  are all negatively correlated with the environment (with individual learned
  cues exhibiting negative correlations of the strongest magnitude), as the
  environment experienced by adults of generation 
@@ -1789,7 +1818,7 @@ literal "false"
 
 \end_inset
 
- and should be a subject of future modeling attempts.
+ and should be a subject of future modelling attempts.
  
 \end_layout
 
@@ -1815,7 +1844,7 @@ literal "false"
  selection-based or detection-based.
  Selection-based cues arise when phenotypic variants become correlated to
  a local environment through differential selection.
- An example are genetic cues, where local adaptation results in the assocation
+ An example are genetic cues, where local adaptation results in the association
  of different genetic variants to different selective conditions 
 \begin_inset CommandInset citation
 LatexCommand citep
@@ -1825,7 +1854,7 @@ literal "false"
 \end_inset
 
  or maternal phenotypic effects, where selection on the maternal phenotype
- before reproduction results in assocations between the maternal phenotype
+ before reproduction results in associations between the maternal phenotype
  and the local environment 
 \begin_inset CommandInset citation
 LatexCommand citep
@@ -1853,10 +1882,9 @@ literal "false"
  as they involve a measure of phenotypic performance in its current environment.
  By contrast, conformity-based cues can be both selection and detection-based,
  as they involve a measure of the frequency of different phenotypes.
- The distribution of these phenotypes is, in part, a result of diffential
+ The distribution of these phenotypes is, in part, a result of differential
  survival and hence selection, but also, in part a result of individuals
  modulating their phenotypes through individual learning.
- In order to achieve inheritance 
 \end_layout
 
 \begin_layout Standard
@@ -2059,7 +2087,7 @@ The proportion of variance in adult phenotype (measured at the logistic
 
 ) prevails.
  Panel C: when individually learned environmental cues are unreliable (
-\begin_inset Formula $q_{\mathrm{juv}}=0.5$
+\begin_inset Formula $q_{\mathrm{ind}}=0.5$
 \end_inset
 
 ), we find that this has little effect on horizontal social learning based
@@ -2073,38 +2101,42 @@ The proportion of variance in adult phenotype (measured at the logistic
  unreliable, vertically learned cues based on prestige prevail in autocorrelated
  environments.
  Parameters: Panel A: 
-\begin_inset Formula $\sigma_{\mathrm{horiz,conformity}}=\sigma_{\mathrm{horiz,prestige}}=\sigma_{\mathrm{vert,conformity}}=\sigma_{\mathrm{vert,prestige}}=1.0$
+\begin_inset Formula $\sigma_{\mathrm{h}}=1.0$
 \end_inset
 
-, 
-\begin_inset Formula $q_{\mathrm{juv}}=1$
+ (high noise in horizontal social learning), 
+\begin_inset Formula $\sigma_{v}=1.0$
 \end_inset
 
-.
+ (high noise in vertical social learning), 
+\begin_inset Formula $q_{\mathrm{ind}}=1.0$
+\end_inset
+
+ (high fidelity of individual learning).
  Panel B: 
-\begin_inset Formula $\sigma_{\mathrm{horiz,conformity}}=\sigma_{\mathrm{horiz,prestige}}=\sigma_{\mathrm{vert,conformity}}=\sigma_{\mathrm{vert,prestige}}=0$
+\begin_inset Formula $\sigma_{\mathrm{h}}=\sigma_{v}=0$
 \end_inset
 
 , 
-\begin_inset Formula $q_{\mathrm{juv}}=1$
+\begin_inset Formula $q_{\mathrm{ind}}=1.0$
 \end_inset
 
 .
  Panel C: 
-\begin_inset Formula $\sigma_{\mathrm{horiz,conformity}}=\sigma_{\mathrm{horiz,prestige}}=\sigma_{\mathrm{vert,conformity}}=\sigma_{\mathrm{vert,prestige}}=0$
+\begin_inset Formula $\sigma_{\mathrm{h}}=\sigma_{v}=0$
 \end_inset
 
 , 
-\begin_inset Formula $q_{\mathrm{juv}}=0.5$
+\begin_inset Formula $q_{\mathrm{ind}}=0.5$
 \end_inset
 
 .
  Panel D: 
-\begin_inset Formula $\sigma_{\mathrm{horiz,conformity}}=\sigma_{\mathrm{horiz,prestige}}=1.0$
+\begin_inset Formula $\sigma_{\mathrm{h}}=1.0$
 \end_inset
 
-, 
-\begin_inset Formula $\sigma_{\mathrm{vert,conformity}}=\sigma_{\mathrm{vert,prestige}}=0$
+ , 
+\begin_inset Formula $\sigma_{v}=0$
 \end_inset
 
 , 
@@ -2121,7 +2153,7 @@ The proportion of variance in adult phenotype (measured at the logistic
 \end_inset
 
 , 
-\begin_inset Formula $n_{c}=n_{h}=5$
+\begin_inset Formula $n_{c}=n_{h}=n=5$
 \end_inset
 
 .
@@ -2145,7 +2177,7 @@ noprefix "false"
 \begin_inset Formula $\eta^{2}=\mathrm{SS}_{\mathrm{between}}/\mathrm{SS}_{\mathrm{total}}$
 \end_inset
 
- for each indepent variable (i.e., the partial 
+ for each independent variable (i.e., the partial 
 \begin_inset Formula $R^{2}$
 \end_inset
 
@@ -2410,7 +2442,7 @@ name "fig:eta_vs_p"
 \begin_inset Float figure
 wide false
 sideways false
-status open
+status collapsed
 
 \begin_layout Plain Layout
 \align center
@@ -2450,7 +2482,7 @@ name "fig:contour_fidelity"
 \begin_inset Float figure
 wide false
 sideways false
-status open
+status collapsed
 
 \begin_layout Plain Layout
 \align center
@@ -2675,8 +2707,7 @@ LARGE{The evolution of social learning as phenotypic cue integration}
 
 
 \backslash
-large{Bram Kuijper, Olof Leimar, Peter R.
- Hammerstein,
+large{Bram Kuijper, Olof Leimar, Peter Hammerstein,
 \backslash
 
 \backslash
@@ -2733,7 +2764,8 @@ Example simulations in a negatively autocorrelated environment (
 \begin_inset Formula $75000$
 \end_inset
 
- generations.Sensitivity to individually learned cues 
+ generations.
+ Sensitivity to individually learned cues 
 \begin_inset Formula $a_{\mathrm{ind}}$
 \end_inset
 
@@ -2791,7 +2823,7 @@ noprefix "false"
 placement b
 wide false
 sideways false
-status open
+status collapsed
 
 \begin_layout Plain Layout
 \align center
@@ -2898,7 +2930,7 @@ noprefix "false"
 placement b
 wide false
 sideways false
-status open
+status collapsed
 
 \begin_layout Plain Layout
 \align center
@@ -3001,7 +3033,7 @@ noprefix "false"
 placement b
 wide false
 sideways false
-status open
+status collapsed
 
 \begin_layout Plain Layout
 \align center
@@ -3021,6 +3053,121 @@ status open
 \begin_inset CommandInset label
 LatexCommand label
 name "fig:suppl:non_individual_learning"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+clearpage
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Paragraph
+Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:suppl:contour_fidelity:juv"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+Juvenile cues overview
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Most important cues affecting juvenile phenotype determination (i.e., before
+ horizontal social learning).
+ Vertical prestige biases and individual learning mostly predominate.
+ However, when fidelities of both vertical social learning and individual
+ learning are low (top left corner of each panel), maternal effects typically
+ prevail.
+ Cases where vertical social learning based on conformity evolves despite
+ high levels of noise in vertical social learning (top of panel A) merely
+ reflect the generation of phenotypic variance: horizontal prestige-based
+ learning (shown in Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:contour_fidelity"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+) evolves to strong values here, so that other cues are largely superfluous.
+ See Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:contour_fidelity"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ for parameters.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement b
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename img/juvenile_contour/levelplot_qjuv_vs_sdsoc_jv.pdf
+	scale 60
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:suppl:contour_fidelity:juv"
 
 \end_inset
 
@@ -3107,7 +3254,7 @@ noprefix "false"
 \begin_inset Float figure
 wide false
 sideways false
-status open
+status collapsed
 
 \begin_layout Plain Layout
 \align center
@@ -3218,7 +3365,7 @@ noprefix "false"
 placement b
 wide false
 sideways false
-status open
+status collapsed
 
 \begin_layout Plain Layout
 \align center
@@ -3615,7 +3762,7 @@ noprefix "false"
 \begin_inset Formula $a_{\mathrm{ind}}$
 \end_inset
 
- reflects evolving sensitity to individually learned cues 
+ reflects evolving sensitivity to individually learned cues 
 \begin_inset Formula $x_{\mathrm{ind}}$
 \end_inset
 
@@ -3835,7 +3982,7 @@ Juveniles receive two maternal cues: the first is a maternal phenotypic
 \begin_inset Formula $u_{\mathrm{ad}}(t-1)$
 \end_inset
 
- we standardize the maternal phenotype between 
+ we standardise the maternal phenotype between 
 \begin_inset Formula $-1/2$
 \end_inset
 
@@ -4030,7 +4177,7 @@ noprefix "false"
 \end_inset
 
  is a sample drawn from a Gaussian noise distribution with mean 0 and standard
- devation 
+ deviation 
 \begin_inset Formula $\sigma_{\mathrm{vert,prestige}}$
 \end_inset
 
@@ -4038,7 +4185,7 @@ noprefix "false"
 \begin_inset Formula $-1/2$
 \end_inset
 
- standardizes the cue range to the same scale as for other cues.
+ standardises the cue range to the same scale as for other cues.
  
 \end_layout
 
@@ -4198,7 +4345,31 @@ noprefix "false"
 \begin_inset Formula $i$
 \end_inset
 
-th model's juvenile phenotype 
+
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+th
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+ model's juvenile phenotype 
 \begin_inset Formula $u_{\mathrm{juv},i}$
 \end_inset
 
@@ -4244,7 +4415,7 @@ noprefix "false"
 \end_inset
 
  is a sample drawn from a Gaussian noise distribution with mean 0 and standard
- devation 
+ deviation 
 \begin_inset Formula $\sigma_{\mathrm{horiz,prestige}}$
 \end_inset
 
@@ -4252,7 +4423,7 @@ noprefix "false"
 \begin_inset Formula $-1/2$
 \end_inset
 
- standardizes the cue range to the same scale as for other cues.
+ standardises the cue range to the same scale as for other cues.
  
 \end_layout
 

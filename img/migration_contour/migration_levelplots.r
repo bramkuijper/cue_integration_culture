@@ -218,7 +218,7 @@ pushViewport(
         ,x.label=F
         ,x.ticks=F
         ,ind.label="A"
-        ,title=expression(paste("Migration probability, ",italic("m")," = ",0.3))
+        ,title=expression(paste("Migration probability, ",italic("d")," = ",0.3))
         )
 
     subs.2 <- subset(the.data, m == 0.5 & p == 0.8)
@@ -232,7 +232,7 @@ pushViewport(
         ,x.label=F
         ,x.ticks=F
         ,ind.label="B"
-        ,title=expression(paste("Migration probability, ",italic("m")," = ",0.5))
+        ,title=expression(paste("Migration probability, ",italic("d")," = ",0.5))
         )
 
     subs.3 <- subset(the.data, m == 0.8 & p == 0.8)
@@ -246,7 +246,7 @@ pushViewport(
         ,x.label=F
         ,x.ticks=F
         ,ind.label="C"
-        ,title=expression(paste("Migration probability, ",italic("m")," = ",0.8))
+        ,title=expression(paste("Migration probability, ",italic("d")," = ",0.8))
         )
 
     subs.4 <- subset(the.data, m == 0.3 & p == 0.2)
