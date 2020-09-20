@@ -18,9 +18,20 @@ sigmoidal_survival = [ 0 ]
 envt_change_birth = [0]
 juv_learns_remote = [0]
 
-# frequency of the high environment
+# frequency and autocorrelation of the 
+# environment
+autocorr = [ 0, 0.3, 0.9]
+risk = [ 0.05, 0.1 ]
 
-p = [ 0.8 ]
+s_combinations = []
+
+for rho_i in autocorr:
+    for r_i in risk:
+        s_P2NP = (1 - r_i) * (1 - rho_i)
+        s_NP2P = r_i * (1 - rho_i)
+
+        s_combinations.append([round(s_P2NP,3), round(s_NP2P,3)])
+
 
 survival_scalar_sig = [-2.5,3.5]
 survival_scalar_quad = [0.8,0.0]
@@ -208,8 +219,10 @@ for rep_i in range(0,nrep):
         survival_scalar_i_str = " ".join(str(x) for x in survival_scalar_i)
 
         for envt_change_birth_i in envt_change_birth:
-            for p_i in p:
-                p_i = round(p_i,3)
+            for s_combi_i in s_combinations:
+                s12_i = s_combi_i[0]
+                s21_i = s_combi_i[1]
+
                 for qjuv_mat_i in qjuv_mat_combinations:
 
                     qjuv_i = qjuv_mat_i[0]

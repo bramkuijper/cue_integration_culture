@@ -44,9 +44,6 @@ int number_generations = 75000;
 //
 // parameters below will be changed on the command line
 
-// frequency of high state patches
-double p = 0.0;
-
 // survival function in low vs high patches
 double survival_scalar[2] = {0.0, 0.0};
 
@@ -86,6 +83,9 @@ double init_hc = 0.0;
 double init_hp = 0.0;
 double init_vc = 0.0;
 double init_vp = 0.0;
+
+// spatial heterogeneity parameters
+double sigma[2] = {0.0,0.0};
 
 // ranges for traits
 double gmin = 0.0;
@@ -187,7 +187,10 @@ void init_arguments(int argc, char **argv)
 {
     sigmoidal_survival = atoi(argv[1]);
     laplace = atoi(argv[2]);
-    p = atof(argv[3]);
+    sigma[0] = atof(argv[3]);
+    sigma[1] = atof(argv[3]);
+
+    // TODO
     survival_scalar[0] = atof(argv[4]);
     survival_scalar[1] = atof(argv[5]);
     qmat = atof(argv[6]);
@@ -256,7 +259,8 @@ void write_parameters(std::ofstream &DataFile)
     DataFile << std::endl << std::endl
         << "sigmoidal_survival;" << sigmoidal_survival << ";"<< std::endl
         << "laplace;" << laplace << ";"<< std::endl
-        << "p;" << p << ";"<< std::endl
+        << "sigma12;" << sigma[0] << ";"<< std::endl
+        << "sigma21;" << sigma[1] << ";"<< std::endl
         << "qmat;" << qmat << ";"<< std::endl
         << "qjuv;" << qjuv << ";"<< std::endl
         << "sd_hc_noise;" << sd_hc_noise  << ";" << std::endl
@@ -1436,7 +1440,8 @@ void replace(int const generation )
         {
             envt_previous = Pop[patch_i].envt_high;
 
-            if (uniform(rng_r) < 1.0 - p)
+            // change environment
+            if (uniform(rng_r) < sigma[Pop[patch_i].envt_high])
             {
                 Pop[patch_i].envt_high = !Pop[patch_i].envt_high;
             }
@@ -1651,10 +1656,9 @@ void replace(int const generation )
         envt_previous = Pop[patch_i].envt_high;
 
         // envtal change after breeder establishment, but before adult survival
-        if (!envt_change_at_birth && uniform(rng_r) < 1.0 - p)
+        if (!envt_change_at_birth && uniform(rng_r) < sigma[Pop[patch_i].envt_high])
         {
             Pop[patch_i].envt_high = !Pop[patch_i].envt_high;
-           
         }
 
         envt_current = Pop[patch_i].envt_high;

@@ -479,6 +479,17 @@ for envt_change_i in moment_envt_change:
             ,verticalalignment="center"
             ,transform=the_fig.fig.transFigure)
 
+    if envt_change_i == 0:
+        the_fig.fig.text(
+                x=0.01
+                ,y=0.99
+                ,s=r"Figure 2"
+                ,fontsize=18
+                ,fontweight="bold"
+                ,horizontalalignment="left"
+                ,verticalalignment="center"
+                ,transform=the_fig.fig.transFigure)
+
     the_fig.close(tight=True)
 
 

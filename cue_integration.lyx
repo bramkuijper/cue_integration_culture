@@ -38,7 +38,7 @@
 \patchBothAmsMathEnvironmentsForLineno{multline}%
 }
 
-\linenumbers
+%\linenumbers
 \end_preamble
 \use_default_options true
 \maintain_unincluded_children false
@@ -560,7 +560,7 @@ status open
 
 
 \backslash
-url{https://github.com/bramkuijper/cue_integration_culture/}
+url{https://doi.org/10.5281/zenodo.3924688}
 \end_layout
 
 \end_inset
@@ -1422,7 +1422,7 @@ B-D).
 \end_layout
 
 \begin_layout Standard
-While Figure 
+Overall, Figure 
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "fig:contour_fidelity"
@@ -1433,7 +1433,10 @@ noprefix "false"
 \end_inset
 
  shows that horizontal social learning (based on either prestige or conformity)
- often predominates in the development of the adult phenotype, Figure 
+ often predominates when it comes to the development of the adult phenotype.
+ This raises the question what cues are important in the development of
+ juvenile phenotypes, as those serve as models for horizontal social learning.
+ Figure 
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "fig:suppl:contour_fidelity:juv"
@@ -1443,9 +1446,9 @@ noprefix "false"
 
 \end_inset
 
- shows that vertical social learning based on prestige and individual learning
- predominate in the development of the juvenile phenotype.
- 
+ shows that individual learning and vertical prestige biases (and rarely
+ also maternal effects) are the most important cues in the development of
+ juvenile phenotypes.
 \end_layout
 
 \begin_layout Section
@@ -1841,7 +1844,8 @@ literal "false"
 \end_inset
 
 ), the information content of different cues has been classified as either
- selection-based or detection-based.
+ selection-based or detection-based, with the aim of explaining differences
+ in inheritance fidelity.
  Selection-based cues arise when phenotypic variants become correlated to
  a local environment through differential selection.
  An example are genetic cues, where local adaptation results in the association
@@ -1881,10 +1885,15 @@ literal "false"
  In case of social learning, prestige-based cues are clearly detection-based,
  as they involve a measure of phenotypic performance in its current environment.
  By contrast, conformity-based cues can be both selection and detection-based,
- as they involve a measure of the frequency of different phenotypes.
- The distribution of these phenotypes is, in part, a result of differential
- survival and hence selection, but also, in part a result of individuals
- modulating their phenotypes through individual learning.
+ as conformity is a function of the distribution of the different phenotypes
+ in the local deme: this distribution is both a result of differential survival
+ selection and of individuals modulating their phenotypes via detection-based
+ mechanisms (i.e., individual learning).
+ Consequently, conformity-based social learning can result in either short-term
+ inheritance of variants (when those variants are newly generated each generatio
+n through detection-based mechanisms), or it can result in long-term inheritance
+ (when a variant is copied because it is the most frequent due to differential
+ selection).
 \end_layout
 
 \begin_layout Standard
@@ -3148,13 +3157,13 @@ noprefix "false"
 placement b
 wide false
 sideways false
-status collapsed
+status open
 
 \begin_layout Plain Layout
 \align center
 \begin_inset Graphics
 	filename img/juvenile_contour/levelplot_qjuv_vs_sdsoc_jv.pdf
-	scale 60
+	scale 90
 
 \end_inset
 
