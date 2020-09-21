@@ -15,7 +15,7 @@ import copy
 # sigmoidal or not
 sigmoidal_survival = [ 0 ]
 
-envt_change_birth = [0]
+envt_change_birth = [0,1]
 juv_learns_remote = [0]
 
 # frequency of the high environment
@@ -69,7 +69,8 @@ gminmax = "-1.0 1.0"
 bminmax = "-10.0 10.0"
 
 #m = list(np.linspace(0, 1.0, 20))
-m = [0.3,0.5,0.8]
+#m = [0.3,0.5,0.8]
+m = [0.1]
 #mu_g, mu_aintercept, mu_ajuv, mu_agen, mu_bmat_phen, mu_bmat_envt, mu_hp, mu_hc, mu_vp, mu_vc
 #mu_combis = [[ 0.01 for x in range(0,10) ]]
 zeros = [ 0 for i in range(0,10) ]
@@ -136,7 +137,7 @@ mu_c_only[-4] = 0.0
 
 
 # choose what set of traits evolving we want
-mu_combis = [ mu_all ]
+mu_combis = [ mu_all_but_prestige ]
                         
 sd_hv_noise_combs = []
 
