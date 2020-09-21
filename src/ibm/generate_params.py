@@ -15,14 +15,25 @@ import copy
 # sigmoidal or not
 sigmoidal_survival = [ 0 ]
 
-envt_change_birth = [0,1]
+envt_change_birth = [0]
 juv_learns_remote = [0]
 
-# frequency of the high environment
+# frequency and autocorrelation of the 
+# environment
+autocorr = list(np.linspace(-1,1,20)) 
+risk = list(np.linspace(0,1,20))
 
+s_combinations = []
 
-p = [ 0.2,0.8 ]
-#p = np.linspace(0,1,30)
+for rho_i in autocorr:
+    for r_i in risk:
+        s_P2NP = (1 - r_i) * (1 - rho_i)
+        s_NP2P = r_i * (1 - rho_i)
+
+        if s_P2NP > 1.0 or s_NP2P > 1.0:
+            continue
+        
+        s_combinations.append([round(s_P2NP,3), round(s_NP2P,3)])
 
 survival_scalar_sig = [-2.5,3.5]
 survival_scalar_quad = [0.8,0.0]
@@ -37,7 +48,7 @@ for qjuv_i in qjuv:
 #qjuv_mat_combinations = [[0.5,0.5],[1.0,0.5],[0.5,1.0],[1.0,1.0],[0.75,1.0],[0.75,0.5]]
 
 #qjuv_mat_combinations = [[0.5,1.0],[0.75,1.0],[1.0,1.0]]
-#qjuv_mat_combinations = [[1.0,0.5]]
+qjuv_mat_combinations = [[1.0,0.5],[0.5,0.5]]
 
 nloci_g = [ 3 ]
 
@@ -68,9 +79,8 @@ aminmax = "-10.0 10.0"
 gminmax = "-1.0 1.0"
 bminmax = "-10.0 10.0"
 
-#m = list(np.linspace(0, 1.0, 20))
-#m = [0.3,0.5,0.8]
 m = [0.1]
+
 #mu_g, mu_aintercept, mu_ajuv, mu_agen, mu_bmat_phen, mu_bmat_envt, mu_hp, mu_hc, mu_vp, mu_vc
 #mu_combis = [[ 0.01 for x in range(0,10) ]]
 zeros = [ 0 for i in range(0,10) ]
@@ -137,7 +147,7 @@ mu_c_only[-4] = 0.0
 
 
 # choose what set of traits evolving we want
-mu_combis = [ mu_all_but_prestige ]
+mu_combis = [ mu_all ]
                         
 sd_hv_noise_combs = []
 
@@ -149,7 +159,7 @@ for sd_h_i in sd_h_noise:
     sd_hv_noise_combs.append([sd_h_i, sd_h_i, 1.0 - sd_h_i, 1.0 - sd_h_i])
 
 sd_mat_phen_noise = [ 0 ]
-
+sd_hv_noise_combs = [[0.0, 0.0, 0.0, 0.0]]
 
 sd_mat_phen_noise = [ 0.0 ]
 
@@ -208,8 +218,10 @@ for rep_i in range(0,nrep):
         survival_scalar_i_str = " ".join(str(x) for x in survival_scalar_i)
 
         for envt_change_birth_i in envt_change_birth:
-            for p_i in p:
-                p_i = round(p_i,3)
+            for s_combi_i in s_combinations:
+                s12_i = s_combi_i[0]
+                s21_i = s_combi_i[1]
+
                 for qjuv_mat_i in qjuv_mat_combinations:
 
                     qjuv_i = qjuv_mat_i[0]
@@ -254,7 +266,8 @@ for rep_i in range(0,nrep):
                                                         print(exe + " \t"
                                                                 + str(sigmoidal_survival_i) + " \t"
                                                                 + str(laplace) + " "
-                                                                + str(p_i) + " \t"
+                                                                + str(s12_i) + " "
+                                                                + str(s21_i) + " \t"
                                                                 + survival_scalar_i_str + " \t"
                                                                 + str(qmat_i) + " "
                                                                 + str(qjuv_i) + " "

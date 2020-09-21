@@ -203,6 +203,9 @@ def eta_panel(
         ,ylim=[-0.05,1.05]
         ,legend=False
         ,title=""
+        ,random_bar=False # depict a bar in the middle with random
+        ,random_bar_text=False # depict a label with 'Random'
+        ,autocorrelation_text=False # depict a label with 'Random'
         ):
 
     # generate the query string dependent on command line args and other things
@@ -267,13 +270,14 @@ def eta_panel(
 
 
     # add a horizontal line indicating randomness
-    the_axis.add_artist(lines.Line2D(
-        xdata=[0.5,0.5]
-        ,ydata=[ylim[0],ylim[1]]
-        ,linewidth=1
-        ,color="#bcbcbc"))
+    if random_bar:
+        the_axis.add_artist(lines.Line2D(
+            xdata=[0.5,0.5]
+            ,ydata=[ylim[0],ylim[1]]
+            ,linewidth=1
+            ,color="#bcbcbc"))
 
-    if row == 0:
+    if random_bar_text:
         the_axis.text(x=0.47
                 ,y=0.7
                 ,s=r"Random"
@@ -281,6 +285,7 @@ def eta_panel(
                 ,rotation=90
                 ,transform=the_axis.transAxes)
 
+    if autocorrelation_text:
         the_axis.text(x=0.25
                 ,y=1.0
                 ,s=r"Autocorrelation $+$ve"
@@ -399,6 +404,9 @@ for envt_change_i in moment_envt_change:
             ,query_str=query_str
             ,trait_selection=[1,2,3,4]
             ,legend=False
+            ,random_bar=envt_change_i == 0# depict a bar in the middle with random
+            ,random_bar_text=envt_change_i == 0 # depict a label with 'Random'
+            ,autocorrelation_text=envt_change_i == 0 # depict a label with 'Random'
             ,title=title)
 
     if type(ax) != type(None):
@@ -470,6 +478,17 @@ for envt_change_i in moment_envt_change:
             ,horizontalalignment="center"
             ,verticalalignment="center"
             ,transform=the_fig.fig.transFigure)
+
+    if envt_change_i == 0:
+        the_fig.fig.text(
+                x=0.01
+                ,y=0.99
+                ,s=r"Figure 2"
+                ,fontsize=18
+                ,fontweight="bold"
+                ,horizontalalignment="left"
+                ,verticalalignment="center"
+                ,transform=the_fig.fig.transFigure)
 
     the_fig.close(tight=True)
 
