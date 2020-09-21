@@ -20,8 +20,8 @@ juv_learns_remote = [0]
 
 # frequency and autocorrelation of the 
 # environment
-autocorr = [ 0, 0.3, 0.9]
-risk = [ 0.05, 0.1 ]
+autocorr = list(np.linspace(-1,1,20)) 
+risk = list(np.linspace(0,1,20))
 
 s_combinations = []
 
@@ -30,8 +30,11 @@ for rho_i in autocorr:
         s_P2NP = (1 - r_i) * (1 - rho_i)
         s_NP2P = r_i * (1 - rho_i)
 
-        s_combinations.append([round(s_P2NP,3), round(s_NP2P,3)])
+        if s_P2NP > 1.0 or s_NP2P > 1.0:
+            continue
 
+
+        s_combinations.append([round(s_P2NP,3), round(s_NP2P,3)])
 
 survival_scalar_sig = [-2.5,3.5]
 survival_scalar_quad = [0.8,0.0]
@@ -48,7 +51,7 @@ for qjuv_i in qjuv:
 #qjuv_mat_combinations = [[0.5,1.0],[0.75,1.0],[1.0,1.0]]
 qjuv_mat_combinations = [[1.0,0.5]]
 #qjuv_mat_combinations = [[1.0,1.0]]
-qjuv_mat_combinations = [[0.5,1.0],[0.75,0.75]]
+#qjuv_mat_combinations = [[0.5,1.0],[0.75,0.75]]
 
 nloci_g = [ 3 ]
 
@@ -267,7 +270,8 @@ for rep_i in range(0,nrep):
                                                         print(exe + " \t"
                                                                 + str(sigmoidal_survival_i) + " \t"
                                                                 + str(laplace) + " "
-                                                                + str(p_i) + " \t"
+                                                                + str(s12_i) + " "
+                                                                + str(s21_i) + " \t"
                                                                 + survival_scalar_i_str + " \t"
                                                                 + str(qmat_i) + " "
                                                                 + str(qjuv_i) + " "

@@ -188,69 +188,67 @@ void init_arguments(int argc, char **argv)
     sigmoidal_survival = atoi(argv[1]);
     laplace = atoi(argv[2]);
     sigma[0] = atof(argv[3]);
-    sigma[1] = atof(argv[3]);
+    sigma[1] = atof(argv[4]);
+    survival_scalar[0] = atof(argv[5]);
+    survival_scalar[1] = atof(argv[6]);
+    qmat = atof(argv[7]);
+    qjuv = atof(argv[8]);
+    sd_hc_noise = atof(argv[9]);
+    sd_hp_noise = atof(argv[10]);
+    sd_vc_noise = atof(argv[11]);
+    sd_vp_noise = atof(argv[12]);
+    sd_mat_phen_noise = atof(argv[13]);
+    nloci_g = atoi(argv[14]);
 
-    // TODO
-    survival_scalar[0] = atof(argv[4]);
-    survival_scalar[1] = atof(argv[5]);
-    qmat = atof(argv[6]);
-    qjuv = atof(argv[7]);
-    sd_hc_noise = atof(argv[8]);
-    sd_hp_noise = atof(argv[9]);
-    sd_vc_noise = atof(argv[10]);
-    sd_vp_noise = atof(argv[11]);
-    sd_mat_phen_noise = atof(argv[12]);
-    nloci_g = atoi(argv[13]);
+    init_g = atof(argv[15]);
+    init_aintercept = atof(argv[16]);
+    init_ajuv = atof(argv[17]);
 
-    init_g = atof(argv[14]);
-    init_aintercept = atof(argv[15]);
-    init_ajuv = atof(argv[16]);
+    init_agen = atof(argv[18]);
+    init_bmat_phen = atof(argv[19]);
+    init_bmat_envt = atof(argv[20]);
 
-    init_agen = atof(argv[17]);
-    init_bmat_phen = atof(argv[18]);
-    init_bmat_envt = atof(argv[19]);
+    init_hp = atof(argv[21]);
+    init_hc = atof(argv[22]);
+    init_vp = atof(argv[23]);
 
-    init_hp = atof(argv[20]);
-    init_hc = atof(argv[21]);
-    init_vp = atof(argv[22]);
+    init_vc = atof(argv[24]);
 
-    init_vc = atof(argv[23]);
-
-    gmin = atof(argv[24]);
-    gmax = atof(argv[25]);
-    amin = atof(argv[26]);
-    amax = atof(argv[27]);
-    bmin = atof(argv[28]);
-    bmax = atof(argv[29]);
+    gmin = atof(argv[25]);
+    gmax = atof(argv[26]);
+    amin = atof(argv[27]);
+    amax = atof(argv[28]);
+    bmin = atof(argv[29]);
+    bmax = atof(argv[30]);
     
-    mu_g = atof(argv[30]);
-    mu_aintercept = atof(argv[31]);
-    mu_ajuv = atof(argv[32]);
-    mu_agen = atof(argv[33]);
-    mu_bmat_phen = atof(argv[34]);
-    mu_bmat_envt = atof(argv[35]);
-    mu_hp_t1 = atof(argv[36]);
-    mu_hc_t1 = atof(argv[37]);
-    mu_vp_t1 = atof(argv[38]);
-    mu_vc_t1 = atof(argv[39]);
-    mu_hp = mu_hp_t0 = atof(argv[40]);
-    mu_hc = mu_hc_t0 = atof(argv[41]);
-    mu_vp = mu_vp_t0 = atof(argv[42]);
-    mu_vc = mu_vc_t0 = atof(argv[43]);
+    mu_g = atof(argv[31]);
+    mu_aintercept = atof(argv[32]);
+    mu_ajuv = atof(argv[33]);
+    mu_agen = atof(argv[34]);
+    mu_bmat_phen = atof(argv[35]);
+    mu_bmat_envt = atof(argv[36]);
+    mu_hp_t1 = atof(argv[37]);
+    mu_hc_t1 = atof(argv[38]);
+    mu_vp_t1 = atof(argv[39]);
+    mu_vc_t1 = atof(argv[40]);
+    mu_hp = mu_hp_t0 = atof(argv[41]);
+    mu_hc = mu_hc_t0 = atof(argv[42]);
+    mu_vp = mu_vp_t0 = atof(argv[43]);
+    mu_vc = mu_vc_t0 = atof(argv[44]);
 
-    sdmu_a = atof(argv[44]);
-    sdmu_b = atof(argv[45]);
-    sdmu_g = atof(argv[46]);
-    m = atof(argv[47]);
-    nph = atoi(argv[48]);
-    nch = atoi(argv[49]);
-    npv = atoi(argv[50]);
-    ncv = atoi(argv[51]);
-    juvenile_survival_on = atoi(argv[52]);
-    adult_survival_on = atoi(argv[53]);
-    envt_change_at_birth = atoi(argv[54]);
-    juvenile_learns_remote_envt = atoi(argv[55]);
-    base_name = argv[56];
+    sdmu_a = atof(argv[45]);
+    sdmu_b = atof(argv[46]);
+    sdmu_g = atof(argv[47]);
+    m = atof(argv[48]);
+    nph = atoi(argv[49]);
+    nch = atoi(argv[50]);
+    npv = atoi(argv[51]);
+    ncv = atoi(argv[52]);
+    juvenile_survival_on = atoi(argv[53]);
+    adult_survival_on = atoi(argv[54]);
+    envt_change_at_birth = atoi(argv[55]);
+    juvenile_learns_remote_envt = atoi(argv[56]);
+    base_name = argv[57];
 }
 
 // write down all parameters to the file DataFile
@@ -261,6 +259,8 @@ void write_parameters(std::ofstream &DataFile)
         << "laplace;" << laplace << ";"<< std::endl
         << "sigma12;" << sigma[0] << ";"<< std::endl
         << "sigma21;" << sigma[1] << ";"<< std::endl
+        << "autocorr;" << 1.0 - sigma[1] - sigma[0] << ";"<< std::endl
+        << "freq1;" << sigma[1]/(sigma[0] + sigma[1]) << ";"<< std::endl
         << "qmat;" << qmat << ";"<< std::endl
         << "qjuv;" << qjuv << ";"<< std::endl
         << "sd_hc_noise;" << sd_hc_noise  << ";" << std::endl
@@ -1706,6 +1706,7 @@ int main(int argc, char **argv)
     std::string filename_dist = base_name + "_dist.csv";
     std::ofstream DataFileDist(filename_dist.c_str());  
 
+    write_parameters(DataFile);
     // write headers to the datafile
     write_data_headers(DataFile);
     
@@ -1751,5 +1752,4 @@ int main(int argc, char **argv)
 
     write_dist(DataFileDist, generation);
     
-    write_parameters(DataFile);
 }
