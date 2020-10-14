@@ -48,7 +48,7 @@ for qjuv_i in qjuv:
 #qjuv_mat_combinations = [[0.5,0.5],[1.0,0.5],[0.5,1.0],[1.0,1.0],[0.75,1.0],[0.75,0.5]]
 
 #qjuv_mat_combinations = [[0.5,1.0],[0.75,1.0],[1.0,1.0]]
-qjuv_mat_combinations = [[1.0,0.5],[0.5,0.5]]
+qjuv_mat_combinations = [[0.5,0.5]]
 
 nloci_g = [ 3 ]
 
