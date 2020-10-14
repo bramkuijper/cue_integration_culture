@@ -37,8 +37,7 @@ const int NPatches = 40;
 const int NBreeder = 100;
 
 // number of generations
-int number_generations = 3;
-// int number_generations = 5;
+int number_generations = 50000;
 
 // environmental switch rate
 //
@@ -1374,7 +1373,6 @@ void social_learning(
         }
     }
 
-
     int nlo = 0;
     int nhi = 0;
 
@@ -1712,7 +1710,6 @@ int main(int argc, char **argv)
     std::string filename_dist = base_name + "_dist.csv";
     std::ofstream DataFileDist(filename_dist.c_str());  
 
-    write_parameters(DataFile);
     // write headers to the datafile
     write_data_headers(DataFile);
     
@@ -1758,4 +1755,5 @@ int main(int argc, char **argv)
 
     write_dist(DataFileDist, generation);
     
+    write_parameters(DataFile);
 }

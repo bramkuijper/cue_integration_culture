@@ -32,7 +32,7 @@ for rho_i in autocorr:
 #
         if s_P2NP > 1.0 or s_NP2P > 1.0:
             continue
-
+        
         rho_combinations.append([rho_i,r_i])
 
 survival_scalar_sig = [-2.5,3.5]
@@ -48,9 +48,7 @@ for qjuv_i in qjuv:
 #qjuv_mat_combinations = [[0.5,0.5],[1.0,0.5],[0.5,1.0],[1.0,1.0],[0.75,1.0],[0.75,0.5]]
 
 #qjuv_mat_combinations = [[0.5,1.0],[0.75,1.0],[1.0,1.0]]
-qjuv_mat_combinations = [[1.0,0.5]]
-#qjuv_mat_combinations = [[1.0,1.0]]
-#qjuv_mat_combinations = [[0.5,1.0],[0.75,0.75]]
+qjuv_mat_combinations = [[1.0,0.5],[0.5,0.5]]
 
 nloci_g = [ 3 ]
 
@@ -59,7 +57,6 @@ exe = "./xcue_integration.exe"
 laplace = 1
 
 nrep =1
-
 
 # for now we just need 10 zeros, which covers all the traits
 #
@@ -82,8 +79,8 @@ aminmax = "-10.0 10.0"
 gminmax = "-1.0 1.0"
 bminmax = "-10.0 10.0"
 
-#m = list(np.linspace(0, 1.0, 20))
 m = [0.1]
+
 #mu_g, mu_aintercept, mu_ajuv, mu_agen, mu_bmat_phen, mu_bmat_envt, mu_hp, mu_hc, mu_vp, mu_vc
 #mu_combis = [[ 0.01 for x in range(0,10) ]]
 zeros = [ 0 for i in range(0,10) ]
@@ -162,11 +159,11 @@ for sd_h_i in sd_h_noise:
     sd_hv_noise_combs.append([sd_h_i, sd_h_i, 1.0 - sd_h_i, 1.0 - sd_h_i])
 
 sd_mat_phen_noise = [ 0 ]
-
+sd_hv_noise_combs = [[0.0, 0.0, 0.0, 0.0]]
 
 sd_mat_phen_noise = [ 0.0 ]
 
-sd_hv_noise_combs = [[0.0,0.0,0,0]]
+#sd_hv_noise_combs = [[0.0,0.0,0,0]]
 
 sdmu = "0.02 0.25 0.25"
 
