@@ -37,7 +37,7 @@ const int NPatches = 40;
 const int NBreeder = 100;
 
 // number of generations
-int number_generations = 75000;
+int number_generations = 3;
 // int number_generations = 5;
 
 // environmental switch rate
@@ -86,6 +86,8 @@ double init_vp = 0.0;
 
 // spatial heterogeneity parameters
 double sigma[2] = {0.0,0.0};
+double risk = 0.0;
+double autocorr = 0.0;
 
 // ranges for traits
 double gmin = 0.0;
@@ -187,8 +189,12 @@ void init_arguments(int argc, char **argv)
 {
     sigmoidal_survival = atoi(argv[1]);
     laplace = atoi(argv[2]);
-    sigma[0] = atof(argv[3]);
-    sigma[1] = atof(argv[4]);
+    autocorr = atof(argv[3]);
+    risk = atof(argv[4]);
+
+    sigma[0] = (1.0 - risk) * (1.0 - autocorr);
+    sigma[1] = risk * (1.0 - autocorr);
+
     survival_scalar[0] = atof(argv[5]);
     survival_scalar[1] = atof(argv[6]);
     qmat = atof(argv[7]);
@@ -259,8 +265,8 @@ void write_parameters(std::ofstream &DataFile)
         << "laplace;" << laplace << ";"<< std::endl
         << "sigma12;" << sigma[0] << ";"<< std::endl
         << "sigma21;" << sigma[1] << ";"<< std::endl
-        << "autocorr;" << 1.0 - sigma[1] - sigma[0] << ";"<< std::endl
-        << "freq1;" << sigma[1]/(sigma[0] + sigma[1]) << ";"<< std::endl
+        << "autocorr;" << autocorr << ";"<< std::endl
+        << "freq1;" << risk << ";"<< std::endl
         << "qmat;" << qmat << ";"<< std::endl
         << "qjuv;" << qjuv << ";"<< std::endl
         << "sd_hc_noise;" << sd_hc_noise  << ";" << std::endl

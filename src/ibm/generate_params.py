@@ -20,21 +20,20 @@ juv_learns_remote = [0]
 
 # frequency and autocorrelation of the 
 # environment
-autocorr = list(np.linspace(-1,1,20)) 
-risk = list(np.linspace(0,1,20))
+autocorr = list(np.linspace(-1,1,30)) 
+risk = list(np.linspace(0,1,30))
 
-s_combinations = []
+rho_combinations = []
 
 for rho_i in autocorr:
     for r_i in risk:
         s_P2NP = (1 - r_i) * (1 - rho_i)
         s_NP2P = r_i * (1 - rho_i)
-
+#
         if s_P2NP > 1.0 or s_NP2P > 1.0:
             continue
 
-
-        s_combinations.append([round(s_P2NP,3), round(s_NP2P,3)])
+        rho_combinations.append([rho_i,r_i])
 
 survival_scalar_sig = [-2.5,3.5]
 survival_scalar_quad = [0.8,0.0]
@@ -193,7 +192,7 @@ nx = [[5,5,5,5]]
 ctr = 1
 
 # whether jobs should be run in the background
-run_in_background = True
+run_in_background = False
 
 juvenile_survival = [ 0 ]
 adult_survival = [ 1 ]
@@ -222,9 +221,9 @@ for rep_i in range(0,nrep):
         survival_scalar_i_str = " ".join(str(x) for x in survival_scalar_i)
 
         for envt_change_birth_i in envt_change_birth:
-            for s_combi_i in s_combinations:
-                s12_i = s_combi_i[0]
-                s21_i = s_combi_i[1]
+            for rho_combi_i in rho_combinations:
+                rho_i = rho_combi_i[0]
+                risk_i = rho_combi_i[1]
 
                 for qjuv_mat_i in qjuv_mat_combinations:
 
@@ -270,8 +269,8 @@ for rep_i in range(0,nrep):
                                                         print(exe + " \t"
                                                                 + str(sigmoidal_survival_i) + " \t"
                                                                 + str(laplace) + " "
-                                                                + str(s12_i) + " "
-                                                                + str(s21_i) + " \t"
+                                                                + str(rho_i) + " "
+                                                                + str(risk_i) + " \t"
                                                                 + survival_scalar_i_str + " \t"
                                                                 + str(qmat_i) + " "
                                                                 + str(qjuv_i) + " "
