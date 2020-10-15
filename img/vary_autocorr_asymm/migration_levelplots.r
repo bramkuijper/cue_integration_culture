@@ -2,7 +2,7 @@ library("lattice")
 library("grid")
 library("RColorBrewer")
 library("colorRamps")
-source("/Users/bram/R/src/bramlib.r")
+source("~/R/src/bramlib.r")
 
 type <- "pdf"
 
@@ -194,7 +194,7 @@ legend <- function(row,col)
 # data folder
 script.dir <- dirname(sys.frame(1)$ofile)
 
-filename <- "summary_asymm_max_eta_.csv"
+filename <- "summary_asymm_both_max_eta_.csv"
 
 full_filename = file.path(script.dir,"../../data",filename)
 
@@ -220,9 +220,7 @@ pushViewport(
                                 widths=widths,
                                 heights=heights)))
 
-        #    subs.1 <- subset(the.data, m == 0.3 & p == 0.8)
-
-    subs.1 <- the.data
+    subs.1 <- subset(the.data, qjuv == 0.5)
 
     plot_x <- single.level(
         row=2
@@ -236,20 +234,20 @@ pushViewport(
         ,title=expression(paste("Migration probability, ",italic("d")," = ",0.3))
         )
 
-#    subs.2 <- subset(the.data, m == 0.5 & p == 0.8)
-#    
-#    plot_x <- single.level(
-#        row=2
-#        ,col=4
-#        ,dataset=subs.2
-#        ,y.label=F
-#        ,y.ticks=F
-#        ,x.label=F
-#        ,x.ticks=F
-#        ,ind.label="B"
-#        ,title=expression(paste("Migration probability, ",italic("d")," = ",0.5))
-#        )
-#
+    subs.2 <- subset(the.data, qjuv == 1.0)
+    
+    plot_x <- single.level(
+        row=2
+        ,col=4
+        ,dataset=subs.2
+        ,y.label=F
+        ,y.ticks=F
+        ,x.label=F
+        ,x.ticks=F
+        ,ind.label="B"
+        ,title=expression(paste("Migration probability, ",italic("d")," = ",0.5))
+        )
+
 #    subs.3 <- subset(the.data, m == 0.8 & p == 0.8)
 #    
 #    plot_x <- single.level(
