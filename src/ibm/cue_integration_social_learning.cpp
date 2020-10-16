@@ -1470,9 +1470,7 @@ void replace(int const generation )
             Individual Kid;
 
             // offspring is born in local patch hence sample from local parents
-            if (uniform(rng_r) < 1.0 - m 
-                    &&
-                    Pop[patch_i].n_breeders > 0)
+            if (Pop[patch_i].n_breeders > 0)
             {
                 // set up a random number generator to 
                 // sample from the remaining breeders
@@ -1484,7 +1482,7 @@ void replace(int const generation )
                 // vertical social learning (i.e., from parents)
                 social_learning(
                         patch_i
-                        ,false
+                        ,false // vertical social learning
                         ,prestige_phen
                         ,xconformist);
 
@@ -1497,7 +1495,7 @@ void replace(int const generation )
                         ,xconformist
                 );
             }
-            else // offspring born in remote patch
+            else // offspring born in remote patch, this only happens in case of local extinction
             {
                 // sample a random remote pathc
                 do {
