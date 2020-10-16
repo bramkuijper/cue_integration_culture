@@ -37,7 +37,7 @@ const int NPatches = 40;
 const int NBreeder = 100;
 
 // number of generations
-int number_generations = 50000;
+int number_generations = 3;
 
 // environmental switch rate
 //
@@ -65,6 +65,10 @@ bool laplace = true;
 
 bool envt_change_at_birth = false;
 bool juvenile_learns_remote_envt = false;
+
+// whether vertical social learning is from individuals
+// in the natal patch
+bool vertical_natal = true;
 
 // number of loci underlying the genetic cue
 int nloci_g = 3;
@@ -253,7 +257,8 @@ void init_arguments(int argc, char **argv)
     adult_survival_on = atoi(argv[54]);
     envt_change_at_birth = atoi(argv[55]);
     juvenile_learns_remote_envt = atoi(argv[56]);
-    base_name = argv[57];
+    vertical_natal = atoi(argv[57]);
+    base_name = argv[58];
 }
 
 // write down all parameters to the file DataFile
@@ -298,6 +303,7 @@ void write_parameters(std::ofstream &DataFile)
         << "juvenile_survival;" << juvenile_survival_on << ";"<< std::endl
         << "envt_change_at_birth;" << envt_change_at_birth << ";"<< std::endl
         << "juvenile_learns_remote_envt;" << juvenile_learns_remote_envt << ";" << std::endl
+        << "vertical_natal;" << vertical_natal << ";" << std::endl
         << "adult_survival;" << adult_survival_on << ";"<< std::endl
         << "mu_bmat_phen;" << mu_bmat_phen << ";"<< std::endl
         << "mu_bmat_envt;" << mu_bmat_envt << ";"<< std::endl
@@ -1470,7 +1476,7 @@ void replace(int const generation )
             Individual Kid;
 
             // offspring is born in local patch hence sample from local parents
-            if (Pop[patch_i].n_breeders > 0)
+            if (Pop[patch_i].n_breeders > 0 && uniform(rng_r) < 1.0 - m)
             {
                 // set up a random number generator to 
                 // sample from the remaining breeders
@@ -1497,7 +1503,7 @@ void replace(int const generation )
             }
             else // offspring born in remote patch, this only happens in case of local extinction
             {
-                // sample a random remote pathc
+                // sample a random remote patch containing breeders
                 do {
 
                     random_remote_patch = patch_sampler(rng_r);
@@ -1512,7 +1518,7 @@ void replace(int const generation )
                 // prepare cues in remote patch (where parents are breeding)
                 // from vertical social learning
                 social_learning(
-                        random_remote_patch
+                        vertical_natal ? random_remote_patch : patch_i
                         ,false
                         ,prestige_phen
                         ,xconformist);
