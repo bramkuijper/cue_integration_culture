@@ -2823,6 +2823,10 @@ noprefix "false"
 \begin_inset Formula $1-p=0.9$
 \end_inset
 
+, 
+\begin_inset Formula $\sigma_{\mathrm{h}}=\sigma_{v}=0.0$
+\end_inset
+
 .
  Number of replicate simulations: 5.
 \end_layout
@@ -2832,7 +2836,7 @@ noprefix "false"
 placement b
 wide false
 sideways false
-status collapsed
+status open
 
 \begin_layout Plain Layout
 \align center
@@ -2939,7 +2943,7 @@ noprefix "false"
 placement b
 wide false
 sideways false
-status collapsed
+status open
 
 \begin_layout Plain Layout
 \align center
@@ -3042,7 +3046,7 @@ noprefix "false"
 placement b
 wide false
 sideways false
-status collapsed
+status open
 
 \begin_layout Plain Layout
 \align center
@@ -3263,7 +3267,7 @@ noprefix "false"
 \begin_inset Float figure
 wide false
 sideways false
-status collapsed
+status open
 
 \begin_layout Plain Layout
 \align center
@@ -3374,7 +3378,7 @@ noprefix "false"
 placement b
 wide false
 sideways false
-status collapsed
+status open
 
 \begin_layout Plain Layout
 \align center
