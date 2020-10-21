@@ -17,11 +17,15 @@ sigmoidal_survival = [ 0 ]
 
 envt_change_birth = [0]
 juv_learns_remote = [0]
+vertical_natal = [0]
 
 # frequency and autocorrelation of the 
 # environment
-autocorr = list(np.linspace(-1,1,30)) 
-risk = list(np.linspace(0,1,30))
+#autocorr = list(np.linspace(-1,1,30)) 
+#risk = list(np.linspace(0,1,30))
+
+autocorr = [ 0.6, -0.6 ]
+risk = [ 0.5 ]
 
 rho_combinations = []
 
@@ -44,11 +48,6 @@ qjuv_mat_combinations = []
 qjuv = np.linspace(0.5,1.0,30)
 for qjuv_i in qjuv:
     qjuv_mat_combinations.append([qjuv_i,1.5-qjuv_i])
-
-#qjuv_mat_combinations = [[0.5,0.5],[1.0,0.5],[0.5,1.0],[1.0,1.0],[0.75,1.0],[0.75,0.5]]
-
-#qjuv_mat_combinations = [[0.5,1.0],[0.75,1.0],[1.0,1.0]]
-qjuv_mat_combinations = [[0.5,0.5]]
 
 nloci_g = [ 3 ]
 
@@ -158,9 +157,8 @@ sd_h_noise = np.linspace(0,1,30)
 for sd_h_i in sd_h_noise:
     sd_hv_noise_combs.append([sd_h_i, sd_h_i, 1.0 - sd_h_i, 1.0 - sd_h_i])
 
-sd_mat_phen_noise = [ 0 ]
-sd_hv_noise_combs = [[0.0, 0.0, 0.0, 0.0]]
-
+#sd_hv_noise_combs = [[0.0, 0.0, 0.0, 0.0]]
+#
 sd_mat_phen_noise = [ 0.0 ]
 
 #sd_hv_noise_combs = [[0.0,0.0,0,0]]
@@ -207,91 +205,93 @@ date = datetime.datetime.now()
 base_name = "sim_cue_integration_" +\
         f"{date:%d}_{date:%m}_{date:%Y}_{date:%H}{date:%M}{date:%S}"
 
-for rep_i in range(0,nrep):
-    for sigmoidal_survival_i in sigmoidal_survival:
+for vertical_natal_i in vertical_natal:
+    for rep_i in range(0,nrep):
+        for sigmoidal_survival_i in sigmoidal_survival:
 
-        if sigmoidal_survival_i == 0:
-            survival_scalar_i = survival_scalar_quad
-        else:
-            survival_scalar_i = survival_scalar_sig
+            if sigmoidal_survival_i == 0:
+                survival_scalar_i = survival_scalar_quad
+            else:
+                survival_scalar_i = survival_scalar_sig
 
-        survival_scalar_i_str = " ".join(str(x) for x in survival_scalar_i)
+            survival_scalar_i_str = " ".join(str(x) for x in survival_scalar_i)
 
-        for envt_change_birth_i in envt_change_birth:
-            for rho_combi_i in rho_combinations:
-                rho_i = rho_combi_i[0]
-                risk_i = rho_combi_i[1]
+            for envt_change_birth_i in envt_change_birth:
+                for rho_combi_i in rho_combinations:
+                    rho_i = rho_combi_i[0]
+                    risk_i = rho_combi_i[1]
 
-                for qjuv_mat_i in qjuv_mat_combinations:
+                    for qjuv_mat_i in qjuv_mat_combinations:
 
-                    qjuv_i = qjuv_mat_i[0]
-                    qmat_i = qjuv_mat_i[1]
+                        qjuv_i = qjuv_mat_i[0]
+                        qmat_i = qjuv_mat_i[1]
 
-                    for nloci_g_i in nloci_g:
-                        for sd_hv_noise_i in sd_hv_noise_combs:
+                        for nloci_g_i in nloci_g:
+                            for sd_hv_noise_i in sd_hv_noise_combs:
 
-                            sd_hc_noise_i = sd_hv_noise_i[0]
-                            sd_hp_noise_i = sd_hv_noise_i[1]
-                            sd_vc_noise_i = sd_hv_noise_i[2]
-                            sd_vp_noise_i = sd_hv_noise_i[3]
+                                sd_hc_noise_i = sd_hv_noise_i[0]
+                                sd_hp_noise_i = sd_hv_noise_i[1]
+                                sd_vc_noise_i = sd_hv_noise_i[2]
+                                sd_vp_noise_i = sd_hv_noise_i[3]
 
-                            for sd_mat_phen_noise_i in sd_mat_phen_noise:
-                                for juv_learns_remote_i in juv_learns_remote:
-                                    for m_i in m:
-                                        m_i = round(m_i,3)
-                                        for mu_combi_i in mu_combis:
+                                for sd_mat_phen_noise_i in sd_mat_phen_noise:
+                                    for juv_learns_remote_i in juv_learns_remote:
+                                        for m_i in m:
+                                            m_i = round(m_i,3)
+                                            for mu_combi_i in mu_combis:
 
-                                            social_mut_t0 = " ".join(
-                                                    str(x) for x in mu_combi_i[-4:])
-                                            
-                                            mu_combi_i_str = " ".join(
-                                                    str(x) for x in mu_combi_i)
-
-
-
-                                            for nx_i in nx:
+                                                social_mut_t0 = " ".join(
+                                                        str(x) for x in mu_combi_i[-4:])
                                                 
-                                                nxstr = " ".join(
-                                                        str(x) for x in nx_i)
-
-                                                for juvenile_survival_i in juvenile_survival:
-                                                    for adult_survival_i in adult_survival:
-
-                                                        print("echo " + str(ctr))
+                                                mu_combi_i_str = " ".join(
+                                                        str(x) for x in mu_combi_i)
 
 
-                                                        base_name_i = base_name + "_" + str(ctr)
+
+                                                for nx_i in nx:
+                                                    
+                                                    nxstr = " ".join(
+                                                            str(x) for x in nx_i)
+
+                                                    for juvenile_survival_i in juvenile_survival:
+                                                        for adult_survival_i in adult_survival:
+
+                                                            print("echo " + str(ctr))
 
 
-                                                        print(exe + " \t"
-                                                                + str(sigmoidal_survival_i) + " \t"
-                                                                + str(laplace) + " "
-                                                                + str(rho_i) + " "
-                                                                + str(risk_i) + " \t"
-                                                                + survival_scalar_i_str + " \t"
-                                                                + str(qmat_i) + " "
-                                                                + str(qjuv_i) + " "
-                                                                + str(sd_hc_noise_i) + " "
-                                                                + str(sd_hp_noise_i) + " "
-                                                                + str(sd_vc_noise_i) + " "
-                                                                + str(sd_vp_noise_i) + " "
-                                                                + str(sd_mat_phen_noise_i) + " "
-                                                                + str(nloci_g_i) + " \t"
-                                                                + initvals + " \t"
-                                                                + gminmax + " "
-                                                                + aminmax + " "
-                                                                + bminmax + " \t"
-                                                                + mu_combi_i_str + " \t"
-                                                                + social_mut_t0 + " \t"
-                                                                + sdmu + " \t" 
-                                                                + str(m_i) + " "
-                                                                + str(nxstr) + " "
-                                                                + str(juvenile_survival_i) + " "
-                                                                + str(adult_survival_i) + " "
-                                                                + str(envt_change_birth_i) + " "
-                                                                + str(juv_learns_remote_i) + " "
-                                                                + base_name_i + " "
-                                                                + bg
-                                                                )
+                                                            base_name_i = base_name + "_" + str(ctr)
 
-                                                        ctr += 1
+
+                                                            print(exe + " \t"
+                                                                    + str(sigmoidal_survival_i) + " \t"
+                                                                    + str(laplace) + " "
+                                                                    + str(rho_i) + " "
+                                                                    + str(risk_i) + " \t"
+                                                                    + survival_scalar_i_str + " \t"
+                                                                    + str(qmat_i) + " "
+                                                                    + str(qjuv_i) + " "
+                                                                    + str(sd_hc_noise_i) + " "
+                                                                    + str(sd_hp_noise_i) + " "
+                                                                    + str(sd_vc_noise_i) + " "
+                                                                    + str(sd_vp_noise_i) + " "
+                                                                    + str(sd_mat_phen_noise_i) + " "
+                                                                    + str(nloci_g_i) + " \t"
+                                                                    + initvals + " \t"
+                                                                    + gminmax + " "
+                                                                    + aminmax + " "
+                                                                    + bminmax + " \t"
+                                                                    + mu_combi_i_str + " \t"
+                                                                    + social_mut_t0 + " \t"
+                                                                    + sdmu + " \t" 
+                                                                    + str(m_i) + " "
+                                                                    + str(nxstr) + " "
+                                                                    + str(juvenile_survival_i) + " "
+                                                                    + str(adult_survival_i) + " "
+                                                                    + str(envt_change_birth_i) + " "
+                                                                    + str(juv_learns_remote_i) + " "
+                                                                    + str(vertical_natal_i) + " "
+                                                                    + base_name_i + " "
+                                                                    + bg
+                                                                    )
+
+                                                            ctr += 1
