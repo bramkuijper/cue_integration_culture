@@ -266,6 +266,7 @@ void write_parameters(std::ofstream &DataFile)
 {
     DataFile << std::endl << std::endl
         << "sigmoidal_survival;" << sigmoidal_survival << ";"<< std::endl
+        << "horizontal_post_dispersal;" << 0 << ";" << std::endl
         << "laplace;" << laplace << ";"<< std::endl
         << "sigma12;" << sigma[0] << ";"<< std::endl
         << "sigma21;" << sigma[1] << ";"<< std::endl
@@ -1337,8 +1338,8 @@ void social_learning(
     int np = learning_is_horizontal ? nph : npv;
     int nc = learning_is_horizontal ? nch : ncv;
 
-    // set up a random number generator to 
-    // sample and socially learn from 
+    // set up a random number generator to
+    // sample and socially learn from
     // the surviving breeders
     std::uniform_int_distribution<> random_local_breeder(
             0,
@@ -1352,14 +1353,14 @@ void social_learning(
     // of the individual with the highest 'prestige'
     //
     // if no individuals are sampled to learn about prestige
-    // cue value is always 0.0. 
+    // cue value is always 0.0.
     prestige_phen = 0.0;
     double prestige_surv = 0.0;
 
     // compare survivorship values from np breeders and pick the highest
     for (int prest_i = 0; prest_i < np_local; ++prest_i)
     {
-        // if learning is horizontal learn from other individual's juvenile 
+        // if learning is horizontal learn from other individual's juvenile
         // phenotypes, otherwise learn from parental generation adult phenotypes
         phen = learning_is_horizontal ?
             Pop[patch_i].breeders[random_local_breeder(rng_r)].phen_juv
@@ -1413,6 +1414,93 @@ void social_learning(
 
     xconformist = nlo > nhi ? 0.0 : 1.0;
 } // end void social_learning
+
+
+
+// quickly modified social learning function 
+// to deal with horizontal transmission
+void social_learning_horizontal(
+        int const patch_i  // the patch in which social learning takes place
+        ,double &prestige_phen // returning the prestige-bias phenotype
+        ,double &xconformist) // returning the conformism-bias cue
+{
+    double surv, phen;
+
+    int np_local, nc_local;
+
+    int np = nph;
+    int nc = nch;
+
+    // set up a random number generator to 
+    // sample and socially learn from 
+    // the surviving breeders
+    std::uniform_int_distribution<> random_local_breeder(
+            0,
+            Pop[patch_i].n_recruits - 1);
+
+    // check whether sampling np is feasible
+    // otherwise take the number of breeders in the local patch
+    np_local = np > Pop[patch_i].n_recruits ? Pop[patch_i].n_recruits : np;
+
+    // keep track on the current phenotype and survival value
+    // of the individual with the highest 'prestige'
+    //
+    // if no individuals are sampled to learn about prestige
+    // cue value is always 0.0. 
+    prestige_phen = 0.0;
+    double prestige_surv = 0.0;
+
+    // compare survivorship values from np breeders and pick the highest
+    for (int prest_i = 0; prest_i < np_local; ++prest_i)
+    {
+        // if learning is horizontal learn from other individual's juvenile 
+        // phenotypes, otherwise learn from parental generation adult phenotypes
+        phen = Pop[patch_i].breeders_t1[random_local_breeder(rng_r)].phen_juv;
+
+        assert(std::isnormal(phen) > 0);
+
+        surv = survival_probability(phen,Pop[patch_i].envt_high);
+
+        // update prestige bias
+        if (surv > prestige_surv)
+        {
+            prestige_phen = phen;
+
+            prestige_surv = surv;
+        }
+    }
+
+    int nlo = 0;
+    int nhi = 0;
+
+    // check whether sampling nc is feasible
+    nc_local = nc > Pop[patch_i].n_recruits ? Pop[patch_i].n_recruits : nc;
+
+    // check which phenotype is most common, those below 0.5 or those above
+    for (int conform_i = 0; conform_i < nc_local; ++conform_i)
+    {
+        phen = Pop[patch_i].breeders_t1[random_local_breeder(rng_r)].phen_juv;
+
+        assert(std::isnormal(phen) > 0);
+
+        if (phen > 0.5)
+        {
+            ++nhi;
+        }
+        else if (phen <= 0.5)
+        {
+            ++nlo;
+        }
+    }
+
+    // give conformist cue which is between 0 and 1
+    if (nlo == nhi)
+    {
+        xconformist = 0.5;
+    }
+
+    xconformist = nlo > nhi ? 0.0 : 1.0;
+} // end void social_learning_horizontal
  
 
 
@@ -1466,6 +1554,9 @@ void replace(int const generation )
         }
     } // end if envt_change_at_birth
 
+
+    double hp, hc;
+
     for (int patch_i = 0; patch_i < NPatches; ++patch_i)
     {
         Pop[patch_i].n_recruits = 0;
@@ -1475,8 +1566,8 @@ void replace(int const generation )
         {
             Individual Kid;
 
-            // offspring is born in local patch hence sample from local parents
-            if (Pop[patch_i].n_breeders > 0 && uniform(rng_r) < 1.0 - m)
+            // produce offspring
+            if (Pop[patch_i].n_breeders > 0 )
             {
                 // set up a random number generator to 
                 // sample from the remaining breeders
@@ -1559,28 +1650,83 @@ void replace(int const generation )
 
             // offspring survives
             Pop[patch_i].breeders_t1[Pop[patch_i].n_recruits] = Kid;
+           
             assert((int)Pop[patch_i].breeders_t1[Pop[patch_i].n_recruits].g[0].size() == nloci_g);
 
             ++Pop[patch_i].n_recruits;
 
             assert(Pop[patch_i].n_recruits <= NBreeder);
-
         } // for (int offspring_i = 0; offspring_i < NBreeder; ++offspring_i)
+
+        // now horizontal social learning
+        for (int breeder_t1_i = 0; breeder_t1_i < Pop[patch_i].n_recruits; ++breeder_t1_i)
+        {
+            // horizontal social learning takes place
+            social_learning_horizontal(
+                    patch_i
+                    ,prestige_phen
+                    ,xconformist);
+
+            hp = 0.5 * (
+                    Pop[patch_i].breeders_t1[breeder_t1_i].hp[0]
+                    + 
+                    Pop[patch_i].breeders_t1[breeder_t1_i].hp[1]);
+            
+            hc = 0.5 * (
+                    Pop[patch_i].breeders_t1[breeder_t1_i].hc[0]
+                    + 
+                    Pop[patch_i].breeders_t1[breeder_t1_i].hc[1]);
+
+            // horizontal social learning
+            // conformity biases
+            Pop[patch_i].breeders_t1[breeder_t1_i].xconformist_horiz = xconformist;
+            
+            // add error to horizontal social learning with 
+            // conformity bias
+            std::normal_distribution<> xconformist_horiz_noise(0.0, sd_hc_noise);
+            Pop[patch_i].breeders_t1[breeder_t1_i].xconformist_horiz_error = 
+                xconformist + xconformist_horiz_noise(rng_r);
+
+            clamp(Pop[patch_i].breeders_t1[breeder_t1_i].xconformist_horiz_error, 0.0, 1.0);
+
+            // horizontal social learning
+            // prestige biases
+            Pop[patch_i].breeders_t1[breeder_t1_i].phen_prestige_horiz = prestige_phen;
+            
+            // add error to horizontal social learning with 
+            // prestige bias
+            std::normal_distribution<> phen_prestige_noise(0.0, sd_hp_noise);
+            Pop[patch_i].breeders_t1[breeder_t1_i].phen_prestige_horiz_error = 
+                prestige_phen + phen_prestige_noise(rng_r);
+
+            clamp(Pop[patch_i].breeders_t1[breeder_t1_i].phen_prestige_horiz_error, 0.0, 1.0);
+
+            Pop[patch_i].breeders_t1[breeder_t1_i].phen_ad_logistic = 
+                Pop[patch_i].breeders_t1[breeder_t1_i].phen_juv_logistic
+                + hp * (Pop[patch_i].breeders_t1[breeder_t1_i].phen_prestige_horiz_error - 0.5)
+                + hc * (Pop[patch_i].breeders_t1[breeder_t1_i].xconformist_horiz_error - 0.5);
+
+            // add social learning to the adult phenotype
+            Pop[patch_i].breeders_t1[breeder_t1_i].phen_ad = 1.0 / 
+                (1.0 + exp(-Pop[patch_i].breeders_t1[breeder_t1_i].phen_ad_logistic));
+        } 
     } // end for (int patch_i = 0
 
     bool cue_ad_envt_high;
 
-    // auxiliary variables for horizontal social learning
-    double hp, hc;
-
+    // some stats we originally used
     double ss_xconf_envt = 0;
     double ss_envt_envt = 0;
     double mean_xconf = 0;
     double mean_envt = 0;
     double n_xconf_envt = 0;
 
+    // bookkeeping variable to keep track 
+    // of either immigrant or native individual's
+    // patch of origin
+    int patch_origin, random_recruit;
+
     // all new breeders born etc, copy them over
-    // and perform horiz social learning
     for (int patch_i = 0; patch_i < NPatches; ++patch_i)
     {
         // calculate adult cue value supplied to mothers
@@ -1589,78 +1735,57 @@ void replace(int const generation )
             Pop[patch_i].envt_high 
             : 
             !Pop[patch_i].envt_high;
-        
-        for (int breeder_i = 0; breeder_i < Pop[patch_i].n_recruits; ++breeder_i)
+    
+        // recruit NBreeder new breeders through sampling
+        // with replacement - this is different from the previous
+        // simulation but makes it slightly faster, as sampling without
+        // replacement would mean one would have to scrape for the last
+        // individuals and this can take a long time
+        for (int breeder_i = 0; breeder_i < NBreeder; ++breeder_i)
         {
-            Pop[patch_i].breeders[breeder_i] = 
-                Pop[patch_i].breeders_t1[breeder_i];
+            // sample immigrant juvenile
+            if (uniform(rng_r) < m)
+            {
+                // sample a random remote patch containing breeders
+                do {
 
+                    patch_origin = patch_sampler(rng_r);
+
+                }
+                while(Pop[patch_origin].n_recruits < 1);
+            }
+            else // sample philopatric juvenile
+            {
+                patch_origin = patch_i;
+            }
+
+            std::uniform_int_distribution<> 
+                random_juvenile(
+                    0,
+                    Pop[patch_origin].n_recruits - 1);
+
+            random_recruit = random_juvenile(rng_r);
+            
+            assert(Pop[patch_origin].breeders_t1[random_recruit].agen[0] >= amin);
+            assert(Pop[patch_origin].breeders_t1[random_recruit].agen[0] <= amax);
+                
+            Pop[patch_i].breeders[breeder_i] = 
+                Pop[patch_origin].breeders_t1[random_recruit];
+
+            // some bounds checking
+            assert(Pop[patch_i].breeders[breeder_i].agen[0] >= amin);
+            assert(Pop[patch_i].breeders[breeder_i].agen[0] <= amax);
+            
             assert((int)Pop[patch_i].breeders[breeder_i].g[0].size() == nloci_g);
             
             // give breeder an environmental cue as adult
             Pop[patch_i].breeders[breeder_i].cue_ad_envt_high = 
                 cue_ad_envt_high;
+
         } // all juveniles are now assigned a breeding position
         
         Pop[patch_i].n_breeders = Pop[patch_i].n_recruits;
 
-        // horizontal social learning 
-        for (int breeder_i = 0; breeder_i < Pop[patch_i].n_breeders; ++breeder_i)
-        {
-            // ad_phen should be NaN as it is yet to be set
-            assert(std::isnan(Pop[patch_i].breeders[breeder_i].phen_ad) > 0);
-
-            // horizontal social learning takes place
-            social_learning(
-                    patch_i
-                    ,true
-                    ,prestige_phen
-                    ,xconformist);
-
-            hp = 0.5 * (
-                    Pop[patch_i].breeders[breeder_i].hp[0]
-                    + 
-                    Pop[patch_i].breeders[breeder_i].hp[1]);
-            
-            hc = 0.5 * (
-                    Pop[patch_i].breeders[breeder_i].hc[0]
-                    + 
-                    Pop[patch_i].breeders[breeder_i].hc[1]);
-
-            // horizontal social learning
-            // conformity biases
-            Pop[patch_i].breeders[breeder_i].xconformist_horiz = xconformist;
-            
-            // add error to horizontal social learning with 
-            // conformity bias
-            std::normal_distribution<> xconformist_horiz_noise(0.0, sd_hc_noise);
-            Pop[patch_i].breeders[breeder_i].xconformist_horiz_error = 
-                xconformist + xconformist_horiz_noise(rng_r);
-
-            clamp(Pop[patch_i].breeders[breeder_i].xconformist_horiz_error, 0.0, 1.0);
-
-            // horizontal social learning
-            // prestige biases
-            Pop[patch_i].breeders[breeder_i].phen_prestige_horiz = prestige_phen;
-            
-            // add error to horizontal social learning with 
-            // prestige bias
-            std::normal_distribution<> phen_prestige_noise(0.0, sd_hp_noise);
-            Pop[patch_i].breeders[breeder_i].phen_prestige_horiz_error = 
-                prestige_phen + phen_prestige_noise(rng_r);
-
-            clamp(Pop[patch_i].breeders[breeder_i].phen_prestige_horiz_error, 0.0, 1.0);
-
-            Pop[patch_i].breeders[breeder_i].phen_ad_logistic = 
-                Pop[patch_i].breeders[breeder_i].phen_juv_logistic
-                + hp * (Pop[patch_i].breeders[breeder_i].phen_prestige_horiz_error - 0.5)
-                + hc * (Pop[patch_i].breeders[breeder_i].xconformist_horiz_error - 0.5);
-
-            // add social learning to the adult phenotype
-            Pop[patch_i].breeders[breeder_i].phen_ad = 1.0 / 
-                (1.0 + exp(-Pop[patch_i].breeders[breeder_i].phen_ad_logistic));
-        } // for (int breeder_i = 0; breeder_i < Pop[patch_i].n_breeders; ++breeder_i)
-    
         envt_previous = Pop[patch_i].envt_high;
 
         // envtal change after breeder establishment, but before adult survival
