@@ -4,6 +4,8 @@ library("RColorBrewer")
 library("colorRamps")
 source("~/R/src/bramlib.r")
 
+# see also migration contour where i analyze a more relevant parameter range
+
 type <- "pdf"
 
 tickcex <- 0.75
@@ -186,186 +188,191 @@ full_filename = file.path(script.dir,"../../data",filename)
 
 the.data <- read.table(full_filename, sep=";",header=T)
 
+mval <- c(0.1,0.5)
 
-init.plot("levelplot_vertical_post_dispersal", 
-                type=type,
-                width=600,
-                height=430,
-                font="times")
+for (m.i in mval)
+{
+    init.plot(
+            paste("levelplot_vertical_post_dispersal",m.i,sep=""),
+                    type=type,
+                    width=600,
+                    height=430,
+                    font="times")
 
-widths <- c(0.3,1,0.1,1,1)
-heights <- c(0.3,1,0.1,1,0.2)
-
-# initial viewport
-pushViewport(
-            viewport(name="vp_head",
-                just="center",
-            height=.95,
-            width=.95,
-            layout=grid.layout(nrow=length(heights),
-                                ncol=length(widths),
-                                widths=widths,
-                                heights=heights)))
-
-    subs.1 <- subset(the.data, autocorr==0.6 & envt_change_at_birth == 0)
-
-    print(nrow(subs.1))
-
-    plot_x <- single.level(
-        row=2
-        ,col=2
-        ,dataset=subs.1
-        ,y.label=F
-        ,y.ticks=T
-        ,x.label=F
-        ,x.ticks=F
-        ,ind.label="A"
-        ,title=expression(atop("Positive autocorrelation",paste(1-{},italic("p")," = 0.2")))
-        )
-
-    subs.2 <- subset(the.data, autocorr == -0.6 & envt_change_at_birth == 0)
-    print(nrow(subs.2))
-    
-    plot_x <- single.level(
-        row=2
-        ,col=4
-        ,dataset=subs.2
-        ,y.label=F
-        ,y.ticks=F
-        ,x.label=F
-        ,x.ticks=F
-        ,ind.label="B"
-        ,title=expression(atop("Negative autocorrelation",paste(1-{},italic("p")," = 0.8")))
-        )
-
-    subs.3 <- subset(the.data, autocorr == 0.6 & envt_change_at_birth== 1)
-    
-    plot_x <- single.level(
-        row=4
-        ,col=2
-        ,dataset=subs.3
-        ,y.label=F
-        ,y.ticks=T
-        ,x.label=F
-        ,x.ticks=T
-        ,ind.label="C"
-        ,title=""
-        )
-
-    subs.4 <- subset(the.data, autocorr == -0.6 & envt_change_at_birth== 1)
-    
-    plot_x <- single.level(
-        row=4
-        ,col=4
-        ,dataset=subs.4
-        ,y.label=F
-        ,y.ticks=F
-        ,x.label=F
-        ,x.ticks=T
-        ,ind.label="D"
-        ,title=""
-        )
-#
-#    subs.5 <- subset(the.data, m == 0.5 & p == 0.2)
-#    
-#    plot_x <- single.level(
-#        row=4
-#        ,col=4
-#        ,dataset=subs.5
-#        ,y.label=F
-#        ,y.ticks=F
-#        ,x.label=F
-#        ,x.ticks=T
-#        ,ind.label="E"
-#        ,title=""
-#        )
-#
-#    subs.6 <- subset(the.data, m == 0.8 & p == 0.2)
-#    
-#    plot_x <- single.level(
-#        row=4
-#        ,col=6
-#        ,dataset=subs.6
-#        ,y.label=F
-#        ,y.ticks=F
-#        ,x.label=F
-#        ,x.ticks=T
-#        ,ind.label="F"
-#        ,title=""
-#        )
-
-    grid.text(
-            x=unit(units="native"
-                    ,x=0.01)
-            ,y=unit(units="native"
-                    ,x=0.5)
-            ,rot=90
-            ,just="centre"
-            ,hjust="centre"
-            ,label=expression(atop("Noise in vertical versus horizontal",
-                                   paste("social learning, ",sigma["v"]," = ",1-sigma["h"],sep="")))
-           )
-
-    grid.text(
-            x=unit(units="native"
-                    ,x=0.43)
-            ,y=unit(units="native"
-                    ,x=0.0)
-            ,rot=0
-            ,just="centre"
-            ,hjust="centre"
-            ,label=expression(paste("Fidelity of individually learned cues versus maternal cues, ",italic("q")["ind"]," = ",1.5-{},italic("q")["mat"]))
-           )
-
-   legend(row=2,col=5)
-   
-   x.loc.label <- 0.73
-   y.loc.label <- 0.6
-   
-   grid.text(
-            x=unit(units="native"
-                    ,x=x.loc.label)
-            ,y=unit(units="native"
-                    ,x=y.loc.label)
-            ,just="left"
-            ,gp=gpar(lineheight=0.75)
-            ,label=expression({}%<-%{})
-           )
-   grid.text(
-            x=unit(units="native"
-                    ,x=x.loc.label)
-            ,y=unit(units="native"
-                    ,x=y.loc.label - 0.08)
-            ,just="left"
-            ,gp=gpar(lineheight=0.75)
-            ,label=expression(paste("Environmental change\nbetween juvenility and\nadulthood"))
-           )
-   
-   
-   x.loc.label <- 0.73
-   y.loc.label <- 0.15
-   
-   grid.text(
-            x=unit(units="native"
-                    ,x=x.loc.label)
-            ,y=unit(units="native"
-                    ,x=y.loc.label)
-            ,just="left"
-            ,gp=gpar(lineheight=0.75)
-            ,label=expression({}%<-%{})
-           )
-   grid.text(
-            x=unit(units="native"
-                    ,x=x.loc.label)
-            ,y=unit(units="native"
-                    ,x=y.loc.label - 0.06)
-            ,just="left"
-            ,gp=gpar(lineheight=0.75)
-            ,label=expression(paste("Environmental change\nat birth"))
-           )
-   
-   upViewport()
+    widths <- c(0.3,1,0.1,1,1)
+    heights <- c(0.3,1,0.1,1,0.2)
 
 
-exit.plot()
+    # initial viewport
+    pushViewport(
+                viewport(name="vp_head",
+                    just="center",
+                height=.95,
+                width=.95,
+                layout=grid.layout(nrow=length(heights),
+                                    ncol=length(widths),
+                                    widths=widths,
+                                    heights=heights)))
 
+        subs.1 <- subset(the.data, autocorr==0.6 & envt_change_at_birth == 0 & m == m.i)
+
+        print(nrow(subs.1))
+
+        plot_x <- single.level(
+            row=2
+            ,col=2
+            ,dataset=subs.1
+            ,y.label=F
+            ,y.ticks=T
+            ,x.label=F
+            ,x.ticks=F
+            ,ind.label="A"
+            ,title=expression(atop("Positive autocorrelation",paste(1-{},italic("p")," = 0.2")))
+            )
+
+        subs.2 <- subset(the.data, autocorr == -0.6 & envt_change_at_birth == 0 & m == m.i)
+        print(nrow(subs.2))
+        
+        plot_x <- single.level(
+            row=2
+            ,col=4
+            ,dataset=subs.2
+            ,y.label=F
+            ,y.ticks=F
+            ,x.label=F
+            ,x.ticks=F
+            ,ind.label="B"
+            ,title=expression(atop("Negative autocorrelation",paste(1-{},italic("p")," = 0.8")))
+            )
+
+        subs.3 <- subset(the.data, autocorr == 0.6 & envt_change_at_birth== 1 & m == m.i)
+        
+        plot_x <- single.level(
+            row=4
+            ,col=2
+            ,dataset=subs.3
+            ,y.label=F
+            ,y.ticks=T
+            ,x.label=F
+            ,x.ticks=T
+            ,ind.label="C"
+            ,title=""
+            )
+
+        subs.4 <- subset(the.data, autocorr == -0.6 & envt_change_at_birth== 1 & m == m.i)
+        
+        plot_x <- single.level(
+            row=4
+            ,col=4
+            ,dataset=subs.4
+            ,y.label=F
+            ,y.ticks=F
+            ,x.label=F
+            ,x.ticks=T
+            ,ind.label="D"
+            ,title=""
+            )
+    #
+    #    subs.5 <- subset(the.data, m == 0.5 & p == 0.2)
+    #    
+    #    plot_x <- single.level(
+    #        row=4
+    #        ,col=4
+    #        ,dataset=subs.5
+    #        ,y.label=F
+    #        ,y.ticks=F
+    #        ,x.label=F
+    #        ,x.ticks=T
+    #        ,ind.label="E"
+    #        ,title=""
+    #        )
+    #
+    #    subs.6 <- subset(the.data, m == 0.8 & p == 0.2)
+    #    
+    #    plot_x <- single.level(
+    #        row=4
+    #        ,col=6
+    #        ,dataset=subs.6
+    #        ,y.label=F
+    #        ,y.ticks=F
+    #        ,x.label=F
+    #        ,x.ticks=T
+    #        ,ind.label="F"
+    #        ,title=""
+    #        )
+
+        grid.text(
+                x=unit(units="native"
+                        ,x=0.01)
+                ,y=unit(units="native"
+                        ,x=0.5)
+                ,rot=90
+                ,just="centre"
+                ,hjust="centre"
+                ,label=expression(atop("Noise in vertical versus horizontal",
+                                       paste("social learning, ",sigma["v"]," = ",1-sigma["h"],sep="")))
+               )
+
+        grid.text(
+                x=unit(units="native"
+                        ,x=0.43)
+                ,y=unit(units="native"
+                        ,x=0.0)
+                ,rot=0
+                ,just="centre"
+                ,hjust="centre"
+                ,label=expression(paste("Fidelity of individually learned cues versus maternal cues, ",italic("q")["ind"]," = ",1.5-{},italic("q")["mat"]))
+               )
+
+       legend(row=2,col=5)
+       
+       x.loc.label <- 0.73
+       y.loc.label <- 0.6
+       
+       grid.text(
+                x=unit(units="native"
+                        ,x=x.loc.label)
+                ,y=unit(units="native"
+                        ,x=y.loc.label)
+                ,just="left"
+                ,gp=gpar(lineheight=0.75)
+                ,label=expression({}%<-%{})
+               )
+       grid.text(
+                x=unit(units="native"
+                        ,x=x.loc.label)
+                ,y=unit(units="native"
+                        ,x=y.loc.label - 0.08)
+                ,just="left"
+                ,gp=gpar(lineheight=0.75)
+                ,label=expression(paste("Environmental change\nbetween juvenility and\nadulthood"))
+               )
+       
+       
+       x.loc.label <- 0.73
+       y.loc.label <- 0.15
+       
+       grid.text(
+                x=unit(units="native"
+                        ,x=x.loc.label)
+                ,y=unit(units="native"
+                        ,x=y.loc.label)
+                ,just="left"
+                ,gp=gpar(lineheight=0.75)
+                ,label=expression({}%<-%{})
+               )
+       grid.text(
+                x=unit(units="native"
+                        ,x=x.loc.label)
+                ,y=unit(units="native"
+                        ,x=y.loc.label - 0.06)
+                ,just="left"
+                ,gp=gpar(lineheight=0.75)
+                ,label=expression(paste("Environmental change\nat birth"))
+               )
+       
+       upViewport()
+
+
+    exit.plot()
+}

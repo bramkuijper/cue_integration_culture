@@ -12,6 +12,9 @@ import matplotlib.patches as mpatches
 import matplotlib as mpl
 mpl.use("pgf")
 
+from matplotlib import rc
+
+
 fontpath = "/System/Library/Fonts/Supplemental/" 
 
 pgf_with_custom_preamble = {
@@ -43,12 +46,15 @@ pgf_with_custom_preamble = {
 }
 
 mpl.rcParams.update(pgf_with_custom_preamble)
+mpl.rcParams['axes.unicode_minus'] = False
 mpl.rcParams["axes.labelsize"] = 18
 mpl.rcParams["axes.titlesize"] = 16
 mpl.rcParams["ytick.labelsize"] = 16
 mpl.rcParams["xtick.labelsize"] = 16
 mpl.rcParams["axes.labelpad"] = 16
 mpl.rcParams["svg.fonttype"] = "none"
+
+mpl.rcParams["axes.formatter.use_mathtext"]: True
 
 # plot the aggregate of n simulations
 def sim_agg_panel(
@@ -57,7 +63,7 @@ def sim_agg_panel(
         ,col
         ,dataset
         ,trait_selection
-        ,xlim=[0,75000]
+        ,xlim=[0,300000]
         ,ylim=[-7.5,2.5]
         ,ylab=""
         ,legend=False
@@ -98,7 +104,7 @@ def sim_agg_panel(
             ,ylim=ylim
             ,y_ticks_minor = 5
             ,x_ticks_minor = 4
-            ,x_ticks_major_multiple = 25000
+            ,x_ticks_major_multiple = 50000
             ,y_ticks_major_multiple = y_ticks_major_multiple
             ,xticks=row == the_fig.rows - 1
             ,yticks=col==0
@@ -116,14 +122,18 @@ def sim_agg_panel(
     return(the_axis)
 
 def read_in_all_sims(
-        file_names):
+        file_names
+        ,max_rows=1501
+        ):
 
     all_files = None
 
     for i, file_name in enumerate(file_names):
         df = pd.read_csv(filepath_or_buffer=file_name
                 ,sep=";"
-                ,nrows=1501)
+                ,nrows=max_rows)
+
+        df = df.iloc[::10,:]
 
         df["id"] = i
 
@@ -142,8 +152,7 @@ summary_data = pd.read_csv("summary.csv",sep=";")
 
 summary_data = summary_data.loc[summary_data["m"] == 0.1]
 
-
-all_data = read_in_all_sims(file_names=list(summary_data["file"]))
+all_data = read_in_all_sims(file_names=list(summary_data["file"]),max_rows=6001)
 
 # start the figure
 the_fig = multipanel.MultiPanel(
@@ -194,6 +203,7 @@ sim_agg_panel(
         ,dataset=all_data
         ,legend=True
         ,ylab=r"Vertical social" + "\n" + r"learning, $v$"
+        ,ylim=[-7.5,2.8]
         ,trait_selection={
             "identifiers":["mean_vp","mean_vc"]
             ,"labels":[r"$v_{\mathrm{p}}$",r"$v_{\mathrm{c}}$"]})

@@ -3335,7 +3335,7 @@ noprefix "false"
 status open
 
 \begin_layout Plain Layout
-migration
+migration + other timings
 \end_layout
 
 \end_inset
@@ -3344,23 +3344,100 @@ migration
 \end_layout
 
 \begin_layout Standard
-Cues that explain the majority of phenotypic variance in adult phenotype
- (measured at the logistic scale) when varying the probability of migration
- from modest (
+Sensitivity analysis assessing the role of migration and the timing of vertical
+ social learning.
+ Panels along the 
+\begin_inset Formula $x$
+\end_inset
+
+ axis increase migration from 
 \begin_inset Formula $m=0.3$
 \end_inset
 
-, panels A,D) to high (
+ to 
 \begin_inset Formula $m=0.8$
 \end_inset
 
-, panels C, F) in positively vs negatively autocorrelated environments (top
- vs bottom rows).
- With increasing levels of migration, we find that horizontal socially learned
- cues based on prestige prevail over a large region of the parameter space.
- This is because only horizontal learning allows an individual to obtain
- information about its local environment.
- Parameters as in Figure 
+.
+ The top two rows (panels A - F) consider the scenario discussed in the
+ main text, in which juveniles learn vertically from breeders in the natal
+ patch (i.e., vertical learning 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+emph{before}
+\end_layout
+
+\end_inset
+
+ migration), while they learn horizontally from other juveniles on the patch
+ to which they have migrated (i.e., social learning 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+emph{after}
+\end_layout
+
+\end_inset
+
+ migration.
+ By contrast, the bottom two rows (panels G - L) consider a scenario where
+ both vertical and social learning occur from individuals on the patch to
+ which a focal individual has migrated (i.e., learning 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+emph{after}
+\end_layout
+
+\end_inset
+
+ migration).
+ Coloration again depicts the cue which explains the majority of phenotypic
+ variance in adult phenotype (measured at the logistic scale).
+ 
+\end_layout
+
+\begin_layout Standard
+When individuals learn vertically in their natal patch and learn horizontally
+ in their patch of arrival (panels A - F), we find that for high levels
+ of dispersal horizontal social learning prevails in both negatively and
+ positively autocorrelated environments (panels C, F).
+ This occurs because only horizontal learning allows an individual to obtain
+ information about its current local environment.
+ 
+\end_layout
+
+\begin_layout Standard
+By contrast, when individuals learn vertically as well as horizontally on
+ their patch of arrival (panels G - L), horizontal social learning only
+ prevails when it is characterized by low levels of noise, while vertical
+ social learning prevails otherwise (compare panels I, L with C, F).
+ In this case, both horizontal and vertical social learning (based on prestige)
+ provide accurate information about the environment on the patch of arrival,
+ so that prevalence of either is determined by the relative amount of noise
+ 
+\begin_inset Formula $\sigma_{v}=1-\sigma_{h}$
+\end_inset
+
+ that is varied on the 
+\begin_inset Formula $y$
+\end_inset
+
+ axis.
+ Other parameters as in Figure 
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "fig:contour_fidelity"

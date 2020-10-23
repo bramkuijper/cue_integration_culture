@@ -2,6 +2,7 @@ library("lattice")
 library("grid")
 library("RColorBrewer")
 library("colorRamps")
+library("gtools")
 source("/Users/bram/R/src/bramlib.r")
 
 type <- "pdf"
@@ -180,21 +181,28 @@ legend <- function(row,col)
 # data folder
 script.dir <- dirname(sys.frame(1)$ofile)
 
-filename <- "migration_contour_max_eta_.csv"
+filename.normal <- "migration_contour_max_eta_.csv"
+full_filename.normal = file.path(script.dir,"../../data",filename.normal)
+the.data.normal <- read.table(full_filename.normal, sep=";",header=T)
 
-full_filename = file.path(script.dir,"../../data",filename)
+filename.vert_post_m <- "summary_vert_after_dispersal_max_eta_.csv"
+full_filename.vert_post_m = file.path(script.dir,"../../data",filename.vert_post_m)
+the.data.vert_post_m <- read.table(full_filename.vert_post_m, sep=";",header=T)
 
-the.data <- read.table(full_filename, sep=";",header=T)
-
+the.data.normal <- the.data.normal[the.data.normal$envt_change_at_birth == 0,]
+the.data.vert_post_m <- the.data.vert_post_m[the.data.vert_post_m$envt_change_at_birth == 0,]
 
 init.plot("levelplot_vary_migration", 
                 type=type,
-                width=800,
-                height=400,
+                width=820,
+                height=800,
                 font="times")
 
-widths <- c(0.3,1,0.1,1,0.1,1,1)
-heights <- c(0.1,1,0.1,1,0.2)
+plot.dim <- 0.75
+
+widths <- c(0.5,plot.dim,0.1,plot.dim,0.1,plot.dim,1)
+
+heights <- c(0.1,plot.dim,0.1,plot.dim,0.1,plot.dim,0.1,plot.dim,0.2)
 
 # initial viewport
 pushViewport(
@@ -207,7 +215,14 @@ pushViewport(
                                 widths=widths,
                                 heights=heights)))
 
-    subs.1 <- subset(the.data, m == 0.3 & p == 0.8)
+###########
+#
+# BASELINE CASE
+#
+###########
+
+
+    subs.1 <- subset(the.data.normal, m == 0.3 & p == 0.8)
 
     plot_x <- single.level(
         row=2
@@ -221,7 +236,7 @@ pushViewport(
         ,title=expression(paste("Migration probability, ",italic("d")," = ",0.3))
         )
 
-    subs.2 <- subset(the.data, m == 0.5 & p == 0.8)
+    subs.2 <- subset(the.data.normal, m == 0.5 & p == 0.8)
     
     plot_x <- single.level(
         row=2
@@ -235,7 +250,7 @@ pushViewport(
         ,title=expression(paste("Migration probability, ",italic("d")," = ",0.5))
         )
 
-    subs.3 <- subset(the.data, m == 0.8 & p == 0.8)
+    subs.3 <- subset(the.data.normal, m == 0.8 & p == 0.8)
     
     plot_x <- single.level(
         row=2
@@ -249,7 +264,7 @@ pushViewport(
         ,title=expression(paste("Migration probability, ",italic("d")," = ",0.8))
         )
 
-    subs.4 <- subset(the.data, m == 0.3 & p == 0.2)
+    subs.4 <- subset(the.data.normal, m == 0.3 & p == 0.2)
     
     plot_x <- single.level(
         row=4
@@ -258,12 +273,12 @@ pushViewport(
         ,y.label=F
         ,y.ticks=T
         ,x.label=F
-        ,x.ticks=T
+        ,x.ticks=F
         ,ind.label="D"
         ,title=""
         )
 
-    subs.5 <- subset(the.data, m == 0.5 & p == 0.2)
+    subs.5 <- subset(the.data.normal, m == 0.5 & p == 0.2)
     
     plot_x <- single.level(
         row=4
@@ -272,12 +287,12 @@ pushViewport(
         ,y.label=F
         ,y.ticks=F
         ,x.label=F
-        ,x.ticks=T
+        ,x.ticks=F
         ,ind.label="E"
         ,title=""
         )
 
-    subs.6 <- subset(the.data, m == 0.8 & p == 0.2)
+    subs.6 <- subset(the.data.normal, m == 0.8 & p == 0.2)
     
     plot_x <- single.level(
         row=4
@@ -286,14 +301,143 @@ pushViewport(
         ,y.label=F
         ,y.ticks=F
         ,x.label=F
-        ,x.ticks=T
+        ,x.ticks=F
         ,ind.label="F"
         ,title=""
         )
 
+
+
+##### 
+#
+# VERTICAL POST MIGRATION
+#
+#####
+
+row <- 6
+
+ind.label.i <- 71
+
+    subs.1 <- subset(the.data.vert_post_m, m == 0.3 & autocorr == 0.6)
+
+    plot_x <- single.level(
+        row=row
+        ,col=2
+        ,dataset=subs.1
+        ,y.label=F
+        ,y.ticks=T
+        ,x.label=F
+        ,x.ticks=F
+        ,ind.label=chr(ind.label.i)
+        ,title=""
+        )
+
+    subs.2 <- subset(the.data.vert_post_m, m == 0.5 & autocorr == 0.6)
+    
+ind.label.i <-  ind.label.i + 1
+    plot_x <- single.level(
+        row=row
+        ,col=4
+        ,dataset=subs.2
+        ,y.label=F
+        ,y.ticks=F
+        ,x.label=F
+        ,x.ticks=F
+        ,ind.label=chr(ind.label.i)
+        ,title=""
+        )
+
+    subs.3 <- subset(the.data.vert_post_m, m == 0.8 & autocorr == 0.6)
+    
+ind.label.i <-  ind.label.i + 1
+    plot_x <- single.level(
+        row=row
+        ,col=6
+        ,dataset=subs.3
+        ,y.label=F
+        ,y.ticks=F
+        ,x.label=F
+        ,x.ticks=F
+        ,ind.label=chr(ind.label.i)
+        ,title=""
+        )
+
+row <- 8
+
+    subs.4 <- subset(the.data.vert_post_m, m == 0.3 & autocorr == -0.6)
+    
+ind.label.i <-  ind.label.i + 1
+    plot_x <- single.level(
+        row=row
+        ,col=2
+        ,dataset=subs.4
+        ,y.label=F
+        ,y.ticks=T
+        ,x.label=F
+        ,x.ticks=T
+        ,ind.label=chr(ind.label.i)
+        ,title=""
+        )
+
+    subs.5 <- subset(the.data.vert_post_m, m == 0.5 & autocorr == -0.6)
+    
+ind.label.i <-  ind.label.i + 1
+    plot_x <- single.level(
+        row=row
+        ,col=4
+        ,dataset=subs.5
+        ,y.label=F
+        ,y.ticks=F
+        ,x.label=F
+        ,x.ticks=T
+        ,ind.label=chr(ind.label.i)
+        ,title=""
+        )
+
+    subs.6 <- subset(the.data.vert_post_m, m == 0.8 & autocorr == -0.6)
+   
+ind.label.i <-  ind.label.i + 1
+    plot_x <- single.level(
+        row=row
+        ,col=6
+        ,dataset=subs.6
+        ,y.label=F
+        ,y.ticks=F
+        ,x.label=F
+        ,x.ticks=T
+        ,ind.label=chr(ind.label.i)
+        ,title=""
+        )
+
+# indication that it is vertical pre, horizontal post
     grid.text(
             x=unit(units="native"
                     ,x=0.01)
+            ,y=unit(units="native"
+                    ,x=0.8)
+            ,rot=90
+            ,just="centre"
+            ,hjust="centre"
+            ,label=expression(paste({}%down%{}," Vertical pre, horizontal post migration ",{}%down%{}))
+           )
+
+# indication that it is vertical post, horizontal post
+    grid.text(
+            x=unit(units="native"
+                    ,x=0.01)
+            ,y=unit(units="native"
+                    ,x=0.23)
+            ,rot=90
+            ,just="centre"
+            ,hjust="centre"
+            ,label=expression(paste({}%down%{}," Vertical + horizontal post migration ",{}%down%{}))
+           )
+
+# y label
+
+    grid.text(
+            x=unit(units="native"
+                    ,x=0.06)
             ,y=unit(units="native"
                     ,x=0.5)
             ,rot=90
@@ -317,20 +461,38 @@ pushViewport(
    legend(row=2,col=7)
     
    
+   x.pos.arrow.text <- 0.75
    grid.text(
             x=unit(units="native"
-                    ,x=0.78)
+                    ,x=x.pos.arrow.text)
             ,y=unit(units="native"
-                    ,x=0.58)
+                    ,x=0.8)
             ,just="left"
             ,label=expression(paste({}%<-%{},"Rate of change ",1 - {},italic("p")," = 0.2",sep=""))
            )
    
    grid.text(
             x=unit(units="native"
-                    ,x=0.78)
+                    ,x=x.pos.arrow.text)
             ,y=unit(units="native"
-                    ,x=0.1)
+                    ,x=0.55)
+            ,just="left"
+            ,label=expression(paste({}%<-%{},"Rate of change ",1 - {},italic("p")," = 0.8",sep=""))
+           )
+   grid.text(
+            x=unit(units="native"
+                    ,x=x.pos.arrow.text)
+            ,y=unit(units="native"
+                    ,x=0.32)
+            ,just="left"
+            ,label=expression(paste({}%<-%{},"Rate of change ",1 - {},italic("p")," = 0.2",sep=""))
+           )
+   
+   grid.text(
+            x=unit(units="native"
+                    ,x=x.pos.arrow.text)
+            ,y=unit(units="native"
+                    ,x=0.08)
             ,just="left"
             ,label=expression(paste({}%<-%{},"Rate of change ",1 - {},italic("p")," = 0.8",sep=""))
            )
