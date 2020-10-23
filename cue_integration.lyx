@@ -760,8 +760,18 @@ where the
 \begin_inset Formula $x_{i}$
 \end_inset
 
-s in the equation above are the values of each of the different cues (see
- the online supplement for the details of the individual cues).
+s are the values of each of the different cues (see section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "subsec:suppl:Juvenile-phenotype-determination"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ in the Online Supplement where we set out the details of the different
+ cues).
  We then allow the influence of each cue on juvenile phenotype determination
  to evolve, by assuming that cues are weighed by a set of evolving sensitivity
  loci, here reflected by variables 
@@ -791,8 +801,8 @@ s in the equation above are the values of each of the different cues (see
  (vertical social learning; conformity bias) respectively.
  For the sake of tractability, we assume that each sensitivity locus is
  diploid and unlinked to other loci.
- The value of each sensitivity locus is bounded between -10 and 10.
- For example, in the absence of any other cues, a sensitivity value 
+ The value of each sensitivity locus is restricted to [-10, 10].
+ In the absence of any other cues, a sensitivity value 
 \begin_inset Formula $v_{\mathrm{p}}=0$
 \end_inset
 
@@ -825,8 +835,51 @@ s in the equation above are the values of each of the different cues (see
 \end_inset
 
  is positive.
- Note that horizontal social learning only occurs after birth and migration,
- and hence affects phenotypic development later in life (see eqns.
+ 
+\end_layout
+
+\begin_layout Standard
+Regarding the timing and place of the different types of learning, we assume
+ that individual learning occurs in the natal environment prior to migration
+ (see life cycle in Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:life_cycle"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+).
+ However, in Supplementary Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:suppl:vary_timing_horiz_ind"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+G-L, we consider a scenario in which individual learning occurs after migration
+ in the remote environment.
+ Similar to individual learning, vertical social learning is assumed to
+ occur prior to migration throughout the main text.
+ However, in Supplementary Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:suppl:vary_timing_migration"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+G-L, individuals are assumed to perform vertical social learning after migration.
+ By contrast, horizontal social learning is assumed to occur after migration
+ and hence only affects phenotypic development later in life throughout
+ the main text (see eqns.
  [
 \begin_inset CommandInset ref
 LatexCommand ref
@@ -848,11 +901,19 @@ noprefix "false"
 \end_inset
 
 ]).
- How each of the underlying cues 
-\begin_inset Formula $x_{i}$
+ However, in Supplementary Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:suppl:vary_timing_horiz_ind"
+plural "false"
+caps "false"
+noprefix "false"
+
 \end_inset
 
- are obtained is set out in the online supplement.
+A-F, we relax these assumptions regarding the timing of horizontal social
+ learning, by assuming that individuals perform horizontal social learning
+ in their natal environment.
 \end_layout
 
 \begin_layout Standard
@@ -880,6 +941,18 @@ Adult phenotype determination
 After juvenile phenotype determination, all adults from the previous generation
  die and individuals learn from other individuals of their current generation
  (horizontal social learning).
+ As noted before, horizontal social learning occurs only after migration
+ (but see Supplementary Figures 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:suppl:vary_timing_horiz_ind"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+A - F).
  Information acquired from horizontally learned social cues is then used
  by individuals to update the various cue weightings 
 \begin_inset Formula $\bar{x}_{\mathrm{juv}}$
@@ -1285,7 +1358,7 @@ noprefix "false"
  environments (panels B and D; see Figure 
 \begin_inset CommandInset ref
 LatexCommand ref
-reference "fig:suppl:vary_migration"
+reference "fig:suppl:vary_timing_migration"
 plural "false"
 caps "false"
 noprefix "false"
@@ -1473,7 +1546,17 @@ noprefix "false"
 
 \end_inset
 
-).
+, Supplementary Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:suppl:vary_timing_horiz_ind"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+C, F).
  Alternatively, when all other cues prove to be unreliable do we find that
  environmental maternal effects are selectively favoured (see Figure 
 \begin_inset CommandInset ref
@@ -1900,79 +1983,175 @@ n through detection-based mechanisms), or it can result in long-term inheritance
 The current study has only scratched the surface when it comes to integrating
  social learning and cultural evolution with other forms of cue integration.
  To study the interplay of different cue integration mechanisms, our model
- considered a scenario of local adaptation to a variable environment, as
- has been the subject of most previous studies of cue integration (e.g.,
+ considered a scenario of local adaptation to a spatiotemporally environment
+ that fluctuates between two types, as has been the subject of numerous
+ previous models of cue integration (e.g.,
 \begin_inset CommandInset citation
 LatexCommand citep
-key "Rivoire2014,Kuijper2015,Leimar2015,Botero2015,McNamara2016,Proulx_2017"
+key "Leimar2015,Botero2015,Proulx_2017"
 literal "false"
 
 \end_inset
 
 ).
- By contrast, how multiple forms of cue integration (among which social
- learning) coevolve in other contexts, such as cooperative decision making
- 
+ However, several studies in the context of social learning have considered
+ other environmental configurations, such as a scenario in which the environment
+ changes into a previously unknown state (i.e., similar to 'infinite states'
+ models of social learning 
 \begin_inset CommandInset citation
 LatexCommand citep
-key "Lehmann2008,Boyd2009,Richerson2014"
+key "Feldman1996,Aoki2014"
 literal "false"
 
 \end_inset
 
- or mate choice 
+).
+ It would be interesting to assess the consequences of environmental change
+ always resulting in novel environmental conditions for the evolution of
+ cue integration, where we would predict individual learned cues to prevail
+ over all other cues, particularly when environmental change is rapid 
 \begin_inset CommandInset citation
 LatexCommand citep
-key "Verzijden2012"
-literal "false"
-
-\end_inset
-
- has seen much less attention.
- Previous models which focused on a limited number of cues have shown that
- allowing for the coevolution of multiple forms of social learning (e.g.,
- conformity and prestige biases) can substantially alter the evolutionary
- scope of cooperation 
-\begin_inset CommandInset citation
-LatexCommand citep
-key "Molleman2013a,Molleman2013,VanCleve2016"
+key "Aoki2014"
 literal "false"
 
 \end_inset
 
 .
- This raises the question how integration of multiple cues will affect the
- outcome of such cooperative games, particularly when each cue may provide
- a different aspect of information about cooperation: for example, genetic
- cues may inform about current relatedness 
+ 
+\end_layout
+
+\begin_layout Standard
+Also, the timing at which individuals obtain information from different
+ types of cues could substantially affect the outcome (e.g., 
 \begin_inset CommandInset citation
 LatexCommand citep
-key "Leimar2016"
+key "Enquist2007"
 literal "false"
 
 \end_inset
 
-, parental cues may inform about fluctuations in local competition 
-\begin_inset CommandInset citation
-LatexCommand citep
-key "Kuijper2019"
-literal "false"
+).
+ For the sake of tractability, our study focused on a scenario in which
+ individuals perform vertical social learning and individual learning before
+ migration, while horizontal social learning was performed following migration
+ (see Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:life_cycle"
+plural "false"
+caps "false"
+noprefix "false"
 
 \end_inset
 
- and social learning could inform about the ongoing levels of helping and
- harming.
- As being able to respond to other individuals can substantially affect
- the level of cooperation (e.g., 
-\begin_inset CommandInset citation
-LatexCommand citep
-key "McNamara1999,Quinones2016"
-literal "false"
+).
+ In Supplementary Figures 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:suppl:vary_timing_migration"
+plural "false"
+caps "false"
+noprefix "false"
 
 \end_inset
 
-), the different ways in which individuals can do so should be the subject
- of future studies.
+ and 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:suppl:vary_timing_horiz_ind"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ we have, however, relaxed these assumptions, for different probabilities
+ of migration.
+ Unsurprisingly, in case migration is relatively low, the timing at which
+ learning occurs has little impact and outcomes are highly similar to those
+ in Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:contour_fidelity"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+ When dispersal probabilities are larger we find that the latest cues received
+ (i.e., those received subsequent to migration) prevail over all others.
+ For example, in Supplementary Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:suppl:vary_timing_migration"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+G-L, both vertical and horizontal social learning occur subsequent to migration,
+ whereas individual learning occurs prior to migration.
+ As a consequence, we find that individual learning is nearly absent when
+ migration rates are high (Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:suppl:vary_timing_migration"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+I, L).
+ By contrast, when individual learning occurs subsequent to migration, it
+ prevails for a much wider range of the parameter space, particularly when
+ migration rates are high (Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:suppl:vary_timing_horiz_ind"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+I, L).
+ Finally, when neither cue is received subsequent to migration, we find
+ that conservative bet-hedging prevails when migration rates are high (Figure
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:suppl:vary_timing_horiz_ind"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+C, F).
+ Hence, as noted in the main results in which we varied the timing of environmen
+tal change, also the timing of the different learning events matters to
+ the prevalence of different cues over others.
+ We urge for more studies that systematically vary the timing at which (combinat
+ions of) different cues are obtained during the life cycle.
+\end_layout
+
+\begin_layout Standard
+In relation to the timing of cues is that While beyond the scope of the
+ current paper, an open question is whether cues that are obtained in stages
+ in which selection is absent are still relevant to phenotype determination.
+ We find that they are, as testified by the role of individual learning
+ or vertical social learning which occur early in life (i.e., they occur prior
+ to dispersal) (e.g., Figure 3, bottom of each panel).
+ Moreover, while one cue typically prevails, we find that early and late
+ life traits interact, with early-life traits such as vertical learning
+ or maternal effects often evolving in opposite ways to later-life traits
+ (horizontal learning) (Figure S2B – D).
+ We are currently investigating this phenomenon for a follow-up paper 
 \end_layout
 
 \begin_layout Standard
@@ -2258,7 +2437,7 @@ The cue that explains the largest proportion of adult phenotypic variance
  are varied in Figure 
 \begin_inset CommandInset ref
 LatexCommand ref
-reference "fig:suppl:vary_migration"
+reference "fig:suppl:vary_timing_migration"
 plural "false"
 caps "false"
 noprefix "false"
@@ -3323,7 +3502,7 @@ clearpage
 Figure 
 \begin_inset CommandInset ref
 LatexCommand ref
-reference "fig:suppl:vary_migration"
+reference "fig:suppl:vary_timing_migration"
 plural "false"
 caps "false"
 noprefix "false"
@@ -3344,21 +3523,12 @@ migration + other timings
 \end_layout
 
 \begin_layout Standard
-Sensitivity analysis assessing the role of migration and the timing of vertical
- social learning.
- Panels along the 
-\begin_inset Formula $x$
+Sensitivity analysis of the timing of vertical social learning and different
+ values of migration 
+\begin_inset Formula $m$
 \end_inset
 
- axis increase migration from 
-\begin_inset Formula $m=0.3$
-\end_inset
-
- to 
-\begin_inset Formula $m=0.8$
-\end_inset
-
-.
+ (from left to right).
  The top two rows (panels A - F) consider the scenario discussed in the
  main text, in which juveniles learn vertically from breeders in the natal
  patch (i.e., vertical learning 
@@ -3423,7 +3593,7 @@ When individuals learn vertically in their natal patch and learn horizontally
 \begin_layout Standard
 By contrast, when individuals learn vertically as well as horizontally on
  their patch of arrival (panels G - L), horizontal social learning only
- prevails when it is characterized by low levels of noise, while vertical
+ prevails when it is characterised by low levels of noise, while vertical
  social learning prevails otherwise (compare panels I, L with C, F).
  In this case, both horizontal and vertical social learning (based on prestige)
  provide accurate information about the environment on the patch of arrival,
@@ -3455,7 +3625,7 @@ noprefix "false"
 placement b
 wide false
 sideways false
-status open
+status collapsed
 
 \begin_layout Plain Layout
 \align center
@@ -3474,7 +3644,147 @@ status open
 \begin_layout Plain Layout
 \begin_inset CommandInset label
 LatexCommand label
-name "fig:suppl:vary_migration"
+name "fig:suppl:vary_timing_migration"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+clearpage
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Paragraph
+Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:suppl:vary_timing_horiz_ind"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+horizontal learning pre migration, individual learning post migration
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Sensitivity analysis of the timing of horizontal learning (panels A - F),
+ the timing of individual learning (panels G - L) and different values of
+ migration 
+\begin_inset Formula $m$
+\end_inset
+
+ (from left to right).
+\end_layout
+
+\begin_layout Standard
+The top two rows (panels A - F) consider a scenario in which individuals
+ perform all their learning before migration: individual learning and vertical
+ social learning is assumed to occur before migration as in the main text,
+ while now also horizontal social learning happens before migration As a
+ consequence, individuals only acquire information about the environmental
+ state of their natal patch.
+ With an increasing probability of migration, individuals thus lack any
+ information about their future environment, resulting in an outcome where
+ all cues are equally informative (panels C, F) as testified by the large
+ variation between individual simulations in the cue that is most informative.
+\end_layout
+
+\begin_layout Standard
+The bottom two rows (panels G - L) consider the same scenario as in the
+ main text (vertical social learning prior to migration, horizontal social
+ learning after migration), except that individual learning now occurs after
+ dispersal.
+ As a consequence, individual learning (once it has a high fidelity as measured
+ by 
+\begin_inset Formula $q_{\mathrm{ind}}$
+\end_inset
+
+ on the left-hand side of each panel) now prevails over a much larger part
+ of the parameter space, particularly when dispersal is high (i.e., compare
+ panels I, L with Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:suppl:vary_timing_migration"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+C, F).
+ Other parameters as in Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:contour_fidelity"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement b
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename img/migration_contour/levelplot_vary_migration_horiz.pdf
+	scale 70
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:suppl:vary_timing_horiz_ind"
 
 \end_inset
 
@@ -3799,6 +4109,13 @@ B.
 
 \begin_layout Subsection
 Juvenile phenotype determination
+\begin_inset CommandInset label
+LatexCommand label
+name "subsec:suppl:Juvenile-phenotype-determination"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard

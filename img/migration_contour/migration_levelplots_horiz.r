@@ -181,18 +181,19 @@ legend <- function(row,col)
 # data folder
 script.dir <- dirname(sys.frame(1)$ofile)
 
-filename.normal <- "migration_contour_max_eta_.csv"
-full_filename.normal = file.path(script.dir,"../../data",filename.normal)
-the.data.normal <- read.table(full_filename.normal, sep=";",header=T)
 
-filename.vert_post_m <- "summary_vert_after_dispersal_max_eta_.csv"
-full_filename.vert_post_m = file.path(script.dir,"../../data",filename.vert_post_m)
-the.data.vert_post_m <- read.table(full_filename.vert_post_m, sep=";",header=T)
+filename.horiz_pre <- "summary_horiz_pre_disperse_max_eta_.csv"
+full_filename.horiz_pre = file.path(script.dir,"../../data",filename.horiz_pre)
+the.data.horiz_pre <- read.table(full_filename.horiz_pre, sep=";",header=T)
 
-the.data.normal <- the.data.normal[the.data.normal$envt_change_at_birth == 0,]
-the.data.vert_post_m <- the.data.vert_post_m[the.data.vert_post_m$envt_change_at_birth == 0,]
+filename.ind_pre_m <- "summary_ind_learn_post_m_max_eta_.csv"
+full_filename.ind_pre_m = file.path(script.dir,"../../data",filename.ind_pre_m)
+the.data.ind_pre_m <- read.table(full_filename.ind_pre_m, sep=";",header=T)
 
-init.plot("levelplot_vary_migration", 
+the.data.horiz_pre <- the.data.horiz_pre[the.data.horiz_pre$envt_change_at_birth == 0,]
+the.data.ind_pre_m <- the.data.ind_pre_m[the.data.ind_pre_m$envt_change_at_birth == 0,]
+
+init.plot("levelplot_vary_migration_horiz", 
                 type=type,
                 width=820,
                 height=800,
@@ -215,14 +216,14 @@ pushViewport(
                                 widths=widths,
                                 heights=heights)))
 
-###########
-#
-# BASELINE CASE
-#
-###########
+############################################
+
+# HORIZONTAL LEARNING PRIOR TO DISPERSAL
+
+############################################
 
 
-    subs.1 <- subset(the.data.normal, m == 0.3 & p == 0.8)
+    subs.1 <- subset(the.data.horiz_pre, m == 0.3 & autocorr == 0.6)
 
     plot_x <- single.level(
         row=2
@@ -236,7 +237,7 @@ pushViewport(
         ,title=expression(paste("Migration probability, ",italic("d")," = ",0.3))
         )
 
-    subs.2 <- subset(the.data.normal, m == 0.5 & p == 0.8)
+    subs.2 <- subset(the.data.horiz_pre, m == 0.5 & autocorr == 0.6)
     
     plot_x <- single.level(
         row=2
@@ -250,7 +251,7 @@ pushViewport(
         ,title=expression(paste("Migration probability, ",italic("d")," = ",0.5))
         )
 
-    subs.3 <- subset(the.data.normal, m == 0.8 & p == 0.8)
+    subs.3 <- subset(the.data.horiz_pre, m == 0.8 & autocorr == 0.6)
     
     plot_x <- single.level(
         row=2
@@ -264,7 +265,7 @@ pushViewport(
         ,title=expression(paste("Migration probability, ",italic("d")," = ",0.8))
         )
 
-    subs.4 <- subset(the.data.normal, m == 0.3 & p == 0.2)
+    subs.4 <- subset(the.data.horiz_pre, m == 0.3 & autocorr == -0.6)
     
     plot_x <- single.level(
         row=4
@@ -278,7 +279,7 @@ pushViewport(
         ,title=""
         )
 
-    subs.5 <- subset(the.data.normal, m == 0.5 & p == 0.2)
+    subs.5 <- subset(the.data.horiz_pre, m == 0.5 & autocorr == -0.6)
     
     plot_x <- single.level(
         row=4
@@ -292,7 +293,7 @@ pushViewport(
         ,title=""
         )
 
-    subs.6 <- subset(the.data.normal, m == 0.8 & p == 0.2)
+    subs.6 <- subset(the.data.horiz_pre, m == 0.8 & autocorr == -0.6)
     
     plot_x <- single.level(
         row=4
@@ -318,7 +319,7 @@ row <- 6
 
 ind.label.i <- 71
 
-    subs.1 <- subset(the.data.vert_post_m, m == 0.3 & autocorr == 0.6)
+    subs.1 <- subset(the.data.ind_pre_m, m == 0.3 & autocorr == 0.6)
 
     plot_x <- single.level(
         row=row
@@ -332,7 +333,7 @@ ind.label.i <- 71
         ,title=""
         )
 
-    subs.2 <- subset(the.data.vert_post_m, m == 0.5 & autocorr == 0.6)
+    subs.2 <- subset(the.data.ind_pre_m, m == 0.5 & autocorr == 0.6)
     
 ind.label.i <-  ind.label.i + 1
     plot_x <- single.level(
@@ -347,7 +348,7 @@ ind.label.i <-  ind.label.i + 1
         ,title=""
         )
 
-    subs.3 <- subset(the.data.vert_post_m, m == 0.8 & autocorr == 0.6)
+    subs.3 <- subset(the.data.ind_pre_m, m == 0.8 & autocorr == 0.6)
     
 ind.label.i <-  ind.label.i + 1
     plot_x <- single.level(
@@ -364,7 +365,7 @@ ind.label.i <-  ind.label.i + 1
 
 row <- 8
 
-    subs.4 <- subset(the.data.vert_post_m, m == 0.3 & autocorr == -0.6)
+    subs.4 <- subset(the.data.ind_pre_m, m == 0.3 & autocorr == -0.6)
     
 ind.label.i <-  ind.label.i + 1
     plot_x <- single.level(
@@ -379,7 +380,7 @@ ind.label.i <-  ind.label.i + 1
         ,title=""
         )
 
-    subs.5 <- subset(the.data.vert_post_m, m == 0.5 & autocorr == -0.6)
+    subs.5 <- subset(the.data.ind_pre_m, m == 0.5 & autocorr == -0.6)
     
 ind.label.i <-  ind.label.i + 1
     plot_x <- single.level(
@@ -394,7 +395,7 @@ ind.label.i <-  ind.label.i + 1
         ,title=""
         )
 
-    subs.6 <- subset(the.data.vert_post_m, m == 0.8 & autocorr == -0.6)
+    subs.6 <- subset(the.data.ind_pre_m, m == 0.8 & autocorr == -0.6)
    
 ind.label.i <-  ind.label.i + 1
     plot_x <- single.level(
@@ -418,7 +419,7 @@ ind.label.i <-  ind.label.i + 1
             ,rot=90
             ,just="centre"
             ,hjust="centre"
-            ,label=expression(paste({}%down%{}," Vertical pre, horizontal post migration ",{}%down%{}))
+            ,label=expression(paste({}%down%{}," Vertical + horizontal pre migration ",{}%down%{}))
            )
 
 # indication that it is vertical post, horizontal post
@@ -430,7 +431,7 @@ ind.label.i <-  ind.label.i + 1
             ,rot=90
             ,just="centre"
             ,hjust="centre"
-            ,label=expression(paste({}%down%{}," Vertical + horizontal post migration ",{}%down%{}))
+            ,label=expression(paste({}%down%{}," Individual learning post migration ",{}%down%{}))
            )
 
 # y label
